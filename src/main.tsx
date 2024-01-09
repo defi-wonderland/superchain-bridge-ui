@@ -1,63 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { HashRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createConfig, WagmiProvider, http } from 'wagmi';
+import { optimismGoerli } from 'wagmi/chains';
+import { injected, walletConnect } from 'wagmi/connectors';
 
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import { injectedWallet, rainbowWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets';
-import { connectorsForWallets } from '@rainbow-me/rainbowkit';
-
-import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { publicProvider } from 'wagmi/providers/public';
-import { localhost } from 'wagmi/chains';
-
-import { customTheme } from '~/components';
 import { getConfig } from './config';
-import { App } from '~/App';
+import { App } from './App';
 
-import '@rainbow-me/rainbowkit/styles.css';
+const queryClient = new QueryClient();
 
-const { PROJECT_ID, ALCHEMY_KEY } = getConfig();
+const { ALCHEMY_KEY, PROJECT_ID } = getConfig();
 
-const { chains, publicClient } = configureChains(
-  [localhost],
-  [alchemyProvider({ apiKey: ALCHEMY_KEY }), publicProvider()],
-  { batch: { multicall: true } },
-);
-
-const getWallets = () => {
-  if (PROJECT_ID) {
-    return [
-      injectedWallet({ chains }),
-      rainbowWallet({ projectId: PROJECT_ID, chains }),
-      walletConnectWallet({ projectId: PROJECT_ID, chains }),
-    ];
-  } else {
-    return [injectedWallet({ chains })];
-  }
-};
-
-const connectors = connectorsForWallets([
-  {
-    groupName: 'Recommended',
-    wallets: getWallets(),
+export const config = createConfig({
+  chains: [optimismGoerli],
+  connectors: [injected(), walletConnect({ projectId: PROJECT_ID })],
+  transports: {
+    [optimismGoerli.id]: http(`https://opt-goerli.g.alchemy.com/v2/${ALCHEMY_KEY}`),
   },
-]);
-
-const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
 });
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const reactApp: any = (
   <React.StrictMode>
-    <WagmiConfig config={wagmiConfig}>
-      <RainbowKitProvider theme={customTheme} chains={chains}>
-        <HashRouter>
+    <BrowserRouter>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
           <App />
-        </HashRouter>
-      </RainbowKitProvider>
-    </WagmiConfig>
-  </React.StrictMode>,
+        </QueryClientProvider>
+      </WagmiProvider>
+    </BrowserRouter>
+  </React.StrictMode>
 );
+
+ReactDOM.createRoot(document.getElementById('root')!).render(reactApp);

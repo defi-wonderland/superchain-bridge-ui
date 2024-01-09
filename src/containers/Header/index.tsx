@@ -1,5 +1,6 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+// import { ConnectButton } from '@rainbow-me/rainbowkit';
 import styled from 'styled-components';
+import { Connect } from '~/components/Connect';
 
 import { useStateContext } from '~/hooks';
 import { THEME_KEY } from '~/utils';
@@ -21,7 +22,7 @@ export const Header = () => {
     <HeaderContainer>
       <h1>Logo</h1>
       <ThemeButton onClick={handleThemeChange}>{theme === 'dark' ? '🌞' : '🌕'}</ThemeButton>
-      <ConnectButton />
+      <Connect />
     </HeaderContainer>
   );
 };
