@@ -16,8 +16,7 @@
     "format": "yarn run prettier:fix && yarn run lint:fix",
     "format:check": "yarn run prettier && yarn run lint",
     "prepare": "husky install && wonderland-crypto-husky-checks install",
-    "test": "vitest run --dir src/tests/",
-    "test:watch": "vitest --dir src/tests/"
+    "test": "yarn cypress run"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": "eslint --cache --fix",
@@ -38,6 +37,7 @@
     "@typescript-eslint/eslint-plugin": "6.0.0",
     "@typescript-eslint/parser": "6.0.0",
     "@vitejs/plugin-react": "4.0.3",
+    "cypress": "13.6.2",
     "eslint": "8.45.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-import": "2.28.1",

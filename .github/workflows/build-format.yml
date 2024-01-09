@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build and Format
 
 on:
   pull_request:
@@ -14,8 +14,8 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: "18.7"
-          registry-url: "https://registry.npmjs.org"
+          node-version: '18.7'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -52,16 +52,16 @@ jobs:
           only_notify: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
-  test:
-    name: Lint and Test
+  format:
+    name: Lint and Prettier
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "18.7"
-          registry-url: "https://registry.npmjs.org"
+          node-version: '18.7'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -84,6 +84,3 @@ jobs:
 
       - name: Run Linter
         run: yarn lint
-
-      - name: Run Tests
-        run: yarn test
