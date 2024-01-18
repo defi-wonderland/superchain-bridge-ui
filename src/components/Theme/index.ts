@@ -1,2 +1,2 @@
+export * from './muiThemeConfig';
 export * from './theme';
-export * from './Themable';

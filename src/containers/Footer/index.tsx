@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import { styled } from '@mui/material';
 
 export const Footer = () => {
   return (
@@ -12,19 +12,18 @@ export const Footer = () => {
   );
 };
 
-const FooterContainer = styled.div`
+const FooterContainer = styled('div')`
   display: flex;
   height: 8rem;
   padding: 0 8rem;
   align-items: center;
   justify-content: space-between;
-  background-color: ${({ theme }) => theme.headerBackground};
-  border-top: ${({ theme }) => theme.border};
+
   width: 100%;
   max-width: 100vw;
 `;
 
-const Subtitle = styled.div`
+const Subtitle = styled('div')`
   display: flex;
   align-items: center;
   gap: 0.8rem;

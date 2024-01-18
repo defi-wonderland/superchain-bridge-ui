@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
-import { Connect } from '~/components/Connect';
+import { styled } from '@mui/material';
 
-import { useStateContext } from '~/hooks';
+import { useCustomTheme } from '~/hooks';
+import { Connect } from '~/components';
 import { THEME_KEY } from '~/utils';
 
 export const Header = () => {
-  const { setTheme, theme } = useStateContext();
+  const { setTheme, theme } = useCustomTheme();
   const {
     i18n: { changeLanguage, language },
   } = useTranslation();
@@ -42,20 +42,19 @@ export const Header = () => {
   );
 };
 
-const HeaderContainer = styled.div`
+const HeaderContainer = styled('div')`
   display: flex;
   height: 8rem;
   padding: 0 8rem;
   align-items: center;
   justify-content: space-between;
-  background-color: ${({ theme }) => theme.headerBackground};
-  border-bottom: ${({ theme }) => theme.border};
+
   width: 100%;
   max-width: 100vw;
   z-index: 100;
 `;
 
-const ThemeButton = styled.button`
+const ThemeButton = styled('button')`
   background-color: inherit;
   border: none;
   outline: none;

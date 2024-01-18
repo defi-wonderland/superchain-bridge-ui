@@ -23,6 +23,9 @@
     "src/**/*.{js,jsx,ts,tsx,css,scss,md,html}": "prettier --write --ignore-unknown"
   },
   "dependencies": {
+    "@emotion/react": "11.11.3",
+    "@emotion/styled": "11.11.0",
+    "@mui/material": "5.15.5",
     "@tanstack/react-query": "5.17.9",
     "@web3modal/wagmi": "4.0.0-alpha.0",
     "i18next": "23.7.16",
@@ -51,7 +54,6 @@
     "eslint-plugin-react-refresh": "0.4.3",
     "husky": "8.0.3",
     "prettier": "3.0.3",
-    "styled-components": "6.0.7",
     "typescript": "5.0.2",
     "vite": "4.4.5",
     "vite-tsconfig-paths": "4.2.0"

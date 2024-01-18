@@ -1,6 +1,6 @@
+import { styled } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
-import styled from 'styled-components';
 
 export const Landing = () => {
   const { address } = useAccount();
@@ -15,7 +15,7 @@ export const Landing = () => {
   );
 };
 
-const LandingContainer = styled.div`
+const LandingContainer = styled('div')`
   display: flex;
   flex-direction: column;
   height: calc(100vh - 16rem);
