@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "5.17.9",
+    "@web3modal/wagmi": "4.0.0-alpha.0",
     "i18next": "23.7.16",
     "react": "18.2.0",
     "react-dom": "18.2.0",

@@ -1,13 +1,12 @@
-import { useAccount } from 'wagmi';
-import { Account } from './Account';
-import { WalletOptions } from './WalletOptions';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
 
-export function Connect() {
-  const { isConnected } = useAccount();
+export const Connect = () => {
+  const { open } = useWeb3Modal();
+
   return (
-    <div className='buttons'>
-      {!isConnected && <WalletOptions />}
-      {isConnected && <Account />}
-    </div>
+    <>
+      <button onClick={() => open()}>Open Connect Modal</button>
+      <button onClick={() => open({ view: 'Networks' })}>Open Network Modal</button>
+    </>
   );
-}
+};
