@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import './i18n';
 
 import { Landing } from '~/pages';
 import { ScrollToTop } from '~/hooks';

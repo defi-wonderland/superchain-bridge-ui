@@ -1,4 +1,5 @@
-// import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 import { Connect } from '~/components/Connect';
 
@@ -7,6 +8,16 @@ import { THEME_KEY } from '~/utils';
 
 export const Header = () => {
   const { setTheme, theme } = useStateContext();
+  const {
+    i18n: { changeLanguage, language },
+  } = useTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState(language);
+
+  const handleChangeLanguage = () => {
+    const newLanguage = currentLanguage === 'en' ? 'pt' : 'en';
+    setCurrentLanguage(newLanguage);
+    changeLanguage(newLanguage);
+  };
 
   const handleThemeChange = () => {
     if (theme === 'light') {
@@ -22,6 +33,10 @@ export const Header = () => {
     <HeaderContainer>
       <h1>Logo</h1>
       <ThemeButton onClick={handleThemeChange}>{theme === 'dark' ? '🌞' : '🌕'}</ThemeButton>
+      <button onClick={handleChangeLanguage}>
+        language:
+        {currentLanguage}
+      </button>
       <Connect />
     </HeaderContainer>
   );

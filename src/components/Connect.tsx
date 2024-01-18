@@ -1,39 +1,13 @@
-import * as React from 'react';
-import { Connector, useChainId, useConnect } from 'wagmi';
+import { useAccount } from 'wagmi';
+import { Account } from './Account';
+import { WalletOptions } from './WalletOptions';
 
 export function Connect() {
-  const chainId = useChainId();
-  const { connectors, connect } = useConnect();
-
+  const { isConnected } = useAccount();
   return (
     <div className='buttons'>
-      {connectors.map(
-        (connector) =>
-          // Hide MetaMask button because has a bug with injected connector
-          connector.name !== 'MetaMask' && (
-            <ConnectorButton
-              key={connector.uid}
-              connector={connector}
-              onClick={() => connect({ connector, chainId })}
-            />
-          ),
-      )}
+      {!isConnected && <WalletOptions />}
+      {isConnected && <Account />}
     </div>
-  );
-}
-
-function ConnectorButton({ connector, onClick }: { connector: Connector; onClick: () => void }) {
-  const [ready, setReady] = React.useState(false);
-  React.useEffect(() => {
-    (async () => {
-      const provider = await connector.getProvider();
-      setReady(!!provider);
-    })();
-  }, [connector, setReady]);
-
-  return (
-    <button className='button' disabled={!ready} onClick={onClick} type='button'>
-      {connector.name}
-    </button>
   );
 }
