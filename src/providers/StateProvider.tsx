@@ -21,7 +21,8 @@ interface StateProps {
 export const StateContext = createContext({} as ContextType);
 
 export const StateProvider = ({ children }: StateProps) => {
-  const [theme, setTheme] = useState<ThemeName>('dark');
+  const defaultTheme = 'dark';
+  const [theme, setTheme] = useState<ThemeName>(defaultTheme);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -30,7 +31,7 @@ export const StateProvider = ({ children }: StateProps) => {
   useEffect(() => {
     const storedTheme = localStorage.getItem(THEME_KEY) as ThemeName;
     if (!storedTheme) {
-      localStorage.setItem(THEME_KEY, theme);
+      localStorage.setItem(THEME_KEY, defaultTheme);
     } else {
       setTheme(storedTheme);
     }
