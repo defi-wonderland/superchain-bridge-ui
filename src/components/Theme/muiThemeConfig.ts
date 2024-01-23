@@ -9,12 +9,16 @@ export const getMuiThemeConfig = (currentTheme: Theme, themeName: ThemeName) => 
     components: {
       MuiCssBaseline: {
         styleOverrides: {
-          html: {},
-          body: {
+          html: {
             fontSize: '62.5%', // to enable rem units (1rem = 10px)
+          },
+          body: {
             background: currentTheme.backgroundPrimary,
             color: currentTheme.textPrimary,
             // other global styles...
+          },
+          p: {
+            fontSize: '1.4rem',
           },
         },
       },
