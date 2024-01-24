@@ -13,6 +13,7 @@ export interface Theme {
   secondaryBorderRadius: string;
   headerBackground: string;
   border: string;
+  borderColor: string;
 }
 
 export interface PropTheme {

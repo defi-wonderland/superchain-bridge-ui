@@ -17,6 +17,11 @@ export const getMuiThemeConfig = (currentTheme: Theme, themeName: ThemeName) => 
             color: currentTheme.textPrimary,
             // other global styles...
           },
+          a: {
+            color: 'inherit',
+            textDecoration: 'none',
+            fontSize: '1.4rem',
+          },
           p: {
             fontSize: '1.4rem',
           },
@@ -26,7 +31,7 @@ export const getMuiThemeConfig = (currentTheme: Theme, themeName: ThemeName) => 
     typography: {
       // set your global font family here
       fontFamily: [
-        'Inter',
+        'Inter Variable',
         '-apple-system',
         'BlinkMacSystemFont',
         '"Segoe UI"',

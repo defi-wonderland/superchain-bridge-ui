@@ -14,7 +14,7 @@ export const Footer = () => {
 
 const FooterContainer = styled('div')`
   display: flex;
-  height: 8rem;
+  height: 6.4rem;
   padding: 0 8rem;
   align-items: center;
   justify-content: space-between;

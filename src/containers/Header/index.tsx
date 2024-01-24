@@ -1,70 +1,83 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { Box, styled } from '@mui/material';
-
+import { Badge, Box, IconButton, styled } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
+import HistoryIcon from '@mui/icons-material/History';
 import { useCustomTheme } from '~/hooks';
-import { Connect } from '~/components';
-import { THEME_KEY } from '~/utils';
+import { Connect, LangButton, ThemeButton } from '~/components';
 
 export const Header = () => {
-  const { setTheme, theme } = useCustomTheme();
-  const {
-    i18n: { changeLanguage, language },
-  } = useTranslation();
-  const [currentLanguage, setCurrentLanguage] = useState(language);
-
-  const handleChangeLanguage = () => {
-    const newLanguage = currentLanguage === 'en' ? 'es' : 'en';
-    setCurrentLanguage(newLanguage);
-    changeLanguage(newLanguage);
-  };
-
-  const handleThemeChange = () => {
-    if (theme === 'light') {
-      localStorage.setItem(THEME_KEY, 'dark');
-      setTheme('dark');
-    } else {
-      localStorage.setItem(THEME_KEY, 'light');
-      setTheme('light');
-    }
-  };
-
   return (
     <HeaderContainer>
-      <Link to='/'>
-        <h1>Logo</h1>
-      </Link>
-      <Link to='history'>History</Link>
-      <Link to='settings'>settings</Link>
-      <Box>
-        <ThemeButton onClick={handleThemeChange}>{theme === 'dark' ? '🌞' : '🌕'}</ThemeButton>
-        <button onClick={handleChangeLanguage}>
-          language:
-          {currentLanguage}
-        </button>
+      {/* Left section */}
+      <LeftSection>
+        <Link to='/'>
+          <h1>Superchain Bridge</h1>
+        </Link>
+      </LeftSection>
+
+      {/* Right section */}
+      <RightSection>
+        <IconButton>
+          <Link to='history'>
+            <Badge badgeContent={4} variant='dot' color='primary'>
+              <SHistoryIcon color='action' />
+            </Badge>
+          </Link>
+        </IconButton>
+
         <Connect />
-      </Box>
+
+        <LangButton />
+
+        <ThemeButton />
+
+        <IconButton>
+          <Link to='settings'>
+            <SettingsIcon color='action' />
+          </Link>
+        </IconButton>
+      </RightSection>
     </HeaderContainer>
   );
 };
 
-const HeaderContainer = styled('div')`
-  display: flex;
-  height: 8rem;
-  padding: 0 8rem;
-  align-items: center;
-  justify-content: space-between;
+const HeaderContainer = styled('nav')(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    display: 'flex',
+    height: '6.4rem',
+    padding: '0 8rem',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    maxWidth: '100vw',
+    zIndex: 100,
+    borderBottom: `0.5px solid ${currentTheme.borderColor}`,
+    h1: {
+      color: currentTheme.titleColor,
+    },
+    svg: {
+      fontSize: '2.8rem',
+    },
+  };
+});
 
-  width: 100%;
-  max-width: 100vw;
-  z-index: 100;
-`;
+const RightSection = styled(Box)({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: '1.6rem',
+});
 
-const ThemeButton = styled('button')`
-  background-color: inherit;
-  border: none;
-  outline: none;
-  font-size: 2.2rem;
-  cursor: pointer;
-`;
+const LeftSection = styled(Box)({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: '5rem',
+});
+
+const SHistoryIcon = styled(HistoryIcon)({
+  fontSize: '3.2rem',
+});
