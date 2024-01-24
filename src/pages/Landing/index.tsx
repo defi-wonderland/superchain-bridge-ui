@@ -10,6 +10,7 @@ export const Landing = () => {
   const { address } = useAccount();
   const chainId = useChainId();
   const { t } = useTranslation();
+  const { updateQueryParams } = useQueryParams();
   const { publicClientL1, walletClientL1 } = useL1Client();
   const { sendTransaction } = useSendTransaction();
   const { publicClientL2 } = useL2Client();
@@ -52,8 +53,6 @@ export const Landing = () => {
   const handleSend = async () => {
     address && sendTransaction({ value: 1n, to: address });
   };
-
-  const { updateQueryParams } = useQueryParams();
 
   useEffect(() => {
     if (chainId) updateQueryParams(QueryParamKey.originChainId, chainId.toString());
