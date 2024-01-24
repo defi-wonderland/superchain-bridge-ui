@@ -1,26 +1,26 @@
-import { styled } from '@mui/material';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAccount } from 'wagmi';
+import { useAccount, useChainId } from 'wagmi';
+
+import { useQueryParams } from '~/hooks';
+import { QueryParamKey } from '~/types';
 
 export const Landing = () => {
   const { address } = useAccount();
+  const chainId = useChainId();
   const { t } = useTranslation();
 
+  const { updateQueryParams } = useQueryParams();
+
+  useEffect(() => {
+    if (chainId) updateQueryParams(QueryParamKey.originChainId, chainId.toString());
+  }, [chainId, updateQueryParams]);
+
   return (
-    <LandingContainer>
+    <section>
       <h1 data-testid='boilerplate-title'>Web3 React Boilerplate</h1>
       <p>Connected account: {address}</p>
       {t('headerTitle', { appName: 'Web3 React Boilerplate' })}
-    </LandingContainer>
+    </section>
   );
 };
-
-const LandingContainer = styled('div')`
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 16rem);
-  padding: 0 8rem;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-`;

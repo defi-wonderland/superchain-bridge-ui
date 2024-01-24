@@ -4,7 +4,7 @@ import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import './i18n';
 
-import { Landing } from '~/pages';
+import { History, Landing, Settings } from '~/pages';
 import { ScrollToTop, useCustomTheme } from '~/hooks';
 import { AppLayout } from '~/containers';
 import { StateProvider } from './providers';
@@ -15,6 +15,9 @@ const AppRouter = () => {
     <Routes>
       <Route element={<AppLayout />}>
         <Route path='/' element={<Landing />} />
+        <Route path='/settings' element={<Settings />} />
+        <Route path='/history' element={<History />} />
+        <Route path='/history' element={<History />} />
       </Route>
     </Routes>
   );

@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 
 import { useCustomTheme } from '~/hooks';
 import { Connect } from '~/components';
@@ -14,7 +15,7 @@ export const Header = () => {
   const [currentLanguage, setCurrentLanguage] = useState(language);
 
   const handleChangeLanguage = () => {
-    const newLanguage = currentLanguage === 'en' ? 'pt' : 'en';
+    const newLanguage = currentLanguage === 'en' ? 'es' : 'en';
     setCurrentLanguage(newLanguage);
     changeLanguage(newLanguage);
   };
@@ -31,13 +32,19 @@ export const Header = () => {
 
   return (
     <HeaderContainer>
-      <h1>Logo</h1>
-      <ThemeButton onClick={handleThemeChange}>{theme === 'dark' ? '🌞' : '🌕'}</ThemeButton>
-      <button onClick={handleChangeLanguage}>
-        language:
-        {currentLanguage}
-      </button>
-      <Connect />
+      <Link to='/'>
+        <h1>Logo</h1>
+      </Link>
+      <Link to='history'>History</Link>
+      <Link to='settings'>settings</Link>
+      <Box>
+        <ThemeButton onClick={handleThemeChange}>{theme === 'dark' ? '🌞' : '🌕'}</ThemeButton>
+        <button onClick={handleChangeLanguage}>
+          language:
+          {currentLanguage}
+        </button>
+        <Connect />
+      </Box>
     </HeaderContainer>
   );
 };

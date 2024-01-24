@@ -1,3 +1,4 @@
+import { styled } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
 import { Footer } from '~/containers/Footer';
@@ -7,8 +8,20 @@ export const AppLayout = () => {
   return (
     <>
       <Header />
-      <Outlet />
+      <LayoutContainer>
+        <Outlet />
+      </LayoutContainer>
       <Footer />
     </>
   );
 };
+
+const LayoutContainer = styled('div')`
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 16rem);
+  padding: 0 8rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
