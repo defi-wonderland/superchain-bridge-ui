@@ -2,7 +2,7 @@
 =                Misc Variables               =
 =============================================*/
 
-export const THEME_KEY = 'react-app-theme';
+export const THEME_KEY = 'superbridge_theme_key';
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 /*=============================================
@@ -19,4 +19,11 @@ export const fontSize = {
   LARGE: '1.6rem',
   MEDIUM: '1.4rem',
   SMALL: '1.2rem',
+};
+
+export const zIndex = {
+  HEADER: 100,
+  MODAL: 10,
+  BACKDROP: -1,
+  TOAST: 500,
 };

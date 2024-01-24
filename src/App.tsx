@@ -9,6 +9,16 @@ import { ScrollToTop, useCustomTheme } from '~/hooks';
 import { AppLayout } from '~/containers';
 import { StateProvider } from './providers';
 import { getMuiThemeConfig } from './components';
+import { ConfirmModal } from '~/containers';
+
+export const Modals = () => {
+  return (
+    <>
+      {/* Add all modals here... */}
+      <ConfirmModal />
+    </>
+  );
+};
 
 const AppRouter = () => {
   return (
@@ -28,7 +38,7 @@ export const App = () => {
     <StateProvider>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
-
+        <Modals />
         <ScrollToTop />
         <AppRouter />
       </MuiThemeProvider>

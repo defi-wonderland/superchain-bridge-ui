@@ -2,6 +2,8 @@ import { styled } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAccount } from 'wagmi';
 
+import { MainCard } from './MainCard';
+
 export const Landing = () => {
   const { address } = useAccount();
   const { t } = useTranslation();
@@ -11,6 +13,7 @@ export const Landing = () => {
       <h1 data-testid='boilerplate-title'>Web3 React Boilerplate</h1>
       <p>Connected account: {address}</p>
       {t('headerTitle', { appName: 'Web3 React Boilerplate' })}
+      <MainCard />
     </LandingContainer>
   );
 };
