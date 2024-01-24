@@ -17,7 +17,6 @@ const AppRouter = () => {
         <Route path='/' element={<Landing />} />
         <Route path='/settings' element={<Settings />} />
         <Route path='/history' element={<History />} />
-        <Route path='/history' element={<History />} />
       </Route>
     </Routes>
   );
