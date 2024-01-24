@@ -61,7 +61,7 @@ export const Landing = () => {
 
   return (
     <section>
-      <h1 data-testid='boilerplate-title'>{t('headerTitle', { appName: 'Superchain Bridge' })}</h1>
+      <h1 data-testid='boilerplate-title'>{t('HEADER.title', { appName: 'Superchain Bridge' })}</h1>
       <p>Connected account: {address}</p>
       <p>Connected to chainId: {chainId}</p>
 
