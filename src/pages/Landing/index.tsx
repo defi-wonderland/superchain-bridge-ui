@@ -6,6 +6,8 @@ import { getL2TransactionHashes } from 'viem/op-stack';
 import { useQueryParams, useL1Client, useL2Client, useOptimismSdk } from '~/hooks';
 import { QueryParamKey } from '~/types';
 
+import { MainCard } from './MainCard';
+
 export const Landing = () => {
   const { address } = useAccount();
   const chainId = useChainId();
@@ -72,6 +74,7 @@ export const Landing = () => {
       <br />
 
       <button onClick={handleSend}>Send some ETH to myself</button>
+      <MainCard />
     </section>
   );
 };

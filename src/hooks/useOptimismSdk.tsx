@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { CrossChainMessenger } from '@eth-optimism/sdk';
-import { useEthersSigner } from './useEthersAdapters';
 import { optimismSepolia, sepolia } from 'viem/chains';
+
+import { useEthersSigner } from './useEthersAdapters';
 
 export const useOptimismSdk = () => {
   // temporary fixed values
