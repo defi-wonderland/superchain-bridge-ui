@@ -36,6 +36,8 @@ jobs:
       - name: Build project dependencies
         run: yarn run build
         id: build
+        env:
+          NEXT_PUBLIC_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_PROJECT_ID }}
 
   check:
     name: Check for crypto
