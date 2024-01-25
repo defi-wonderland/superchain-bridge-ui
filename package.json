@@ -24,25 +24,25 @@
     "src/**/*.{js,jsx,ts,tsx,css,scss,md,html}": "prettier --write --ignore-unknown"
   },
   "dependencies": {
-    "@emotion/cache": "^11.11.0",
+    "@emotion/cache": "11.11.0",
     "@emotion/react": "11.11.3",
-    "@emotion/server": "^11.11.0",
+    "@emotion/server": "11.11.0",
     "@emotion/styled": "11.11.0",
     "@eth-optimism/sdk": "3.1.8",
     "@fontsource-variable/inter": "5.0.16",
     "@mui/icons-material": "5.15.6",
     "@mui/material": "5.15.5",
-    "@mui/material-nextjs": "^5.15.6",
+    "@mui/material-nextjs": "5.15.6",
     "@tanstack/react-query": "5.17.9",
     "@web3modal/wagmi": "4.0.0-alpha.2",
     "ethers": "5.4.7",
     "i18next": "23.7.16",
-    "next": "^14.1.0",
+    "next": "14.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-i18next": "14.0.0",
     "react-router-dom": "6.15.0",
-    "sharp": "^0.33.2",
+    "sharp": "0.33.2",
     "viem": "2.5.0",
     "wagmi": "2.5.0"
   },
@@ -52,7 +52,6 @@
     "@types/react-dom": "18.2.7",
     "@typescript-eslint/eslint-plugin": "6.0.0",
     "@typescript-eslint/parser": "6.0.0",
-    "@vitejs/plugin-react": "4.0.3",
     "cypress": "13.6.2",
     "eslint": "8.45.0",
     "eslint-config-prettier": "9.0.0",
@@ -64,8 +63,6 @@
     "eslint-plugin-react-refresh": "0.4.3",
     "husky": "8.0.3",
     "prettier": "3.0.3",
-    "typescript": "5.0.2",
-    "vite": "4.4.5",
-    "vite-tsconfig-paths": "4.2.0"
+    "typescript": "5.0.2"
   }
 }
