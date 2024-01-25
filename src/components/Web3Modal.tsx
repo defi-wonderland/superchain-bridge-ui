@@ -19,6 +19,7 @@ const config = createConfig({
     [optimismSepolia.id]: http(`https://opt-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`),
     [sepolia.id]: http(`https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`),
   },
+  ssr: true,
 });
 
 createWeb3Modal({ wagmiConfig: config, projectId: PROJECT_ID });
