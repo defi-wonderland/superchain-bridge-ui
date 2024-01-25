@@ -6,16 +6,18 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { App } from './App';
 import { Web3Modal } from '~/components';
-import { ThemeProvider } from '~/providers';
+import { ModalProvider, ThemeProvider } from '~/providers';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const reactApp: any = (
   <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <Web3Modal>
-          <App />
-        </Web3Modal>
+        <ModalProvider>
+          <Web3Modal>
+            <App />
+          </Web3Modal>
+        </ModalProvider>
       </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>

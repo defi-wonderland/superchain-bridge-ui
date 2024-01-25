@@ -9,6 +9,16 @@ import { ScrollToTop, useCustomTheme } from '~/hooks';
 import { AppLayout } from '~/containers';
 import { StateProvider } from './providers';
 import { getMuiThemeConfig } from './components';
+import { ConfirmModal } from '~/containers';
+
+export const Modals = () => {
+  return (
+    <>
+      {/* Add all modals here... */}
+      <ConfirmModal />
+    </>
+  );
+};
 
 const AppRouter = () => {
   return (
@@ -16,7 +26,6 @@ const AppRouter = () => {
       <Route element={<AppLayout />}>
         <Route path='/' element={<Landing />} />
         <Route path='/settings' element={<Settings />} />
-        <Route path='/history' element={<History />} />
         <Route path='/history' element={<History />} />
       </Route>
     </Routes>
@@ -31,7 +40,7 @@ export const App = () => {
     <StateProvider>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
-
+        <Modals />
         <ScrollToTop />
         <AppRouter />
       </MuiThemeProvider>

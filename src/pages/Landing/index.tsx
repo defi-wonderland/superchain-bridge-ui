@@ -3,25 +3,19 @@ import { useTranslation } from 'react-i18next';
 import { useAccount, useChainId, useSendTransaction } from 'wagmi';
 import { getL2TransactionHashes } from 'viem/op-stack';
 
-import { useQueryParams, useL1Client, useL2Client, useOptimismSdk } from '~/hooks';
+import { useQueryParams, useL1Client, useL2Client } from '~/hooks';
 import { QueryParamKey } from '~/types';
+
+import { MainCard } from './MainCard';
 
 export const Landing = () => {
   const { address } = useAccount();
   const chainId = useChainId();
   const { t } = useTranslation();
+  const { updateQueryParams } = useQueryParams();
   const { publicClientL1, walletClientL1 } = useL1Client();
   const { sendTransaction } = useSendTransaction();
   const { publicClientL2 } = useL2Client();
-
-  const { crosschainMessenger } = useOptimismSdk();
-
-  const handleDepositWithSDK = async () => {
-    const response = crosschainMessenger?.depositETH('1');
-
-    // Log the L2 transaction receipt.
-    console.log(response);
-  };
 
   const handleDeposit = async () => {
     // Build parameters for the transaction on the L2.
@@ -53,26 +47,23 @@ export const Landing = () => {
     address && sendTransaction({ value: 1n, to: address });
   };
 
-  const { updateQueryParams } = useQueryParams();
-
   useEffect(() => {
     if (chainId) updateQueryParams(QueryParamKey.originChainId, chainId.toString());
   }, [chainId, updateQueryParams]);
 
   return (
     <section>
-      <h1 data-testid='boilerplate-title'>{t('headerTitle', { appName: 'Superchain Bridge' })}</h1>
+      <h1 data-testid='boilerplate-title'>{t('HEADER.title', { appName: 'Superchain Bridge' })}</h1>
       <p>Connected account: {address}</p>
       <p>Connected to chainId: {chainId}</p>
 
-      <br />
-      <button onClick={handleDepositWithSDK}>Deposit with OP-SDK</button>
       <br />
 
       <button onClick={handleDeposit}>Deposit with Viem</button>
       <br />
 
       <button onClick={handleSend}>Send some ETH to myself</button>
+      <MainCard />
     </section>
   );
 };

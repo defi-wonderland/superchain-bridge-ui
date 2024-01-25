@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Badge, Box, IconButton, styled } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HistoryIcon from '@mui/icons-material/History';
+
 import { useCustomTheme } from '~/hooks';
 import { Connect, LangButton, ThemeButton } from '~/components';
 
