@@ -1,4 +1,6 @@
+import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { createContext, useEffect, useMemo, useState } from 'react';
+import { getMuiThemeConfig } from '~/components';
 
 import { Theme, ThemeName } from '~/types';
 import { THEME_KEY, getTheme } from '~/utils';
@@ -30,6 +32,7 @@ export const ThemeProvider = ({ children }: StateProps) => {
       setTheme('light');
     }
   };
+  const muiTheme = useMemo(() => getMuiThemeConfig(currentTheme, theme), [currentTheme, theme]);
 
   // Load theme from local storage on load
   useEffect(() => {
@@ -49,7 +52,7 @@ export const ThemeProvider = ({ children }: StateProps) => {
         changeTheme,
       }}
     >
-      {children}
+      <MuiThemeProvider theme={muiTheme}>{children}</MuiThemeProvider>
     </ThemeContext.Provider>
   );
 };

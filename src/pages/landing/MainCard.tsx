@@ -1,7 +1,7 @@
 import { useModal } from '~/hooks';
 import { ModalType } from '~/types';
 
-export const MainCard = () => {
+const MainCard = () => {
   const { setModalOpen } = useModal();
 
   const openModal = () => {
@@ -15,3 +15,5 @@ export const MainCard = () => {
     </div>
   );
 };
+
+export default MainCard;

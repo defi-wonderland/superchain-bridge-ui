@@ -31,10 +31,10 @@ jobs:
         run: yarn run build
         id: build
         env:
-          VITE_RPC_URL: ${{ secrets.VITE_RPC_URL }}
-          VITE_ALCHEMY_KEY: ${{ secrets.VITE_ALCHEMY_KEY }}
-          VITE_TEST_PRIVATE_KEY: ${{ secrets.VITE_TEST_PRIVATE_KEY }}
-          VITE_PROJECT_ID: ${{ secrets.VITE_PROJECT_ID }}
+          NEXT_PUBLIC_RPC_URL: ${{ secrets.NEXT_PUBLIC_RPC_URL }}
+          NEXT_PUBLIC_ALCHEMY_KEY: ${{ secrets.NEXT_PUBLIC_ALCHEMY_KEY }}
+          NEXT_PUBLIC_TEST_PRIVATE_KEY: ${{ secrets.NEXT_PUBLIC_TEST_PRIVATE_KEY }}
+          NEXT_PUBLIC_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_PROJECT_ID }}
 
       - uses: amondnet/vercel-action@v25
         id: vercel-deployment

@@ -20,8 +20,8 @@ jobs:
       - name: Create env file
         run: |
           touch .env
-          echo VITE_RPC_URL="${{ secrets.VITE_RPC_URL }}" >> .env
-          echo VITE_TEST_PRIVATE_KEY="${{ secrets.VITE_TEST_PRIVATE_KEY }}" >> .env
+          echo NEXT_PUBLIC_RPC_URL="${{ secrets.NEXT_PUBLIC_RPC_URL }}" >> .env
+          echo NEXT_PUBLIC_TEST_PRIVATE_KEY="${{ secrets.NEXT_PUBLIC_TEST_PRIVATE_KEY }}" >> .env
 
       - name: Cypress run
         uses: cypress-io/github-action@v5

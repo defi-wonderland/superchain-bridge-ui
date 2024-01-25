@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi';
 import { useQueryParams } from '~/hooks';
 import { QueryParamKey } from '~/types';
 
-export const History = () => {
+const History = () => {
   const { address: currentAddress } = useAccount();
   const [searchAddress, setSearchAddress] = useState(currentAddress || '');
   const { updateQueryParams, getParam } = useQueryParams();
@@ -26,12 +26,14 @@ export const History = () => {
   }, [getParam, searchAddress]);
 
   return (
-    <section>
+    <>
       <h1>History Page</h1>
       <br />
       <span>search Address</span> <input value={searchAddress} onChange={onInputAddressChange} />
       <br />
       <h3>Searching for address: {address}</h3>
-    </section>
+    </>
   );
 };
+
+export default History;

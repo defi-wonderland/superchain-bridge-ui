@@ -1,23 +1,22 @@
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAccount, useChainId, useSendTransaction } from 'wagmi';
 import { getL2TransactionHashes } from 'viem/op-stack';
 
-import { useQueryParams, useL1Client, useL2Client } from '~/hooks';
-import { QueryParamKey } from '~/types';
+import { useL1Client, useL2Client } from '~/hooks';
 
-import { MainCard } from './MainCard';
+import MainCard from './MainCard';
 
-export const Landing = () => {
+const Landing = () => {
   const { address } = useAccount();
   const chainId = useChainId();
   const { t } = useTranslation();
-  const { updateQueryParams } = useQueryParams();
   const { publicClientL1, walletClientL1 } = useL1Client();
   const { sendTransaction } = useSendTransaction();
   const { publicClientL2 } = useL2Client();
 
   const handleDeposit = async () => {
+    if (!walletClientL1) return;
+
     // Build parameters for the transaction on the L2.
     const args = await publicClientL2.buildDepositTransaction({
       account: address,
@@ -47,14 +46,10 @@ export const Landing = () => {
     address && sendTransaction({ value: 1n, to: address });
   };
 
-  useEffect(() => {
-    if (chainId) updateQueryParams(QueryParamKey.originChainId, chainId.toString());
-  }, [chainId, updateQueryParams]);
-
   return (
     <section>
       <h1 data-testid='boilerplate-title'>{t('HEADER.title', { appName: 'Superchain Bridge' })}</h1>
-      <p>Connected account: {address}</p>
+      <p>Connected account: {address?.toString()}</p>
       <p>Connected to chainId: {chainId}</p>
 
       <br />
@@ -67,3 +62,5 @@ export const Landing = () => {
     </section>
   );
 };
+
+export default Landing;

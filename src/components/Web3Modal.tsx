@@ -21,7 +21,7 @@ const config = createConfig({
   },
 });
 
-createWeb3Modal({ wagmiConfig: config, projectId: PROJECT_ID, chains: [sepolia, optimismSepolia] });
+createWeb3Modal({ wagmiConfig: config, projectId: PROJECT_ID });
 
 export function Web3Modal({ children }: { children: React.ReactElement }) {
   return (

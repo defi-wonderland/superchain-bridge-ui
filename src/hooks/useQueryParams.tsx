@@ -1,23 +1,22 @@
+import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { QueryParamKey } from '~/types/queryParam';
 
 export const useQueryParams = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const router = useRouter();
 
   const updateQueryParams = useCallback(
     (key: QueryParamKey, value: string) => {
-      searchParams.set(key, value);
-      setSearchParams(searchParams);
+      router.push({ query: { ...router.query, [key]: value } });
     },
-    [searchParams, setSearchParams],
+    [router],
   );
 
   const getParam = useCallback(
     (key: QueryParamKey) => {
-      return searchParams.get(key) || '';
+      return (router.query[key] as string) || '';
     },
-    [searchParams],
+    [router],
   );
 
   return { updateQueryParams, getParam };

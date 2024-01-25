@@ -1,17 +1,20 @@
-import { Link } from 'react-router-dom';
-import { Badge, Box, IconButton, styled } from '@mui/material';
+import { Badge, Box, IconButton } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HistoryIcon from '@mui/icons-material/History';
+import Link from 'next/link';
+import { useChainId } from 'wagmi';
 
 import { useCustomTheme } from '~/hooks';
 import { Connect, LangButton, ThemeButton } from '~/components';
 
 export const Header = () => {
+  const chainId = useChainId();
   return (
     <HeaderContainer>
       {/* Left section */}
       <LeftSection>
-        <Link to='/'>
+        <Link href='/' replace>
           <h1>Superchain Bridge</h1>
         </Link>
       </LeftSection>
@@ -19,7 +22,13 @@ export const Header = () => {
       {/* Right section */}
       <RightSection>
         <IconButton>
-          <Link to='history'>
+          <Link
+            href={{
+              pathname: '/[chain]/history',
+              query: { chain: chainId },
+            }}
+            replace
+          >
             <Badge badgeContent={4} variant='dot' color='primary'>
               <SHistoryIcon color='action' />
             </Badge>
@@ -33,7 +42,7 @@ export const Header = () => {
         <ThemeButton />
 
         <IconButton>
-          <Link to='settings'>
+          <Link href='/settings' replace>
             <SettingsIcon color='action' />
           </Link>
         </IconButton>

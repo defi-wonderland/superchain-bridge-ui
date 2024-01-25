@@ -1,6 +1,6 @@
 describe('basic test', () => {
   it('test', () => {
     cy.visit('/');
-    cy.contains(/Logo/i).should('exist');
+    cy.contains(/superchain/i).should('exist');
   });
 });
