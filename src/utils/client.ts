@@ -12,11 +12,11 @@ const { ALCHEMY_KEY, PROJECT_ID } = getConfig();
 const networkId = Number(process.env.NEXT_PUBLIC_NETWORK ?? sepolia.id);
 export const defaultChain = Object.values(wagmiChains).find((chain) => chain.id === networkId) ?? sepolia;
 
-const isE2E = process.env.NEXT_PUBLIC_IS_E2E === 'false';
+const isE2E = process.env.NEXT_PUBLIC_IS_E2E === 'true';
 
 export const supportedChains = isE2E
-  ? ([sepolia, optimismSepolia] as const)
-  : ([sepolia, optimismSepolia, baseSepolia] as const);
+  ? ([sepolia, optimismSepolia, baseSepolia] as const)
+  : ([sepolia, optimismSepolia] as const);
 
 export const connectors = [injected(), walletConnect({ projectId: PROJECT_ID })];
 
