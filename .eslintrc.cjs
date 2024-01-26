@@ -2,6 +2,7 @@ module.exports = {
   root: true,
   env: { browser: true, es2020: true },
   extends: [
+    'prettier',
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:jsx-a11y/recommended',
@@ -10,11 +11,14 @@ module.exports = {
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
     'plugin:prettier/recommended',
+    'plugin:@next/next/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh'],
-  rules: {
-    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+  settings: {
+    react: {
+      version: 'detect',
+    },
   },
 };

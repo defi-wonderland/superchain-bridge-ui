@@ -1,7 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { styled, Box } from '@mui/system';
-import { Modal } from '@mui/base/Modal';
+import { Modal, styled, Box } from '@mui/material';
 
 import { useModal, useCustomTheme } from '~/hooks';
 import { CustomScrollbar } from '~/components';

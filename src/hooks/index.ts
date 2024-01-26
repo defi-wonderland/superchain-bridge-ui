@@ -1,4 +1,5 @@
 export * from './useQueryParams';
+export * from './useChain';
 export * from './useModal';
 export * from './useEthersAdapters';
 export * from './useL1Client';

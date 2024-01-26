@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { CssBaseline, styled } from '@mui/material';
 import { ConfirmModal, Header } from '~/containers';
 
 export const Modals = () => {
@@ -13,6 +13,7 @@ export const Modals = () => {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <CssBaseline />
       <Modals />
       <Header />
       <MainContent>{children}</MainContent>
