@@ -24,13 +24,9 @@ export const ThemeProvider = ({ children }: StateProps) => {
   const currentTheme = useMemo(() => getTheme(theme), [theme]);
 
   const changeTheme = () => {
-    if (theme === 'light') {
-      localStorage.setItem(THEME_KEY, 'dark');
-      setTheme('dark');
-    } else {
-      localStorage.setItem(THEME_KEY, 'light');
-      setTheme('light');
-    }
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    localStorage.setItem(THEME_KEY, newTheme);
+    setTheme(newTheme);
   };
   const muiTheme = useMemo(() => getMuiThemeConfig(currentTheme, theme), [currentTheme, theme]);
 
