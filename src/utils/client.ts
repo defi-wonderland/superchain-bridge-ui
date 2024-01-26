@@ -10,7 +10,7 @@ import { getConfig } from '~/config';
 const { ALCHEMY_KEY, PROJECT_ID } = getConfig();
 
 const networkId = Number(process.env.NEXT_PUBLIC_NETWORK ?? sepolia.id);
-export const defaultChain = Object.values(wagmiChains).find((c) => c.id === networkId) ?? sepolia;
+export const defaultChain = Object.values(wagmiChains).find((chain) => chain.id === networkId) ?? sepolia;
 
 const isE2E = process.env.NEXT_PUBLIC_IS_E2E === 'false';
 
