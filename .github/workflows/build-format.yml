@@ -29,7 +29,7 @@ jobs:
       - name: Install project dependencies
         run: pnpm install --frozen-lockfile --prefer-frozen-lockfile
 
-      - name: Build project
+      - name: Build project dependencies
         run: pnpm run build
         env:
           NEXT_PUBLIC_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_PROJECT_ID }}
@@ -65,21 +65,12 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-
       - name: Restore project dependencies from cache
         uses: actions/cache@v2
         with:
           path: ~/.pnpm-store
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: ${{ runner.os }}-pnpm-
-
-      - name: Install project dependencies
-        run: pnpm install --frozen-lockfile --prefer-frozen-lockfile
 
       - name: Run Prettier
         run: pnpm prettier
