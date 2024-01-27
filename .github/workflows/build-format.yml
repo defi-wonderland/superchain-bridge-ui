@@ -78,6 +78,9 @@ jobs:
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: ${{ runner.os }}-pnpm-
 
+      - name: Install project dependencies
+        run: pnpm install --frozen-lockfile --prefer-frozen-lockfile
+
       - name: Run Prettier
         run: pnpm prettier
 
