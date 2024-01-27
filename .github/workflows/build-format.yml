@@ -23,7 +23,7 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
-          path: ~/.pnpm-store
+          path: ~/.cache/pnpm
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install project dependencies
@@ -68,9 +68,12 @@ jobs:
       - name: Restore project dependencies from cache
         uses: actions/cache@v2
         with:
-          path: ~/.pnpm-store
+          path: ~/.cache/pnpm
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: ${{ runner.os }}-pnpm-
+
+      - name: Install project dependencies
+        run: pnpm install --frozen-lockfile --prefer-frozen-lockfile
 
       - name: Run Prettier
         run: pnpm prettier
