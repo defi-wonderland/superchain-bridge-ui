@@ -10,21 +10,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: Install Node
         uses: actions/setup-node@v3
         with:
           node-version: '21.4'
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pnpm
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          cache: 'pnpm'
 
       - name: Install project dependencies
         run: pnpm install --frozen-lockfile --prefer-frozen-lockfile
@@ -55,22 +50,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: Install Node
         uses: actions/setup-node@v3
         with:
           node-version: '21.4'
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Restore project dependencies from cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pnpm
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: ${{ runner.os }}-pnpm-
+          cache: 'pnpm'
 
       - name: Install project dependencies
         run: pnpm install --frozen-lockfile --prefer-frozen-lockfile
