@@ -1,6 +1,7 @@
 import { InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { Chain as ChainType } from 'viem';
 
 import { CustomHead } from '~/components';
 import { useChain } from '~/hooks';
@@ -23,7 +24,8 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async (context: { params: { chain: string } }) => {
   const path = context.params?.chain;
-  const title = supportedChains.find((chain) => replaceSpacesWithHyphens(chain.name) === path)?.name || '';
+  const chains = [...supportedChains] as ChainType[]; // Clone the array to avoid mutating the original
+  const title = chains.find((chain: ChainType) => replaceSpacesWithHyphens(chain.name) === path)?.name || '';
 
   return { props: { title } };
 };
