@@ -3,13 +3,16 @@ import { styled } from '@mui/material/styles';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HistoryIcon from '@mui/icons-material/History';
 import Link from 'next/link';
-import { useChainId } from 'wagmi';
 
-import { useCustomTheme } from '~/hooks';
 import { Connect, LangButton, ThemeButton } from '~/components';
+import { useChain, useCustomTheme } from '~/hooks';
+import { replaceSpacesWithHyphens } from '~/utils';
 
 export const Header = () => {
-  const chainId = useChainId();
+  const { fromChain } = useChain();
+
+  const chainPath = replaceSpacesWithHyphens(fromChain?.name || '');
+
   return (
     <HeaderContainer>
       {/* Left section */}
@@ -25,7 +28,7 @@ export const Header = () => {
           <Link
             href={{
               pathname: '/[chain]/history',
-              query: { chain: chainId },
+              query: { chain: chainPath },
             }}
             replace
           >

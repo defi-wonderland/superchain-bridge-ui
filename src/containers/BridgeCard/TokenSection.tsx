@@ -3,7 +3,7 @@ import { TokenSelect } from '~/components';
 import { useTokens } from '~/hooks';
 
 export const TokenSection = () => {
-  const { tokens, selectedToken, setSelectedToken, isFetching } = useTokens();
+  const { tokens, selectedToken, setSelectedToken } = useTokens();
 
   const handleToken = async (event: SelectChangeEvent) => {
     try {
@@ -16,8 +16,6 @@ export const TokenSection = () => {
 
   return (
     <Box>
-      {isFetching && <p>Fetching...</p>}
-      {tokens.length === 0 && <p>No tokens found</p>}
       {!!tokens.length && (
         <TokenSelect label='Token' value={selectedToken?.symbol || ''} setValue={handleToken} list={tokens} />
       )}

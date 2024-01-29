@@ -1,11 +1,14 @@
 import { CssBaseline, styled } from '@mui/material';
-import { ConfirmModal, Header } from '~/containers';
+import { ConfirmModal, Header, LoadingModal, ReviewModal, SuccessModal } from '~/containers';
 
 export const Modals = () => {
   return (
     <>
       {/* Add all modals here... */}
       <ConfirmModal />
+      <ReviewModal />
+      <LoadingModal />
+      <SuccessModal />
     </>
   );
 };

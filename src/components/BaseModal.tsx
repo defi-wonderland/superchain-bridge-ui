@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { Modal, styled, Box } from '@mui/material';
 
-import { useModal, useCustomTheme } from '~/hooks';
+import { useModal } from '~/hooks';
 import { CustomScrollbar } from '~/components';
 import { ModalType } from '~/types';
 import { zIndex } from '~/utils';
@@ -38,7 +38,6 @@ export const StyledModal = styled(Modal)`
   align-items: center;
   justify-content: center;
   width: 100%;
-  box-shadow: none;
 
   @media (max-width: 600px) {
     padding: 0rem 1.6rem;
@@ -54,15 +53,13 @@ export const StyledBackdrop = styled(Backdrop)`
   -webkit-tap-highlight-color: transparent;
 `;
 
-export const SModal = styled(Box)(() => {
-  const { currentTheme } = useCustomTheme();
-
+export const SModal = styled(Box)((props) => {
   return {
-    backgroundColor: currentTheme.backgroundPrimary,
+    backgroundColor: props.theme.palette.background.default,
     minWidth: '40rem',
     borderRadius: '1.2rem',
     padding: '0.6rem',
-    boxShadow: 'none',
+    boxShadow: props.theme.shadows[24],
 
     '@media (max-width: 600px)': {
       minWidth: '100%',
