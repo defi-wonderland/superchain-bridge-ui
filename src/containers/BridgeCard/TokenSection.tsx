@@ -7,8 +7,8 @@ export const TokenSection = () => {
 
   const handleToken = async (event: SelectChangeEvent) => {
     try {
-      const chain = tokens.find((token) => token.symbol === event.target.value);
-      setSelectedToken(chain);
+      const token = tokens.find((token) => token.symbol === event.target.value);
+      setSelectedToken(token);
     } catch (error) {
       console.warn(error);
     }
