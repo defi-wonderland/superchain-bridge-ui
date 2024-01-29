@@ -1,5 +1,4 @@
 export * from './Theme';
-export * from './BaseModal';
 export * from './Connect';
 export * from './ChainSelect';
 export * from './CustomHead';

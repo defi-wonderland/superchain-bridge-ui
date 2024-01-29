@@ -1,7 +1,7 @@
 import { Box, styled } from '@mui/material';
 import { useEffect } from 'react';
 
-import { BaseModal } from '~/components';
+import BaseModal from '~/components/BaseModal';
 import { useModal } from '~/hooks';
 import { ModalType } from '~/types';
 

@@ -15,8 +15,8 @@ export const TokenSelect = ({ label, list, value, setValue: handleChange }: Toke
         <InputLabel>{label}</InputLabel>
 
         <Select value={value} label={label} onChange={handleChange}>
-          {list.map((token) => (
-            <MenuItem key={token.address} value={token.symbol}>
+          {list.map((token, index) => (
+            <MenuItem key={token.address + index} value={token.symbol}>
               {token.symbol}
             </MenuItem>
           ))}

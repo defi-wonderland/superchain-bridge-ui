@@ -1,6 +1,6 @@
 import { Box, Button, styled } from '@mui/material';
 
-import { BaseModal } from '~/components';
+import BaseModal from '~/components/BaseModal';
 import { useModal } from '~/hooks';
 import { ModalType } from '~/types';
 

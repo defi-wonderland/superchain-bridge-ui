@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Address, erc20Abi, getContract } from 'viem';
+import { useAccount } from 'wagmi';
 
-import { useChain } from '~/hooks';
+import { TOKEN_LIST_URL, ZERO_ADDRESS } from '~/utils';
+import { useChain, useCustomClient } from '~/hooks';
 import { TokenData } from '~/types';
-import { TOKEN_LIST_URL } from '~/utils';
 
 const getTokens = async () => {
   const tokens = await fetch(TOKEN_LIST_URL);
@@ -11,18 +13,55 @@ const getTokens = async () => {
 };
 
 export const useTokens = () => {
+  const { address } = useAccount();
   const { fromChain } = useChain();
   const [tokens, setTokens] = useState<TokenData[]>([]);
-  const [selectedToken, setSelectedToken] = useState<TokenData>();
+  const [selectedToken, setSelectedToken] = useState<TokenData | undefined>();
+  const [balance, setBalance] = useState<string>('');
+  const { fromProvider } = useCustomClient();
 
   const { data, isLoading, isError, error, isFetching } = useQuery({
     queryKey: ['tokens'],
     queryFn: getTokens,
   });
 
-  useEffect(() => {
-    data && setTokens(data.tokens.filter((token: TokenData) => token.chainId === fromChain?.id));
-  }, [data, fromChain?.id]);
+  const tokenContract = useMemo(() => {
+    if (!selectedToken || !fromProvider) return;
+    if (selectedToken?.address === ZERO_ADDRESS) return;
+    return getContract({
+      address: selectedToken?.address as Address,
+      abi: erc20Abi,
+      client: fromProvider,
+    });
+  }, [selectedToken, fromProvider]);
+
+  useEffect(
+    function setTokensWhenFetched() {
+      if (data) {
+        setBalance('');
+        setTokens(data.tokens.filter((token: TokenData) => token.chainId === fromChain?.id));
+      }
+    },
+    [data, fromChain?.id],
+  );
+
+  useEffect(
+    function loadBalance() {
+      if (!tokenContract || !address) return;
+
+      tokenContract.read
+        .balanceOf([address])
+        .then((balance) => {
+          console.log(balance);
+          setBalance(balance.toString());
+        })
+        .catch((error) => {
+          setBalance('');
+          console.warn('Error fetching balance: ', error);
+        });
+    },
+    [address, tokenContract],
+  );
 
   return {
     tokens,
@@ -32,5 +71,7 @@ export const useTokens = () => {
     error,
     selectedToken,
     setSelectedToken,
+    tokenContract,
+    balance,
   };
 };

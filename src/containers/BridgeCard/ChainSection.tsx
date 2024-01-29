@@ -2,15 +2,19 @@ import { Chain } from 'viem';
 import { Box, Button, SelectChangeEvent } from '@mui/material';
 
 import { ChainSelect } from '~/components';
-import { useChain } from '~/hooks';
+import { useChain, useTokens } from '~/hooks';
 
 export const ChainSection = () => {
   const { fromList, toList, setFromChain, setToChain, fromChain, toChain, switchChains, availableChains } = useChain();
+  const { setSelectedToken } = useTokens();
 
   const handleFrom = async (event: SelectChangeEvent) => {
     try {
       const chain = availableChains.find((chain) => chain.name === event.target.value) as Chain;
       setFromChain(chain);
+
+      // Reset token when chain is changed
+      setSelectedToken(undefined);
     } catch (error) {
       console.warn(error);
     }
