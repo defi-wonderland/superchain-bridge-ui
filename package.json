@@ -6,7 +6,7 @@
   "license": "MIT",
   "author": "Wonderland",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "preview": "next start",

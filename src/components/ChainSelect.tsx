@@ -1,18 +1,14 @@
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { SelectChangeEvent, Select, FormControl, MenuItem, InputLabel, Box } from '@mui/material';
 import { Chain } from 'viem';
 
-interface BasicSelectProps {
+interface ChainSelectProps {
   label: string;
   value: Chain;
   setValue: (val: SelectChangeEvent) => void;
   list: Chain[];
 }
 
-export default function BasicSelect({ label, list, value, setValue: handleChange }: BasicSelectProps) {
+export const ChainSelect = ({ label, list, value, setValue: handleChange }: ChainSelectProps) => {
   return (
     <Box>
       <FormControl fullWidth>
@@ -28,4 +24,4 @@ export default function BasicSelect({ label, list, value, setValue: handleChange
       </FormControl>
     </Box>
   );
-}
+};

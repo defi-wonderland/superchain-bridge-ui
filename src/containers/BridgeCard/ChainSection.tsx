@@ -1,7 +1,7 @@
 import { Chain } from 'viem';
 import { Box, Button, SelectChangeEvent } from '@mui/material';
 
-import BasicSelect from '~/components/Select';
+import { ChainSelect } from '~/components';
 import { useChain } from '~/hooks';
 
 export const ChainSection = () => {
@@ -22,9 +22,9 @@ export const ChainSection = () => {
 
   return (
     <Box>
-      <BasicSelect label='From' value={fromChain} setValue={handleFrom} list={fromList} />
+      <ChainSelect label='From' value={fromChain} setValue={handleFrom} list={fromList} />
       <br />
-      <BasicSelect label='To' value={toChain} setValue={handleTo} list={toList} />
+      <ChainSelect label='To' value={toChain} setValue={handleTo} list={toList} />
       <Button onClick={switchChains}>Switch chains</Button>
     </Box>
   );

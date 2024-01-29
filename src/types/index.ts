@@ -1,4 +1,5 @@
 export * from './config';
-export * from './Modal';
+export * from './data';
+export * from './modal';
 export * from './queryParam';
 export * from './theme';

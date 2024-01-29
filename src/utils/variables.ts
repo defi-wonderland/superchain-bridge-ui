@@ -4,6 +4,7 @@
 
 export const THEME_KEY = 'superbridge_theme_key';
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+export const TOKEN_LIST_URL = 'https://static.optimism.io/optimism.tokenlist.json';
 
 /*=============================================
 =               Style Variables               =

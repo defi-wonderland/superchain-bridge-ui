@@ -6,3 +6,4 @@ export * from './useL1Client';
 export * from './useL2Client';
 export * from './useStateContext';
 export * from './useTheme';
+export * from './useTokens';
