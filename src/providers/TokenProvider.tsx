@@ -45,7 +45,6 @@ export const TokenProvider = ({ children }: StateProps) => {
   const tokenContract = useMemo(() => {
     if (!selectedToken || !from) return;
     if (selectedToken?.address === ZERO_ADDRESS) {
-      console.log(data);
       return setEthBalance(data?.value.toString() || '');
     }
     return getContract({

@@ -27,8 +27,8 @@ export const ReviewModal = () => {
 
         // temporary any, typings from viem are kinda broken
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        // const hash = await customClient.from?.depositTransaction(args as any);
-        // console.log(hash);
+        const hash = await customClient.from?.depositTransaction(args as any);
+        console.log(hash);
       }
     } catch (e) {
       console.warn('Error: ', e);
