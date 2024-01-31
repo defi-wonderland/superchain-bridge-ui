@@ -1,94 +1,58 @@
 import { useMemo } from 'react';
-import { WalletClient, createWalletClient, http } from 'viem';
-import { walletActionsL1, walletActionsL2 } from 'viem/op-stack';
+import { WalletClient, createWalletClient, custom, http } from 'viem';
+import { useAccount } from 'wagmi';
+import {
+  walletActionsL1,
+  walletActionsL2,
+  publicActionsL1,
+  publicActionsL2,
+  WalletActionsL1,
+  WalletActionsL2,
+  PublicActionsL1,
+  PublicActionsL2,
+} from 'viem/op-stack';
 
 import { useChain } from '~/hooks';
 import { alchemyUrls } from '~/utils';
 
+interface Providers {
+  from?: WalletClient & (WalletActionsL1 & WalletActionsL2);
+  to: WalletClient & (PublicActionsL2 & PublicActionsL1);
+}
+
 export const useCustomClient = () => {
+  const { address } = useAccount();
   const { fromChain, toChain } = useChain();
 
-  const fromProvider = useMemo(
-    () =>
-      createWalletClient({
+  const fromProvider = useMemo(() => {
+    if (typeof window !== 'undefined') {
+      return createWalletClient({
+        account: address,
         chain: fromChain,
-        transport: http(alchemyUrls[fromChain.id]),
-      }),
-    [fromChain],
-  );
+        transport: custom(window.ethereum),
+      });
+    }
+  }, [address, fromChain]);
 
   const toProvider = useMemo(
     () =>
       createWalletClient({
+        account: address,
         chain: toChain,
         transport: http(alchemyUrls[toChain.id]),
       }),
-    [toChain],
+    [address, toChain],
   );
 
-  // const providers: Providers = useMemo(async () => {
-  //   if (transactionType === TransactionType.DEPOSIT) {
-  //     return {
-  //       from: {
-  //         wallet: fromProvider.extend(walletActionsL1()),
-  //         public: fromProvider.extend(publicActionsL1()),
-  //       },
-  //       to: {
-  //         wallet: toProvider.extend(walletActionsL2()),
-  //         public: toProvider.extend(publicActionsL2()),
-  //       },
-  //     };
-  //   } else if (transactionType === TransactionType.WITHDRAW) {
-  //     return {
-  //       from: {
-  //         wallet: fromProvider.extend(walletActionsL2()),
-  //         public: fromProvider.extend(publicActionsL2()),
-  //       },
-  //       to: {
-  //         wallet: toProvider.extend(walletActionsL1()),
-  //         public: toProvider.extend(publicActionsL1()),
-  //       },
-  //     };
-  //   } else if (transactionType === TransactionType.BRIDGE) {
-  //     return {
-  //       from: {
-  //         wallet: fromProvider.extend(walletActionsL2()),
-  //         public: fromProvider.extend(publicActionsL2()),
-  //       },
-  //       to: {
-  //         wallet: toProvider.extend(walletActionsL2()),
-  //         public: toProvider.extend(publicActionsL2()),
-  //       },
-  //     };
-  //   } else {
-  //     return {
-  //       from: fromProvider,
-  //       to: toProvider,
-  //     };
-  //   }
-  // }, [fromProvider, toProvider, transactionType]);
-
-  const providers: Providers = useMemo(() => {
-    return {
-      from: {
-        wallet: fromProvider.extend(walletActionsL1()) as WalletClient,
-      },
-      to: {
-        wallet: toProvider.extend(walletActionsL2()),
-      },
-    };
-  }, [fromProvider, toProvider]);
+  const customClient: Providers = useMemo(
+    () => ({
+      from: fromProvider?.extend(walletActionsL1()).extend(walletActionsL2()),
+      to: toProvider.extend(publicActionsL2()).extend(publicActionsL1()),
+    }),
+    [fromProvider, toProvider],
+  );
 
   return {
-    providers,
+    customClient,
   };
 };
-
-interface Providers {
-  from: {
-    wallet: WalletClient;
-  };
-  to: {
-    wallet: WalletClient;
-  };
-}

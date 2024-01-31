@@ -5,7 +5,7 @@ export interface TokenData {
   symbol: string;
   decimals: number;
   logoURI: string;
-  extensions?: {
+  extensions: {
     optimismBridgeAddress?: string;
     baseBridgeAddress?: string;
     opListId?: string;

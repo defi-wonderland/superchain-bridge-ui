@@ -1,6 +1,6 @@
 import { createContext, useEffect, useMemo, useState } from 'react';
 import { Address, erc20Abi, getContract } from 'viem';
-import { useAccount } from 'wagmi';
+import { useAccount, useBalance } from 'wagmi';
 
 import { useCustomClient } from '~/hooks';
 import { ZERO_ADDRESS } from '~/utils';
@@ -10,13 +10,15 @@ type ContextType = {
   selectedToken: TokenData | undefined;
   setSelectedToken: (val?: TokenData) => void;
 
-  balance: bigint | undefined;
+  balance: string;
+
+  ethBalance: string;
 
   amount: string;
   setAmount: (val: string) => void;
 
-  allowance: bigint | undefined;
-  setAllowance: (val?: bigint) => void;
+  allowance: string;
+  setAllowance: (val: string) => void;
 };
 
 interface StateProps {
@@ -27,27 +29,31 @@ export const TokenContext = createContext({} as ContextType);
 
 export const TokenProvider = ({ children }: StateProps) => {
   const { address } = useAccount();
+  const { data } = useBalance({
+    address,
+  });
   const [selectedToken, setSelectedToken] = useState<TokenData | undefined>();
-
-  const [balance, setBalance] = useState<bigint>();
-  const [allowance, setAllowance] = useState<bigint>();
+  const [balance, setBalance] = useState<string>('');
+  const [ethBalance, setEthBalance] = useState<string>('');
+  const [allowance, setAllowance] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
 
   const {
-    providers: {
-      from: { wallet },
-    },
+    providers: { from },
   } = useCustomClient();
 
   const tokenContract = useMemo(() => {
-    if (!selectedToken || !wallet) return;
-    if (selectedToken?.address === ZERO_ADDRESS) return;
+    if (!selectedToken || !from) return;
+    if (selectedToken?.address === ZERO_ADDRESS) {
+      console.log(data);
+      return setEthBalance(data?.value.toString() || '');
+    }
     return getContract({
       address: selectedToken?.address as Address,
       abi: erc20Abi,
-      client: wallet,
+      client: from,
     });
-  }, [selectedToken, wallet]);
+  }, [selectedToken, from, data]);
 
   useEffect(
     function getBalance() {
@@ -55,10 +61,11 @@ export const TokenProvider = ({ children }: StateProps) => {
       tokenContract.read
         .balanceOf([address])
         .then((balance: bigint) => {
-          setBalance(balance);
+          console.log(balance);
+          setBalance(balance.toString());
         })
         .catch(() => {
-          setBalance(undefined);
+          setBalance('');
         });
     },
     [address, tokenContract],
@@ -71,13 +78,21 @@ export const TokenProvider = ({ children }: StateProps) => {
       tokenContract.read
         .allowance([address, address]) // owner and spender
         .then((allowance: bigint) => {
-          setAllowance(allowance);
+          setAllowance(allowance.toString());
         })
         .catch(() => {
-          setAllowance(undefined);
+          setAllowance('');
         });
     },
     [address, amount, balance, tokenContract],
+  );
+
+  useEffect(
+    function resetBalance() {
+      if (!selectedToken) return;
+      setBalance('');
+    },
+    [selectedToken],
   );
 
   // TODO:
@@ -120,6 +135,7 @@ export const TokenProvider = ({ children }: StateProps) => {
         selectedToken,
         setSelectedToken,
         balance,
+        ethBalance,
         amount,
         setAmount,
         allowance,

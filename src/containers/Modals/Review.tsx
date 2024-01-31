@@ -1,16 +1,38 @@
 import { Box, Button, styled } from '@mui/material';
+import { parseEther } from 'viem';
 
 import BaseModal from '~/components/BaseModal';
-import { useModal, useTransactionData, useToken } from '~/hooks';
-import { ModalType } from '~/types';
+import { useTransactionData, useToken, useCustomClient } from '~/hooks';
+import { ModalType, TransactionType } from '~/types';
 
 export const ReviewModal = () => {
-  const { setModalOpen } = useModal();
-  const { transactionType } = useTransactionData();
+  const { transactionType, mint, userAddress } = useTransactionData();
+  const { customClient } = useCustomClient();
   const { selectedToken } = useToken();
 
-  const handleReview = () => {
-    setModalOpen(ModalType.LOADING);
+  const handleConfirm = async () => {
+    try {
+      // setModalOpen(ModalType.LOADING);
+      if (!userAddress) return;
+
+      if (transactionType === TransactionType.DEPOSIT) {
+        // Deposit
+        const args = await customClient.to.buildDepositTransaction({
+          mint: parseEther(mint),
+          to: userAddress,
+          chain: customClient.to.chain,
+        });
+
+        console.log(args);
+
+        // temporary any, typings from viem are kinda broken
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // const hash = await customClient.from?.depositTransaction(args as any);
+        // console.log(hash);
+      }
+    } catch (e) {
+      console.warn('Error: ', e);
+    }
   };
 
   return (
@@ -20,7 +42,7 @@ export const ReviewModal = () => {
         <p>Transaction: {transactionType}</p>
         <p>Token: {selectedToken?.symbol}</p>
 
-        <Button variant='contained' color='primary' fullWidth onClick={handleReview}>
+        <Button variant='contained' color='primary' fullWidth onClick={handleConfirm}>
           Initiate Transaction
         </Button>
       </ModalBody>

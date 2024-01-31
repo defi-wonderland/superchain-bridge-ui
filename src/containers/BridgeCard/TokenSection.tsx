@@ -1,11 +1,13 @@
 import { Box, SelectChangeEvent } from '@mui/material';
+import { formatUnits } from 'viem';
 
 import { TokenSelect } from '~/components';
 import { useToken, useTokenList, useTransactionData } from '~/hooks';
 
 export const TokenSection = () => {
-  const { tokens, balance } = useTokenList();
-  const { selectedToken, amount, setSelectedToken, setAmount } = useToken();
+  const { tokens } = useTokenList();
+  const { selectedToken, amount, setSelectedToken, setAmount, balance: tokenBalance, ethBalance } = useToken();
+  const balance = selectedToken?.symbol === 'ETH' ? ethBalance : tokenBalance;
   const { mint, setMint } = useTransactionData();
 
   const handleToken = async (event: SelectChangeEvent) => {
@@ -23,7 +25,7 @@ export const TokenSection = () => {
         <TokenSelect label='Token' value={selectedToken?.symbol || ''} setValue={handleToken} list={tokens} />
       )}
       <br />
-      <p>Balance: {balance}</p>
+      <p>Balance: {formatUnits(BigInt(balance), selectedToken?.decimals || 18)}</p>
 
       {selectedToken?.symbol === 'ETH' && (
         <>

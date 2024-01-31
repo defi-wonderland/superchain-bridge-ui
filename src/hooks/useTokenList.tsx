@@ -13,7 +13,6 @@ const getTokens = async () => {
 export const useTokenList = () => {
   const { fromChain } = useChain();
   const [tokens, setTokens] = useState<TokenData[]>([]);
-  const [balance, setBalance] = useState<string>('');
 
   const { data, isLoading, isError, error, isFetching } = useQuery({
     queryKey: ['tokens'],
@@ -23,7 +22,6 @@ export const useTokenList = () => {
   useEffect(
     function setTokensWhenFetched() {
       if (data) {
-        setBalance('');
         setTokens(data.tokens.filter((token: TokenData) => token.chainId === fromChain?.id));
       }
     },
@@ -36,6 +34,5 @@ export const useTokenList = () => {
     isFetching,
     isError,
     error,
-    balance,
   };
 };

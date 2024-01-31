@@ -1,8 +1,13 @@
-import { createContext, useMemo, useState } from 'react';
+import { createContext, useEffect, useMemo, useState } from 'react';
+import { Address } from 'viem';
+import { useAccount } from 'wagmi';
+
 import { useChain } from '~/hooks';
 import { TransactionType } from '~/types';
 
 type ContextType = {
+  userAddress?: Address;
+
   mint: string;
   setMint: (val: string) => void;
 
@@ -25,6 +30,7 @@ interface StateProps {
 export const TransactionDataContext = createContext({} as ContextType);
 
 export const TransactionDataProvider = ({ children }: StateProps) => {
+  const { address } = useAccount();
   const [mint, setMint] = useState<string>('');
   const [value, setValue] = useState<string>('');
   const [data, setData] = useState<string>('');
@@ -47,6 +53,13 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
     }
   }, [isFromAnL2, isToAnL2]);
 
+  useEffect(() => {
+    if (address) {
+      // temporary
+      setTo(address);
+    }
+  }, [address]);
+
   return (
     <TransactionDataContext.Provider
       value={{
@@ -59,6 +72,7 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
         to,
         setTo,
         transactionType,
+        userAddress: address,
       }}
     >
       {children}
