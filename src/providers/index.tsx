@@ -2,6 +2,8 @@ import { ChainProvider } from './ChainProvider';
 import { ModalProvider } from './ModalProvider';
 import { StateProvider } from './StateProvider';
 import { ThemeProvider } from './ThemeProvider';
+import { TokenProvider } from './TokenProvider';
+import { TransactionDataProvider } from './TransactionDataProvider';
 import { Web3ModalProvider } from './Web3ModalProvider';
 
 export const Providers = ({ children }: { children: React.ReactElement }) => {
@@ -10,7 +12,11 @@ export const Providers = ({ children }: { children: React.ReactElement }) => {
       <ModalProvider>
         <StateProvider>
           <Web3ModalProvider>
-            <ChainProvider>{children}</ChainProvider>
+            <ChainProvider>
+              <TokenProvider>
+                <TransactionDataProvider>{children}</TransactionDataProvider>
+              </TokenProvider>
+            </ChainProvider>
           </Web3ModalProvider>
         </StateProvider>
       </ModalProvider>

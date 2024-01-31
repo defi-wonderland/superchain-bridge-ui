@@ -12,3 +12,10 @@ export interface TokenData {
     opTokenId?: string;
   };
 }
+
+export enum TransactionType {
+  DEPOSIT = 'deposit',
+  WITHDRAW = 'withdraw',
+  BRIDGE = 'bridge',
+  SWAP = 'swap',
+}

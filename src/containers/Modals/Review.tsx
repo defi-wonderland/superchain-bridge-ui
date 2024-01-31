@@ -1,13 +1,13 @@
 import { Box, Button, styled } from '@mui/material';
 
 import BaseModal from '~/components/BaseModal';
-import { useModal, useCustomClient, useTokens } from '~/hooks';
+import { useModal, useTransactionData, useToken } from '~/hooks';
 import { ModalType } from '~/types';
 
 export const ReviewModal = () => {
   const { setModalOpen } = useModal();
-  const { transactionType } = useCustomClient();
-  const { selectedToken } = useTokens();
+  const { transactionType } = useTransactionData();
+  const { selectedToken } = useToken();
 
   const handleReview = () => {
     setModalOpen(ModalType.LOADING);

@@ -2,12 +2,21 @@ import { createWeb3Modal } from '@web3modal/wagmi/react';
 import { injected, walletConnect } from 'wagmi/connectors';
 import { createConfig } from 'wagmi';
 import * as wagmiChains from 'wagmi/chains';
-import { http } from 'viem';
+import { Transport, http } from 'viem';
 import { sepolia, optimismSepolia, baseSepolia, mainnet, optimism, base } from 'viem/chains';
 
 import { getConfig } from '~/config';
 
 const { ALCHEMY_KEY, PROJECT_ID } = getConfig();
+
+export const alchemyUrls: { [k: string]: string } = {
+  [optimismSepolia.id]: `https://opt-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  [sepolia.id]: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  [baseSepolia.id]: `https://base-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  [optimism.id]: `https://optimism-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  [mainnet.id]: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  [base.id]: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+};
 
 const networkId = Number(process.env.NEXT_PUBLIC_NETWORK ?? sepolia.id);
 export const defaultChain = Object.values(wagmiChains).find((chain) => chain.id === networkId) ?? sepolia;
@@ -20,19 +29,14 @@ export const supportedChains = isE2E
 
 export const connectors = [injected(), walletConnect({ projectId: PROJECT_ID })];
 
-const transports = {
-  [optimismSepolia.id]: http(`https://opt-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`),
-  [sepolia.id]: http(`https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`),
-  [baseSepolia.id]: http(`https://base-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`),
-  [optimism.id]: http(`https://optimism-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`),
-  [mainnet.id]: http(`https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`),
-  [base.id]: http(`https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`),
-};
+const trasnport: Record<[wagmiChains.Chain, ...wagmiChains.Chain[]][number]['id'], Transport> = Object.fromEntries(
+  Object.entries(alchemyUrls).map(([chainId, url]) => [chainId, http(url)]),
+);
 
 export const config = createConfig({
   chains: supportedChains,
   connectors,
-  transports,
+  transports: trasnport,
   batch: { multicall: true },
   ssr: true,
 });

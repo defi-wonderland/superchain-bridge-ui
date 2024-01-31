@@ -1,10 +1,12 @@
 import { Box, SelectChangeEvent } from '@mui/material';
 
 import { TokenSelect } from '~/components';
-import { useTokens } from '~/hooks';
+import { useToken, useTokenList, useTransactionData } from '~/hooks';
 
 export const TokenSection = () => {
-  const { tokens, selectedToken, setSelectedToken, balance } = useTokens();
+  const { tokens, balance } = useTokenList();
+  const { selectedToken, amount, setSelectedToken, setAmount } = useToken();
+  const { mint, setMint } = useTransactionData();
 
   const handleToken = async (event: SelectChangeEvent) => {
     try {
@@ -22,6 +24,19 @@ export const TokenSection = () => {
       )}
       <br />
       <p>Balance: {balance}</p>
+
+      {selectedToken?.symbol === 'ETH' && (
+        <>
+          <label htmlFor='ethAmount'>ETH Amount</label>
+          <input value={mint} onChange={(event) => setMint(event.target.value)} />
+        </>
+      )}
+      {selectedToken?.symbol !== 'ETH' && (
+        <>
+          <label htmlFor='tokenAmount'>Token Amount</label>
+          <input value={amount} onChange={(event) => setAmount(event.target.value)} />
+        </>
+      )}
     </Box>
   );
 };
