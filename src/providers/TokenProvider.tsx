@@ -39,7 +39,7 @@ export const TokenProvider = ({ children }: StateProps) => {
   const [amount, setAmount] = useState<string>('');
 
   const {
-    providers: { from },
+    customClient: { from },
   } = useCustomClient();
 
   const tokenContract = useMemo(() => {
