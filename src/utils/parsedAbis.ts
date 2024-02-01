@@ -30,8 +30,8 @@ export const finalizeBridgeERC20ABI = parseAbi([
  *                     execute any code on L2 and is only emitted as extra data for the
  *                     convenience of off-chain tooling.
  */
-export const depositERC20ToABI = parseAbi([
-  'function depositERC20To(address _l1Token, address _l2Token, address _to, uint256 _amount, uint32 _minGasLimit, bytes calldata _extraData) external',
+export const bridgeERC20ToABI = parseAbi([
+  'function bridgeERC20To(address _l1Token, address _l2Token, address _to, uint256 _amount, uint32 _minGasLimit, bytes calldata _extraData) external',
 ]);
 
 /**

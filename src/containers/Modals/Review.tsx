@@ -1,31 +1,27 @@
 import { Box, Button, styled } from '@mui/material';
 import { Address, Hex, PublicClient } from 'viem';
 import { getL2TransactionHashes } from 'viem/op-stack';
-import { useWriteContract } from 'wagmi';
+import { useChainId, useSwitchChain, useWriteContract } from 'wagmi';
 
 import BaseModal from '~/components/BaseModal';
 import { useTransactionData, useToken, useCustomClient, useTokenList, useChain } from '~/hooks';
+import { L1CrossDomainMessengerProxy, L1StandardBridgeProxy, bridgeERC20ToABI, sendMessageABI } from '~/utils';
 import { ModalType, TransactionType } from '~/types';
-import {
-  L1CrossDomainMessengerProxy,
-  L1StandardBridgeProxy,
-  ZERO_ADDRESS,
-  depositERC20ToABI,
-  sendMessageABI,
-} from '~/utils';
 
 export const ReviewModal = () => {
   const { transactionType, mint, userAddress, data } = useTransactionData();
   const { toTokens } = useTokenList();
-  const { toChain } = useChain();
+  const { toChain, fromChain } = useChain();
   const { customClient } = useCustomClient();
   const { selectedToken, amount, allowance, approve, parseTokenUnits } = useToken();
   const { writeContractAsync } = useWriteContract();
+  const chainId = useChainId();
+  const { switchChainAsync } = useSwitchChain();
 
   // temporary function, will be removed
   const depositETH = async () => {
     // Deposit
-    const args = await customClient.to.wallet.buildDepositTransaction({
+    const args = await customClient.to.public.buildDepositTransaction({
       mint: parseTokenUnits(mint),
       to: userAddress,
       chain: customClient.to.wallet.chain,
@@ -56,8 +52,8 @@ export const ReviewModal = () => {
 
     const hash = await writeContractAsync({
       address: L1StandardBridgeProxy,
-      abi: depositERC20ToABI,
-      functionName: 'depositERC20To',
+      abi: bridgeERC20ToABI,
+      functionName: 'bridgeERC20To',
       args: [l1TokenAddress, l2TokenAddress, userAddress!, parseTokenUnits(amount), Number(minGasLimit), extraData],
     });
 
@@ -86,17 +82,86 @@ export const ReviewModal = () => {
     console.log(l2Receipt);
   };
 
+  const initiateETHWithdraw = async () => {
+    if (!userAddress) return;
+    const args = await customClient.to.public.buildInitiateWithdrawal({
+      account: userAddress,
+      to: userAddress,
+      value: parseTokenUnits(mint),
+      chain: customClient.from.public.chain,
+    });
+
+    // Execute the initiate withdrawal transaction on the L2.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const hash = await customClient.from.wallet?.initiateWithdrawal(args as any);
+
+    if (!hash) throw new Error('No hash returned');
+
+    // Wait for the initiate withdrawal transaction receipt.
+    const receipt = await customClient.from.public.waitForTransactionReceipt({ hash: hash });
+
+    // temporary log
+    console.log(receipt);
+  };
+
+  const initiateERC20Withdraw = async () => {
+    // L1 Messenger On Sepolia
+    const l2StandardBridge = '0x4200000000000000000000000000000000000010';
+    const l1TokenAddress = selectedToken?.address as Address;
+    const extraData = '0x';
+    const l2Token = toTokens.find((token) => token.symbol === selectedToken?.symbol && token.chainId === toChain.id);
+    const l2TokenAddress = l2Token?.address as Address;
+
+    // temporary fixed value
+    const minGasLimit = 218_874;
+
+    const hash = await writeContractAsync({
+      address: l2StandardBridge,
+      abi: bridgeERC20ToABI,
+      functionName: 'bridgeERC20To',
+      args: [l1TokenAddress, l2TokenAddress, userAddress!, parseTokenUnits(amount), Number(minGasLimit), extraData],
+    });
+
+    const l2Receipt = await waitForL2TransactionReceipt(customClient.from.public, customClient.to.public, hash);
+
+    // temporary log
+    console.log(l2Receipt);
+  };
+
+  const initiateMessageWithdraw = async () => {
+    // L2 OP Sepolia Messenger
+    const l2CrossDomainMessenger = '0x4200000000000000000000000000000000000007';
+    const targetAddress = userAddress!;
+    const message = data as Hex;
+    const minGasLimit = 200_000; // TODO - get this from the contract
+
+    const hash = await writeContractAsync({
+      address: l2CrossDomainMessenger,
+      abi: sendMessageABI,
+      functionName: 'sendMessage',
+      args: [targetAddress, message, minGasLimit],
+    });
+
+    const l2Receipt = await waitForL2TransactionReceipt(customClient.from.public, customClient.to.public, hash);
+
+    // temporary log
+    console.log(l2Receipt);
+  };
+
   // temporary function, will be removed
   const handleConfirm = async () => {
     try {
       if (!userAddress) return;
+      if (chainId !== fromChain.id) {
+        await switchChainAsync({ chainId: fromChain.id });
+      }
       // setModalOpen(ModalType.LOADING);
 
       switch (transactionType) {
         case TransactionType.DEPOSIT:
           if (!selectedToken) {
             await depositMessage();
-          } else if (selectedToken?.address === ZERO_ADDRESS) {
+          } else if (selectedToken?.symbol === 'ETH') {
             await depositETH();
           } else {
             await depositERC20();
@@ -104,6 +169,13 @@ export const ReviewModal = () => {
           break;
         case TransactionType.WITHDRAW:
           // TODO: Implement withdraw
+          if (!selectedToken) {
+            await initiateMessageWithdraw();
+          } else if (selectedToken?.symbol === 'ETH') {
+            await initiateETHWithdraw();
+          } else {
+            await initiateERC20Withdraw();
+          }
           break;
         case TransactionType.BRIDGE:
           // TODO: Implement bridge

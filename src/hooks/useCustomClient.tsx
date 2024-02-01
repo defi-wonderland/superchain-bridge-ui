@@ -18,11 +18,11 @@ import { alchemyUrls } from '~/utils';
 interface Providers {
   from: {
     wallet?: WalletClient & (WalletActionsL1 & WalletActionsL2);
-    public: PublicClient;
+    public: PublicClient & (PublicActionsL2 & PublicActionsL1);
   };
   to: {
-    wallet: WalletClient & (PublicActionsL2 & PublicActionsL1);
-    public: PublicClient;
+    wallet: WalletClient & (WalletActionsL1 & WalletActionsL2);
+    public: PublicClient & (PublicActionsL2 & PublicActionsL1);
   };
 }
 
@@ -68,11 +68,11 @@ export const useCustomClient = () => {
     () => ({
       from: {
         wallet: fromWalletClient?.extend(walletActionsL1()).extend(walletActionsL2()),
-        public: fromPublicClient,
+        public: fromPublicClient.extend(publicActionsL2()).extend(publicActionsL1()),
       },
       to: {
-        wallet: toWalletClient.extend(publicActionsL2()).extend(publicActionsL1()),
-        public: toPublicClient,
+        wallet: toWalletClient.extend(walletActionsL1()).extend(walletActionsL2()),
+        public: toPublicClient.extend(publicActionsL2()).extend(publicActionsL1()),
       },
     }),
     [fromPublicClient, fromWalletClient, toPublicClient, toWalletClient],

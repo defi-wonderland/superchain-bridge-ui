@@ -3,7 +3,7 @@ import { Address, erc20Abi, getContract, parseUnits } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
 
 import { useCustomClient } from '~/hooks';
-import { SEPOLIA_L1_STANDARD_BRIDGE, ZERO_ADDRESS } from '~/utils';
+import { L1StandardBridgeProxy } from '~/utils';
 import { TokenData } from '~/types';
 
 type ContextType = {
@@ -51,7 +51,7 @@ export const TokenProvider = ({ children }: StateProps) => {
 
   const tokenContract = useMemo(() => {
     if (!selectedToken || !from) return;
-    if (selectedToken?.address === ZERO_ADDRESS) {
+    if (selectedToken?.symbol === 'ETH') {
       return setEthBalance(data?.value.toString() || '');
     }
     return getContract({
@@ -77,7 +77,7 @@ export const TokenProvider = ({ children }: StateProps) => {
         address: selectedToken?.address as Address,
         functionName: 'approve',
         // temporary fixed spender
-        args: [SEPOLIA_L1_STANDARD_BRIDGE, parseTokenUnits(amount)],
+        args: [L1StandardBridgeProxy, parseTokenUnits(amount)],
       });
       const hash = await from.wallet?.writeContract(request);
 
@@ -105,7 +105,7 @@ export const TokenProvider = ({ children }: StateProps) => {
 
     // get allowance
     tokenContract.read
-      .allowance([address, SEPOLIA_L1_STANDARD_BRIDGE]) // owner and spender
+      .allowance([address, L1StandardBridgeProxy]) // owner and spender
       .then((allowance: bigint) => {
         setAllowance(allowance.toString());
       })
