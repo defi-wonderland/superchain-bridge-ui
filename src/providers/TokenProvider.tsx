@@ -1,6 +1,6 @@
-import { createContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { Address, erc20Abi, getContract, parseUnits } from 'viem';
-import { useAccount, useBalance, useWriteContract } from 'wagmi';
+import { useAccount, useBalance } from 'wagmi';
 
 import { useCustomClient } from '~/hooks';
 import { SEPOLIA_L1_STANDARD_BRIDGE, ZERO_ADDRESS } from '~/utils';
@@ -21,6 +21,8 @@ type ContextType = {
   setAllowance: (val: string) => void;
 
   approve: () => Promise<void>;
+
+  parseTokenUnits: (val: string) => bigint;
 };
 
 interface StateProps {
@@ -30,88 +32,97 @@ interface StateProps {
 export const TokenContext = createContext({} as ContextType);
 
 export const TokenProvider = ({ children }: StateProps) => {
-  const { writeContractAsync } = useWriteContract();
   const { address } = useAccount();
   const { data } = useBalance({
     address,
   });
+  const {
+    customClient: { from },
+  } = useCustomClient();
   const [selectedToken, setSelectedToken] = useState<TokenData | undefined>();
+
+  // amount is the value of the input field
+  const [amount, setAmount] = useState<string>('');
+
+  // balance, ethBalance and allowance are in wei units
   const [balance, setBalance] = useState<string>('');
   const [ethBalance, setEthBalance] = useState<string>('');
   const [allowance, setAllowance] = useState<string>('');
-  const [amount, setAmount] = useState<string>('');
-
-  const {
-    customClient: { from: wallet },
-  } = useCustomClient();
 
   const tokenContract = useMemo(() => {
-    if (!selectedToken || !wallet) return;
+    if (!selectedToken || !from) return;
     if (selectedToken?.address === ZERO_ADDRESS) {
       return setEthBalance(data?.value.toString() || '');
     }
     return getContract({
       address: selectedToken?.address as Address,
       abi: erc20Abi,
-      client: wallet,
+      client: from,
     });
-  }, [selectedToken, wallet, data]);
+  }, [selectedToken, from, data]);
 
-  useEffect(
-    function getBalance() {
-      if (!tokenContract || !address) return;
-      tokenContract.read
-        .balanceOf([address])
-        .then((balance: bigint) => {
-          setBalance(balance.toString());
-        })
-        .catch(() => {
-          setBalance('');
-        });
-    },
-    [address, tokenContract],
-  );
-
-  useEffect(
-    function getAllowance() {
-      if (!tokenContract || !address) return;
-      if (!amount) return;
-      tokenContract.read
-        .allowance([address, SEPOLIA_L1_STANDARD_BRIDGE]) // owner and spender
-        .then((allowance: bigint) => {
-          setAllowance(allowance.toString());
-        })
-        .catch(() => {
-          setAllowance('');
-        });
-    },
-    [address, amount, balance, tokenContract],
-  );
-
-  useEffect(
-    function resetBalance() {
-      if (!selectedToken) return;
-      setBalance('');
+  const parseTokenUnits = useCallback(
+    (amount?: string) => {
+      if (!amount || !selectedToken) return 0n;
+      return parseUnits(amount, selectedToken.decimals);
     },
     [selectedToken],
   );
 
   const approve = async () => {
     try {
-      const result = await writeContractAsync({
+      const { request } = await from.public.simulateContract({
+        account: address,
         abi: erc20Abi,
         address: selectedToken?.address as Address,
         functionName: 'approve',
         // temporary fixed spender
-        args: [SEPOLIA_L1_STANDARD_BRIDGE, parseUnits(amount, selectedToken?.decimals as number)],
+        args: [SEPOLIA_L1_STANDARD_BRIDGE, parseTokenUnits(amount)],
       });
+      const hash = await from.wallet?.writeContract(request);
 
-      // TODO: wait for the transaction to be processed
-      console.log(result); // temporary log
+      if (!hash) throw new Error('Approve transaction failed');
+
+      const receipt = await from.public.waitForTransactionReceipt({ hash: hash });
+
+      console.log('Transaction confirmed,', receipt); // temporary log
     } catch (error) {
       console.warn(error);
     }
   };
+
+  useEffect(() => {
+    if (!tokenContract || !address) return;
+    // get balance
+    tokenContract.read
+      .balanceOf([address])
+      .then((balance: bigint) => {
+        setBalance(balance.toString());
+      })
+      .catch(() => {
+        setBalance('');
+      });
+
+    // get allowance
+    tokenContract.read
+      .allowance([address, SEPOLIA_L1_STANDARD_BRIDGE]) // owner and spender
+      .then((allowance: bigint) => {
+        setAllowance(allowance.toString());
+      })
+      .catch(() => {
+        setAllowance('');
+      });
+  }, [address, tokenContract]);
+
+  useEffect(
+    function reset() {
+      if (!selectedToken) return;
+      setBalance('');
+      setAllowance('');
+      setAmount('');
+    },
+    [selectedToken],
+  );
 
   return (
     <TokenContext.Provider
@@ -125,6 +136,7 @@ export const TokenProvider = ({ children }: StateProps) => {
         allowance,
         setAllowance,
         approve,
+        parseTokenUnits,
       }}
     >
       {children}

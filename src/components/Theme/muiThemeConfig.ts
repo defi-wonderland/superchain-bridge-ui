@@ -20,15 +20,12 @@ export const getMuiThemeConfig = (currentTheme: Theme, themeName: ThemeName) => 
           a: {
             color: 'inherit',
             textDecoration: 'none',
-            fontSize: '1.4rem',
-          },
-          p: {
-            fontSize: '1.4rem',
           },
         },
       },
     },
     typography: {
+      fontSize: 22.5,
       // set your global font family here
       fontFamily: [
         'Inter Variable',
