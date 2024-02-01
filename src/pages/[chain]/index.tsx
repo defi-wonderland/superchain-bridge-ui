@@ -24,7 +24,7 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async (context: { params: { chain: string } }) => {
   const path = context.params?.chain;
-  const chains = [...supportedChains] as ChainType[]; // Clone the array to avoid mutating the original
+  const chains = [...supportedChains] as ChainType[]; // This converts the readonly array to a mutable array to use the find method
   const title = chains.find((chain: ChainType) => replaceSpacesWithHyphens(chain.name) === path)?.name || '';
 
   return { props: { title } };
