@@ -5,9 +5,10 @@ interface InputFieldProps {
   label: string;
   value: string;
   setValue: (val: string) => void;
+  error?: boolean;
 }
 
-export function InputField({ label, value, setValue }: InputFieldProps) {
+export function InputField({ label, value, setValue, error }: InputFieldProps) {
   return (
     <Box component='form' noValidate autoComplete='off'>
       <TextField
@@ -16,6 +17,7 @@ export function InputField({ label, value, setValue }: InputFieldProps) {
         value={value}
         onChange={(event) => setValue(event.target.value)}
         fullWidth
+        error={error}
       />
     </Box>
   );

@@ -6,10 +6,16 @@ import { useWriteContract } from 'wagmi';
 import BaseModal from '~/components/BaseModal';
 import { useTransactionData, useToken, useCustomClient, useTokenList, useChain } from '~/hooks';
 import { ModalType, TransactionType } from '~/types';
-import { SEPOLIA_L1_STANDARD_BRIDGE, ZERO_ADDRESS, depositERC20ToABI } from '~/utils';
+import {
+  L1CrossDomainMessengerProxy,
+  L1StandardBridgeProxy,
+  ZERO_ADDRESS,
+  depositERC20ToABI,
+  sendMessageABI,
+} from '~/utils';
 
 export const ReviewModal = () => {
-  const { transactionType, mint, userAddress } = useTransactionData();
+  const { transactionType, mint, userAddress, data } = useTransactionData();
   const { toTokens } = useTokenList();
   const { toChain } = useChain();
   const { customClient } = useCustomClient();
@@ -49,7 +55,7 @@ export const ReviewModal = () => {
     const minGasLimit = 132303;
 
     const hash = await writeContractAsync({
-      address: SEPOLIA_L1_STANDARD_BRIDGE,
+      address: L1StandardBridgeProxy,
       abi: depositERC20ToABI,
       functionName: 'depositERC20To',
       args: [l1TokenAddress, l2TokenAddress, userAddress!, parseTokenUnits(amount), Number(minGasLimit), extraData],
@@ -62,7 +68,22 @@ export const ReviewModal = () => {
   };
 
   const depositMessage = async () => {
-    // TODO: Implement depositMessage
+    // temporary fixed values
+    const targetAddress = userAddress!;
+    const message = data as Hex;
+    const minGasLimit = 200_000;
+
+    const hash = await writeContractAsync({
+      address: L1CrossDomainMessengerProxy,
+      abi: sendMessageABI,
+      functionName: 'sendMessage',
+      args: [targetAddress, message, minGasLimit],
+    });
+
+    const l2Receipt = await waitForL2TransactionReceipt(customClient.from.public, customClient.to.public, hash);
+
+    // temporary log
+    console.log(l2Receipt);
   };
 
   // temporary function, will be removed

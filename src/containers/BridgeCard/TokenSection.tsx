@@ -1,5 +1,5 @@
 import { Box, SelectChangeEvent } from '@mui/material';
-import { formatUnits } from 'viem';
+import { formatUnits, isHex } from 'viem';
 
 import { InputField, TokenSelect } from '~/components';
 import { useToken, useTokenList, useTransactionData } from '~/hooks';
@@ -16,7 +16,7 @@ export const TokenSection = () => {
     allowance,
   } = useToken();
   const balance = selectedToken?.symbol === 'ETH' ? ethBalance : tokenBalance;
-  const { mint, setMint } = useTransactionData();
+  const { mint, setMint, data, setData } = useTransactionData();
 
   const handleToken = async (event: SelectChangeEvent) => {
     try {
@@ -35,7 +35,12 @@ export const TokenSection = () => {
       <br />
 
       {selectedToken?.symbol === 'ETH' && <InputField label='ETH Amount' value={mint} setValue={setMint} />}
-      {selectedToken?.symbol !== 'ETH' && <InputField label='Token Amount' value={amount} setValue={setAmount} />}
+      {selectedToken && selectedToken?.symbol !== 'ETH' && (
+        <InputField label='Token Amount' value={amount} setValue={setAmount} />
+      )}
+      {!selectedToken && (
+        <InputField label='Custom message' value={data} setValue={setData} error={!!data && !isHex(data)} />
+      )}
       <p>Balance: {formatUnits(BigInt(balance), selectedToken?.decimals || 18)}</p>
       <p>Allowance: {formatUnits(BigInt(allowance), selectedToken?.decimals || 18)}</p>
     </Box>
