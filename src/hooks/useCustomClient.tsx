@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { WalletClient, createWalletClient, custom, http } from 'viem';
+import { PublicClient, WalletClient, createPublicClient, createWalletClient, custom, http } from 'viem';
 import { useAccount } from 'wagmi';
 import {
   walletActionsL1,
@@ -16,15 +16,21 @@ import { useChain } from '~/hooks';
 import { alchemyUrls } from '~/utils';
 
 interface Providers {
-  from?: WalletClient & (WalletActionsL1 & WalletActionsL2);
-  to: WalletClient & (PublicActionsL2 & PublicActionsL1);
+  from: {
+    wallet?: WalletClient & (WalletActionsL1 & WalletActionsL2);
+    public: PublicClient;
+  };
+  to: {
+    wallet: WalletClient & (PublicActionsL2 & PublicActionsL1);
+    public: PublicClient;
+  };
 }
 
 export const useCustomClient = () => {
   const { address } = useAccount();
   const { fromChain, toChain } = useChain();
 
-  const fromProvider = useMemo(() => {
+  const fromWalletClient = useMemo(() => {
     if (typeof window !== 'undefined') {
       return createWalletClient({
         account: address,
@@ -34,7 +40,14 @@ export const useCustomClient = () => {
     }
   }, [address, fromChain]);
 
-  const toProvider = useMemo(
+  const fromPublicClient = useMemo(() => {
+    return createPublicClient({
+      chain: fromChain,
+      transport: http(alchemyUrls[fromChain.id]),
+    });
+  }, [fromChain]);
+
+  const toWalletClient = useMemo(
     () =>
       createWalletClient({
         account: address,
@@ -44,12 +57,25 @@ export const useCustomClient = () => {
     [address, toChain],
   );
 
+  const toPublicClient = useMemo(() => {
+    return createPublicClient({
+      chain: toChain,
+      transport: http(alchemyUrls[toChain.id]),
+    });
+  }, [toChain]);
+
   const customClient: Providers = useMemo(
     () => ({
-      from: fromProvider?.extend(walletActionsL1()).extend(walletActionsL2()),
-      to: toProvider.extend(publicActionsL2()).extend(publicActionsL1()),
+      from: {
+        wallet: fromWalletClient?.extend(walletActionsL1()).extend(walletActionsL2()),
+        public: fromPublicClient,
+      },
+      to: {
+        wallet: toWalletClient.extend(publicActionsL2()).extend(publicActionsL1()),
+        public: toPublicClient,
+      },
     }),
-    [fromProvider, toProvider],
+    [fromPublicClient, fromWalletClient, toPublicClient, toWalletClient],
   );
 
   return {

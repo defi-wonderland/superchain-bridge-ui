@@ -5,14 +5,22 @@ import { TokenSelect } from '~/components';
 import { useToken, useTokenList, useTransactionData } from '~/hooks';
 
 export const TokenSection = () => {
-  const { tokens } = useTokenList();
-  const { selectedToken, amount, setSelectedToken, setAmount, balance: tokenBalance, ethBalance } = useToken();
+  const { fromTokens } = useTokenList();
+  const {
+    selectedToken,
+    amount,
+    setSelectedToken,
+    setAmount,
+    balance: tokenBalance,
+    ethBalance,
+    allowance,
+  } = useToken();
   const balance = selectedToken?.symbol === 'ETH' ? ethBalance : tokenBalance;
   const { mint, setMint } = useTransactionData();
 
   const handleToken = async (event: SelectChangeEvent) => {
     try {
-      const token = tokens.find((token) => token.symbol === event.target.value);
+      const token = fromTokens.find((token) => token.symbol === event.target.value);
       setSelectedToken(token);
     } catch (error) {
       console.warn(error);
@@ -21,11 +29,12 @@ export const TokenSection = () => {
 
   return (
     <Box>
-      {!!tokens.length && (
-        <TokenSelect label='Token' value={selectedToken?.symbol || ''} setValue={handleToken} list={tokens} />
+      {!!fromTokens.length && (
+        <TokenSelect label='Token' value={selectedToken?.symbol || ''} setValue={handleToken} list={fromTokens} />
       )}
       <br />
       <p>Balance: {formatUnits(BigInt(balance), selectedToken?.decimals || 18)}</p>
+      <p>Allowance: {formatUnits(BigInt(allowance), selectedToken?.decimals || 18)}</p>
 
       {selectedToken?.symbol === 'ETH' && (
         <>

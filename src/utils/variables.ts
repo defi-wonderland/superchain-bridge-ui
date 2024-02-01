@@ -4,7 +4,9 @@
 
 export const THEME_KEY = 'superbridge_theme_key';
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-export const TOKEN_LIST_URL = 'https://static.optimism.io/optimism.tokenlist.json';
+
+// temporary
+export const SEPOLIA_L1_STANDARD_BRIDGE = '0xFBb0621E0B23b5478B630BD55a5f21f67730B0F1';
 
 /*=============================================
 =               Style Variables               =

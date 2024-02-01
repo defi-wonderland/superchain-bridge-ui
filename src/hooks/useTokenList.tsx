@@ -6,14 +6,20 @@ import { TokenData } from '~/types';
 import TokenList from '@eth-optimism/tokenlist';
 
 export const useTokenList = () => {
-  const { fromChain } = useChain();
+  const { fromChain, toChain } = useChain();
 
-  const tokens = useMemo(
+  const fromTokens = useMemo(
     () => TokenList.tokens.filter((token: TokenData) => token.chainId === fromChain?.id),
     [fromChain?.id],
   );
 
+  const toTokens = useMemo(
+    () => TokenList.tokens.filter((token: TokenData) => token.chainId === toChain?.id),
+    [toChain?.id],
+  );
+
   return {
-    tokens,
+    fromTokens,
+    toTokens,
   };
 };
