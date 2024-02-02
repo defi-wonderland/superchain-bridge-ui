@@ -1,15 +1,8 @@
-import { Address, Chain, Hex } from 'viem';
-import { CustomClients, TokenData } from '~/types';
+import { Address } from 'viem';
+import { InitiateERC20WithdrawProps, InitiateMessageWithdrawProps, InitiateWithdrawProps } from '~/types';
 import { bridgeERC20ToABI, sendMessageABI } from './parsedAbis';
 
-interface InitiateWithdrawProps {
-  customClient: CustomClients;
-  userAddress: Address;
-  mint: bigint;
-  to: Address;
-}
 export const initiateETHWithdraw = async ({ customClient, userAddress, mint, to }: InitiateWithdrawProps) => {
-  if (!userAddress) return;
   const args = await customClient.to.public.buildInitiateWithdrawal({
     chain: undefined, // to no override the chain from the client
     account: userAddress,
@@ -30,14 +23,6 @@ export const initiateETHWithdraw = async ({ customClient, userAddress, mint, to 
   console.log(receipt);
 };
 
-interface InitiateERC20WithdrawProps {
-  customClient: CustomClients;
-  userAddress: Address;
-  selectedToken: TokenData;
-  amount: bigint;
-  toChain: Chain;
-  toTokens: TokenData[];
-}
 export const initiateERC20Withdraw = async ({
   customClient,
   userAddress,
@@ -46,15 +31,13 @@ export const initiateERC20Withdraw = async ({
   toChain,
   toTokens,
 }: InitiateERC20WithdrawProps) => {
-  // L1 Messenger On Sepolia
+  // temporary fixed values
   const l2StandardBridge = '0x4200000000000000000000000000000000000010';
-  const l1TokenAddress = selectedToken?.address as Address;
   const extraData = '0x';
+  const minGasLimit = 218_874;
+  const l1TokenAddress = selectedToken?.address as Address;
   const l2Token = toTokens.find((token) => token.symbol === selectedToken?.symbol && token.chainId === toChain.id);
   const l2TokenAddress = l2Token?.address as Address;
-
-  // temporary fixed value
-  const minGasLimit = 218_874;
 
   const hash = await customClient.from.wallet?.writeContract({
     chain: undefined, // to no override the chain from the client
@@ -74,13 +57,8 @@ export const initiateERC20Withdraw = async ({
   console.log(receipt);
 };
 
-interface InitiateMessageWithdrawProps {
-  customClient: CustomClients;
-  userAddress: Address;
-  message: Hex;
-}
 export const initiateMessageWithdraw = async ({ customClient, userAddress, message }: InitiateMessageWithdrawProps) => {
-  // L2 OP Sepolia Messenger
+  // temporary fixed values
   const l2CrossDomainMessenger = '0x4200000000000000000000000000000000000007';
   const minGasLimit = 200_000; // TODO - get this from the contract
 

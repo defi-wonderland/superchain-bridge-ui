@@ -1,9 +1,9 @@
-import { Address, Chain, Hex, PublicClient } from 'viem';
+import { Address, Hex, PublicClient } from 'viem';
 import { getL2TransactionHashes } from 'viem/op-stack';
 
+import { DepositERC20Props, DepositETHProps, DepositMessageProps } from '~/types';
 import { L1CrossDomainMessengerProxy, L1StandardBridgeProxy } from './variables';
 import { bridgeERC20ToABI, sendMessageABI } from './parsedAbis';
-import { CustomClients, TokenData } from '~/types';
 
 const waitForL2TransactionReceipt = async (l1Client: PublicClient, l2Client: PublicClient, l1Hash?: Hex) => {
   if (!l1Hash) throw new Error('No hash returned');
@@ -22,11 +22,6 @@ const waitForL2TransactionReceipt = async (l1Client: PublicClient, l2Client: Pub
   return l2Receipt;
 };
 
-interface DepositETHProps {
-  customClient: CustomClients;
-  mint: bigint;
-  to: Address;
-}
 export const depositETH = async ({ customClient, mint, to }: DepositETHProps) => {
   const args = await customClient.to.public.buildDepositTransaction({
     chain: undefined, // to no override the chain from the client
@@ -44,16 +39,6 @@ export const depositETH = async ({ customClient, mint, to }: DepositETHProps) =>
   console.log(l2Receipt);
 };
 
-interface DepositERC20Props {
-  customClient: CustomClients;
-  userAddress: Address;
-  toChain: Chain;
-  selectedToken: TokenData;
-  amount: bigint;
-  toTokens: TokenData[];
-  allowance: string;
-  approve: () => Promise<void>;
-}
 export const depositERC20 = async ({
   customClient,
   userAddress,
@@ -67,12 +52,12 @@ export const depositERC20 = async ({
   if (BigInt(allowance) < amount) {
     await approve();
   }
+
+  // temporary fixed values
   const l1TokenAddress = selectedToken?.address as Address;
   const extraData = '0x';
   const l2Token = toTokens.find((token) => token.symbol === selectedToken?.symbol && token.chainId === toChain.id);
   const l2TokenAddress = l2Token?.address as Address;
-
-  // temporary fixed value
   const minGasLimit = 132303;
 
   const hash = await customClient.from.wallet?.writeContract({
@@ -90,11 +75,6 @@ export const depositERC20 = async ({
   console.log(l2Receipt);
 };
 
-interface DepositMessageProps {
-  customClient: CustomClients;
-  userAddress: Address;
-  data: Hex;
-}
 export const depositMessage = async ({ customClient, userAddress, data }: DepositMessageProps) => {
   // temporary fixed values
   const message = data as Hex;
