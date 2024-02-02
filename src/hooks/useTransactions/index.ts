@@ -1,43 +1,47 @@
-import { useAccount, useChainId, useSwitchChain } from 'wagmi';
+import { useChainId, useSwitchChain } from 'wagmi';
 
-import { useChain, useTransactionData } from '~/hooks';
-import { TransactionType } from '~/types';
+import { useChain, useModal, useTransactionData } from '~/hooks';
+import { ModalType, TransactionType } from '~/types';
 import { useWithdraw } from './useWithdraw';
 import { useDeposit } from './useDeposit';
 
 export const useTransactions = () => {
   const { transactionType } = useTransactionData();
-  const { address: userAddress } = useAccount();
   const { switchChainAsync } = useSwitchChain();
   const { fromChain } = useChain();
   const chainId = useChainId();
+
+  const { setModalOpen } = useModal();
 
   const deposit = useDeposit();
   const withdraw = useWithdraw();
 
   const executeTransaction = async () => {
-    try {
-      if (!userAddress) return;
+    setModalOpen(ModalType.LOADING);
 
+    try {
       if (chainId !== fromChain.id) {
         await switchChainAsync({ chainId: fromChain.id });
       }
 
       switch (transactionType) {
         case TransactionType.DEPOSIT:
-          deposit();
+          await deposit();
           break;
         case TransactionType.WITHDRAW:
-          withdraw();
+          await withdraw();
           break;
         case TransactionType.BRIDGE:
           // TODO: Implement bridge
           break;
       }
+
+      setModalOpen(ModalType.SUCCESS);
     } catch (e) {
-      console.warn('Error: ', e);
+      console.warn(e);
+      setModalOpen(ModalType.REVIEW);
     }
   };
 
-  return executeTransaction;
+  return { executeTransaction };
 };
