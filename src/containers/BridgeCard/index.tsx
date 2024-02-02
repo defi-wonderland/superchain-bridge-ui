@@ -28,7 +28,7 @@ export const BridgeCard = () => {
 
   const isButtonDisabled =
     (selectedToken?.symbol === 'ETH' && !mint) ||
-    (selectedToken?.symbol !== 'ETH' && !amount) ||
+    (selectedToken && selectedToken?.symbol !== 'ETH' && !amount) ||
     (!!data && !isHex(data));
 
   return (
