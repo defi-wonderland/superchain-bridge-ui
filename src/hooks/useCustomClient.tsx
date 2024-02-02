@@ -12,7 +12,7 @@ export const useCustomClient = () => {
   const { fromChain, toChain } = useChain();
 
   const fromWalletClient = useMemo(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && window.ethereum) {
       return createWalletClient({
         account: address,
         chain: fromChain,
