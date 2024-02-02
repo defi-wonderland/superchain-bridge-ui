@@ -2,10 +2,10 @@ import { Address, Hex, PublicClient } from 'viem';
 import { getL2TransactionHashes } from 'viem/op-stack';
 
 import { DepositERC20Props, DepositETHProps, DepositMessageProps } from '~/types';
-import { L1CrossDomainMessengerProxy, L1StandardBridgeProxy } from './variables';
-import { bridgeERC20ToABI, sendMessageABI } from './parsedAbis';
+import { L1CrossDomainMessengerProxy, L1StandardBridgeProxy } from '../variables';
+import { bridgeERC20ToABI, sendMessageABI } from '../parsedAbis';
 
-const waitForL2TransactionReceipt = async (l1Client: PublicClient, l2Client: PublicClient, l1Hash?: Hex) => {
+export const waitForL2TransactionReceipt = async (l1Client: PublicClient, l2Client: PublicClient, l1Hash?: Hex) => {
   if (!l1Hash) throw new Error('No hash returned');
 
   // Wait for the L1 transaction to be processed.

@@ -1,6 +1,6 @@
 import { Address } from 'viem';
 import { InitiateERC20WithdrawProps, InitiateMessageWithdrawProps, InitiateWithdrawProps } from '~/types';
-import { bridgeERC20ToABI, sendMessageABI } from './parsedAbis';
+import { bridgeERC20ToABI, sendMessageABI } from '../parsedAbis';
 
 export const initiateETHWithdraw = async ({ customClient, userAddress, mint, to }: InitiateWithdrawProps) => {
   const args = await customClient.to.public.buildInitiateWithdrawal({
