@@ -24,7 +24,7 @@ const waitForL2TransactionReceipt = async (l1Client: PublicClient, l2Client: Pub
 
 export const depositETH = async ({ customClient, mint, to }: DepositETHProps) => {
   const args = await customClient.to.public.buildDepositTransaction({
-    chain: undefined, // to no override the chain from the client
+    chain: customClient.to.public.chain,
     to,
     mint,
   });
@@ -61,12 +61,12 @@ export const depositERC20 = async ({
   const minGasLimit = 132303;
 
   const hash = await customClient.from.wallet?.writeContract({
+    chain: customClient.from.public.chain,
     account: userAddress,
     address: L1StandardBridgeProxy,
     abi: bridgeERC20ToABI,
     functionName: 'bridgeERC20To',
     args: [l1TokenAddress, l2TokenAddress, userAddress!, amount, Number(minGasLimit), extraData],
-    chain: undefined, // to no override the chain from the client
   });
 
   const l2Receipt = await waitForL2TransactionReceipt(customClient.from.public, customClient.to.public, hash);
@@ -81,7 +81,7 @@ export const depositMessage = async ({ customClient, userAddress, data }: Deposi
   const minGasLimit = 200_000;
 
   const hash = await customClient.from.wallet?.writeContract({
-    chain: undefined, // to no override the chain from the client
+    chain: customClient.from.public.chain,
     account: userAddress,
     address: L1CrossDomainMessengerProxy,
     abi: sendMessageABI,
