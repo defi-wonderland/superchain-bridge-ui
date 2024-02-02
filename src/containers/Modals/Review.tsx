@@ -10,7 +10,6 @@ export const ReviewModal = () => {
   const { selectedToken, amount } = useToken();
   const { executeTransaction } = useTransactions();
 
-  // temporary function, will be removed
   const handleConfirm = async () => {
     executeTransaction();
   };
