@@ -33,3 +33,10 @@ export enum TransactionType {
   BRIDGE = 'bridge',
   SWAP = 'swap',
 }
+
+export enum ForceTransactionType {
+  ETH_WITHDRAWAL = 'ethWithdrawal',
+  ERC20_WITHDRAWAL = 'erc20Withdrawal',
+  ETH_TRANSFER = 'ethTransfer',
+  ERC20_TRANSFER = 'erc20Transfer',
+}

@@ -28,9 +28,11 @@ export const useTransactions = () => {
         case TransactionType.DEPOSIT:
           await deposit();
           break;
+
         case TransactionType.WITHDRAW:
           await withdraw();
           break;
+
         case TransactionType.BRIDGE:
           // TODO: Implement bridge
           break;

@@ -47,3 +47,18 @@ export const bridgeERC20ToABI = parseAbi([
 export const sendMessageABI = parseAbi([
   'function sendMessage(address _target, bytes calldata _message, uint32 _minGasLimit) external payable',
 ]);
+
+/**
+ * @notice Accepts deposits of ETH and data, and emits a TransactionDeposited event for use in
+ *         deriving deposit transactions. Note that if a deposit is made by a contract, its
+ *         address will be aliased when retrieved using `tx.origin` or `msg.sender`. Consider
+ *         using the CrossDomainMessenger contracts for a simpler developer experience.
+ * @param _to         Target address on L2.
+ * @param _value      ETH value to send to the recipient.
+ * @param _gasLimit   Amount of L2 gas to purchase by burning gas on L1.
+ * @param _isCreation Whether or not the transaction is a contract creation.
+ * @param _data       Data to trigger the recipient with.
+ */
+export const depositTransactionABI = parseAbi([
+  'function depositTransaction(address _to, uint256 _value, uint64 _gasLimit, bool _isCreation, bytes calldata _data) external',
+]);

@@ -3,7 +3,7 @@ import { Address } from 'viem';
 import { useAccount } from 'wagmi';
 
 import { useChain } from '~/hooks';
-import { TransactionType } from '~/types';
+import { ForceTransactionType, TransactionType } from '~/types';
 
 type ContextType = {
   userAddress?: Address;
@@ -19,6 +19,12 @@ type ContextType = {
 
   to: string;
   setTo: (val: string) => void;
+
+  isForceTransaction: boolean;
+  setIsForceTransaction: (val: boolean) => void;
+
+  forceTransactionType?: ForceTransactionType;
+  setForceTransactionType: (val: ForceTransactionType) => void;
 
   transactionType: TransactionType;
 };
@@ -37,6 +43,9 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
   const [to, setTo] = useState<string>('');
 
   const { fromChain, toChain } = useChain();
+  const [isForceTransaction, setIsForceTransaction] = useState<boolean>(false);
+
+  const [forceTransactionType, setForceTransactionType] = useState<ForceTransactionType>();
 
   // If the selected chain has a sourceId, its because it's a L2 chain
   const isFromAnL2 = !!fromChain?.sourceId;
@@ -78,6 +87,10 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
         setTo,
         transactionType,
         userAddress: address,
+        isForceTransaction,
+        setIsForceTransaction,
+        forceTransactionType,
+        setForceTransactionType,
       }}
     >
       {children}
