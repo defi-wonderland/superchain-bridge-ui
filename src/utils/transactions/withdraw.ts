@@ -4,7 +4,7 @@ import { bridgeERC20ToABI, sendMessageABI } from '../parsedAbis';
 
 export const initiateETHWithdraw = async ({ customClient, userAddress, mint, to }: InitiateWithdrawProps) => {
   const args = await customClient.to.public.buildInitiateWithdrawal({
-    chain: undefined, // to no override the chain from the client
+    chain: customClient.to.public.chain,
     account: userAddress,
     to: to,
     value: mint,
@@ -40,7 +40,7 @@ export const initiateERC20Withdraw = async ({
   const l2TokenAddress = l2Token?.address as Address;
 
   const hash = await customClient.from.wallet?.writeContract({
-    chain: undefined, // to no override the chain from the client
+    chain: customClient.from.public.chain,
     account: userAddress,
     address: l2StandardBridge,
     abi: bridgeERC20ToABI,
@@ -63,7 +63,7 @@ export const initiateMessageWithdraw = async ({ customClient, userAddress, messa
   const minGasLimit = 200_000; // TODO - get this from the contract
 
   const hash = await customClient.from.wallet?.writeContract({
-    chain: undefined, // to no override the chain from the client
+    chain: customClient.from.public.chain,
     account: userAddress,
     address: l2CrossDomainMessenger,
     abi: sendMessageABI,
