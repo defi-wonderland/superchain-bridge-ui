@@ -1,0 +1,103 @@
+import { Address, Chain, Hex } from 'viem';
+import { CustomClients, TokenData } from '~/types';
+import { bridgeERC20ToABI, sendMessageABI } from './parsedAbis';
+
+interface InitiateWithdrawProps {
+  customClient: CustomClients;
+  userAddress: Address;
+  mint: bigint;
+  to: Address;
+}
+export const initiateETHWithdraw = async ({ customClient, userAddress, mint, to }: InitiateWithdrawProps) => {
+  if (!userAddress) return;
+  const args = await customClient.to.public.buildInitiateWithdrawal({
+    chain: undefined, // to no override the chain from the client
+    account: userAddress,
+    to: to,
+    value: mint,
+  });
+
+  // Execute the initiate withdrawal transaction on the L2.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const hash = await customClient.from.wallet?.initiateWithdrawal(args as any);
+
+  if (!hash) throw new Error('No hash returned');
+
+  // Wait for the initiate withdrawal transaction receipt.
+  const receipt = await customClient.from.public.waitForTransactionReceipt({ hash: hash });
+
+  // temporary log
+  console.log(receipt);
+};
+
+interface InitiateERC20WithdrawProps {
+  customClient: CustomClients;
+  userAddress: Address;
+  selectedToken: TokenData;
+  amount: bigint;
+  toChain: Chain;
+  toTokens: TokenData[];
+}
+export const initiateERC20Withdraw = async ({
+  customClient,
+  userAddress,
+  selectedToken,
+  amount,
+  toChain,
+  toTokens,
+}: InitiateERC20WithdrawProps) => {
+  // L1 Messenger On Sepolia
+  const l2StandardBridge = '0x4200000000000000000000000000000000000010';
+  const l1TokenAddress = selectedToken?.address as Address;
+  const extraData = '0x';
+  const l2Token = toTokens.find((token) => token.symbol === selectedToken?.symbol && token.chainId === toChain.id);
+  const l2TokenAddress = l2Token?.address as Address;
+
+  // temporary fixed value
+  const minGasLimit = 218_874;
+
+  const hash = await customClient.from.wallet?.writeContract({
+    chain: undefined, // to no override the chain from the client
+    account: userAddress,
+    address: l2StandardBridge,
+    abi: bridgeERC20ToABI,
+    functionName: 'bridgeERC20To',
+    args: [l1TokenAddress, l2TokenAddress, userAddress!, amount, minGasLimit, extraData],
+  });
+
+  if (!hash) throw new Error('No hash returned');
+
+  // Wait for the initiate withdrawal transaction receipt.
+  const receipt = await customClient.from.public.waitForTransactionReceipt({ hash: hash });
+
+  // temporary log
+  console.log(receipt);
+};
+
+interface InitiateMessageWithdrawProps {
+  customClient: CustomClients;
+  userAddress: Address;
+  message: Hex;
+}
+export const initiateMessageWithdraw = async ({ customClient, userAddress, message }: InitiateMessageWithdrawProps) => {
+  // L2 OP Sepolia Messenger
+  const l2CrossDomainMessenger = '0x4200000000000000000000000000000000000007';
+  const minGasLimit = 200_000; // TODO - get this from the contract
+
+  const hash = await customClient.from.wallet?.writeContract({
+    chain: undefined, // to no override the chain from the client
+    account: userAddress,
+    address: l2CrossDomainMessenger,
+    abi: sendMessageABI,
+    functionName: 'sendMessage',
+    args: [userAddress, message, minGasLimit],
+  });
+
+  if (!hash) throw new Error('No hash returned');
+
+  // Wait for the initiate withdrawal transaction receipt.
+  const receipt = await customClient.from.public.waitForTransactionReceipt({ hash: hash });
+
+  // temporary log
+  console.log(receipt);
+};

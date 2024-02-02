@@ -1,30 +1,11 @@
 import { useMemo } from 'react';
-import { PublicClient, WalletClient, createPublicClient, createWalletClient, custom, http } from 'viem';
+import { createPublicClient, createWalletClient, custom, http } from 'viem';
 import { useAccount } from 'wagmi';
-import {
-  walletActionsL1,
-  walletActionsL2,
-  publicActionsL1,
-  publicActionsL2,
-  WalletActionsL1,
-  WalletActionsL2,
-  PublicActionsL1,
-  PublicActionsL2,
-} from 'viem/op-stack';
+import { walletActionsL1, walletActionsL2, publicActionsL1, publicActionsL2 } from 'viem/op-stack';
 
 import { useChain } from '~/hooks';
 import { alchemyUrls } from '~/utils';
-
-interface Providers {
-  from: {
-    wallet?: WalletClient & (WalletActionsL1 & WalletActionsL2);
-    public: PublicClient & (PublicActionsL2 & PublicActionsL1);
-  };
-  to: {
-    wallet: WalletClient & (WalletActionsL1 & WalletActionsL2);
-    public: PublicClient & (PublicActionsL2 & PublicActionsL1);
-  };
-}
+import { CustomClients } from '~/types';
 
 export const useCustomClient = () => {
   const { address } = useAccount();
@@ -64,7 +45,7 @@ export const useCustomClient = () => {
     });
   }, [toChain]);
 
-  const customClient: Providers = useMemo(
+  const customClient: CustomClients = useMemo(
     () => ({
       from: {
         wallet: fromWalletClient?.extend(walletActionsL1()).extend(walletActionsL2()),
