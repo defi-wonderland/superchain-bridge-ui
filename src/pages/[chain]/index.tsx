@@ -3,11 +3,10 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { Chain as ChainType } from 'viem';
 
-import { CustomHead } from '~/components';
-import { useChain } from '~/hooks';
-
-import Landing from '~/pages/landing';
 import { replaceSpacesWithHyphens, supportedChains } from '~/utils';
+import { CustomHead } from '~/components';
+import { Landing } from '~/containers';
+import { useChain } from '~/hooks';
 
 const paths = supportedChains.map((chain) => ({
   params: {

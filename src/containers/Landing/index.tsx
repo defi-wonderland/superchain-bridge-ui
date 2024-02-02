@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 
 import { BridgeCard } from '~/containers';
 
-const Landing = () => {
+export const Landing = () => {
   const { t } = useTranslation();
 
   return (
@@ -13,5 +13,3 @@ const Landing = () => {
     </section>
   );
 };
-
-export default Landing;

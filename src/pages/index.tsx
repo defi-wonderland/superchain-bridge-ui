@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-import Landing from './landing';
+import { Landing } from '~/containers';
 import { useChain } from '~/hooks';
 import { replaceSpacesWithHyphens } from '~/utils';
 
