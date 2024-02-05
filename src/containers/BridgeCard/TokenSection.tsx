@@ -5,22 +5,24 @@ import { InputField, TokenSelect } from '~/components';
 import { useToken, useTokenList, useTransactionData } from '~/hooks';
 
 export const TokenSection = () => {
-  const { fromTokens } = useTokenList();
+  const { fromTokens, toTokens } = useTokenList();
+  const { mint, setMint, isForceTransaction } = useTransactionData();
   const {
     selectedToken,
     amount,
-    setSelectedToken,
-    setAmount,
     balance: tokenBalance,
     ethBalance,
     allowance,
+    setSelectedToken,
+    setAmount,
   } = useToken();
+
   const balance = selectedToken?.symbol === 'ETH' ? ethBalance : tokenBalance;
-  const { mint, setMint } = useTransactionData();
+  const tokenList = isForceTransaction ? toTokens : fromTokens;
 
   const handleToken = async (event: SelectChangeEvent) => {
     try {
-      const token = fromTokens.find((token) => token.symbol === event.target.value);
+      const token = tokenList.find((token) => token.symbol === event.target.value);
       setSelectedToken(token);
     } catch (error) {
       console.warn(error);
@@ -29,8 +31,8 @@ export const TokenSection = () => {
 
   return (
     <Box>
-      {!!fromTokens.length && (
-        <TokenSelect label='Token' value={selectedToken?.symbol || ''} setValue={handleToken} list={fromTokens} />
+      {!!tokenList.length && (
+        <TokenSelect label='Token' value={selectedToken?.symbol || ''} setValue={handleToken} list={tokenList} />
       )}
 
       <br />

@@ -1,42 +1,22 @@
-import { Address, Hex } from 'viem';
+import { Hex } from 'viem';
 
 import { useTransactionData, useToken, useCustomClient, useTokenList, useChain } from '~/hooks';
-import { ForceTransactionType } from '~/types';
-import { depositERC20, depositETH, depositMessage, forceEthTransfer } from '~/utils';
+import { depositERC20, depositETH, depositMessage } from '~/utils';
+import { useForceTx } from './useForceTx';
 
 export const useDeposit = () => {
-  const { mint, userAddress, data, isForceTransaction, to, value, forceTransactionType } = useTransactionData();
+  const { mint, userAddress, data, isForceTransaction } = useTransactionData();
   const { selectedToken, amount, allowance, approve, parseTokenUnits } = useToken();
   const { customClient } = useCustomClient();
   const { toTokens } = useTokenList();
   const { toChain } = useChain();
+  const forceTx = useForceTx();
 
   const deposit = async () => {
     if (!userAddress) return;
 
     if (isForceTransaction) {
-      switch (forceTransactionType) {
-        case ForceTransactionType.ETH_TRANSFER:
-          await forceEthTransfer({
-            customClient,
-            userAddress,
-            amount: parseTokenUnits(value),
-            to: to as Address,
-          });
-          return;
-
-        case ForceTransactionType.ERC20_TRANSFER:
-          // TODO: Implement ERC20 transfer
-          return;
-
-        case ForceTransactionType.ERC20_WITHDRAWAL:
-          // TODO: Implement ERC20 withdrawal
-          return;
-
-        case ForceTransactionType.ETH_WITHDRAWAL:
-          // TODO: Implement ETH withdrawal
-          return;
-      }
+      await forceTx();
     } else {
       if (!selectedToken) {
         await depositMessage({

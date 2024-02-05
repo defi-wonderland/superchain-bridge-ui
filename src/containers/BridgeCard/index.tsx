@@ -8,12 +8,13 @@ import { useModal, useToken, useTransactionData } from '~/hooks';
 import { ChainSection } from './ChainSection';
 import { TokenSection } from './TokenSection';
 import { InputField } from '~/components';
-import { ModalType } from '~/types';
+import { ModalType, TransactionType } from '~/types';
 
 export const BridgeCard = () => {
   const { setModalOpen } = useModal();
   const { amount, selectedToken, setSelectedToken } = useToken();
-  const { mint, data, setData } = useTransactionData();
+  const { mint, data, setData, transactionType, isForceTransaction, setIsForceTransaction, to, setTo } =
+    useTransactionData();
 
   const [isAdvanceMode, setIsAdvanceMode] = useState(false);
 
@@ -41,6 +42,19 @@ export const BridgeCard = () => {
         <ChainSection />
         <br />
         <br />
+
+        {transactionType === TransactionType.DEPOSIT && (
+          <Button onClick={() => setIsForceTransaction(!isForceTransaction)} fullWidth>
+            Force transaction ({isForceTransaction ? 'On' : 'Off'})
+          </Button>
+        )}
+
+        {isForceTransaction && (
+          <>
+            <InputField label='To' value={to} setValue={setTo} error={!!to && !isHex(to)} />
+            <br />
+          </>
+        )}
 
         {!isAdvanceMode && <TokenSection />}
 

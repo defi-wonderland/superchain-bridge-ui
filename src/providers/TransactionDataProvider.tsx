@@ -40,12 +40,14 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
   const [mint, setMint] = useState<string>('');
   const [value, setValue] = useState<string>('');
   const [data, setData] = useState<string>('');
-  const [to, setTo] = useState<string>('');
+  const [to, setTo] = useState<string>(address?.toString() || '');
 
   const { fromChain, toChain } = useChain();
   const [isForceTransaction, setIsForceTransaction] = useState<boolean>(false);
 
-  const [forceTransactionType, setForceTransactionType] = useState<ForceTransactionType>();
+  const [forceTransactionType, setForceTransactionType] = useState<ForceTransactionType>(
+    ForceTransactionType.ERC20_TRANSFER,
+  );
 
   // If the selected chain has a sourceId, its because it's a L2 chain
   const isFromAnL2 = !!fromChain?.sourceId;
