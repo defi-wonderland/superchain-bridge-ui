@@ -1,26 +1,9 @@
-import { Address, Hex, PublicClient } from 'viem';
-import { getL2TransactionHashes } from 'viem/op-stack';
+import { Address, Hex } from 'viem';
 
 import { DepositERC20Props, DepositETHProps, DepositMessageProps } from '~/types';
 import { L1CrossDomainMessengerProxy, L1StandardBridgeProxy } from '../variables';
 import { bridgeERC20ToABI, sendMessageABI } from '../parsedAbis';
-
-export const waitForL2TransactionReceipt = async (l1Client: PublicClient, l2Client: PublicClient, l1Hash?: Hex) => {
-  if (!l1Hash) throw new Error('No hash returned');
-
-  // Wait for the L1 transaction to be processed.
-  const receipt = await l1Client.waitForTransactionReceipt({ hash: l1Hash });
-
-  // Get the L2 transaction hash from the L1 transaction receipt.
-  const [l2Hash] = getL2TransactionHashes(receipt);
-
-  // Wait for the L2 transaction to be processed.
-  const l2Receipt = await l2Client.waitForTransactionReceipt({
-    hash: l2Hash,
-  });
-
-  return l2Receipt;
-};
+import { waitForL2TransactionReceipt } from './helpers';
 
 export const depositETH = async ({ customClient, mint, to }: DepositETHProps) => {
   const args = await customClient.to.public.buildDepositTransaction({

@@ -46,7 +46,7 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
   const [isForceTransaction, setIsForceTransaction] = useState<boolean>(false);
 
   const [forceTransactionType, setForceTransactionType] = useState<ForceTransactionType>(
-    ForceTransactionType.ERC20_TRANSFER,
+    ForceTransactionType.ETH_TRANSFER, // TODO: remove later
   );
 
   // If the selected chain has a sourceId, its because it's a L2 chain
