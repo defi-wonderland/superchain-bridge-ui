@@ -9,7 +9,7 @@ export const useForceTx = () => {
   const { selectedToken, amount, toToken, parseTokenUnits } = useToken();
   const { customClient } = useCustomClient();
 
-  const froceTx = async () => {
+  const forceTx = async () => {
     if (!userAddress) return;
 
     if (isForceTransaction) {
@@ -57,5 +57,5 @@ export const useForceTx = () => {
     }
   };
 
-  return froceTx;
+  return forceTx;
 };
