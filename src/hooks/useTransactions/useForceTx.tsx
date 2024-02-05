@@ -2,11 +2,11 @@ import { Address } from 'viem';
 
 import { useTransactionData, useToken, useCustomClient } from '~/hooks';
 import { ForceTransactionType } from '~/types';
-import { forceErc20Transfer, forceEthTransfer, forceEthWithdrawal } from '~/utils';
+import { forceErc20Transfer, forceErc20Withdrawal, forceEthTransfer, forceEthWithdrawal } from '~/utils';
 
 export const useForceTx = () => {
   const { userAddress, isForceTransaction, to, value, forceTransactionType } = useTransactionData();
-  const { selectedToken, amount, parseTokenUnits } = useToken();
+  const { selectedToken, amount, toToken, parseTokenUnits } = useToken();
   const { customClient } = useCustomClient();
 
   const froceTx = async () => {
@@ -44,7 +44,14 @@ export const useForceTx = () => {
           return;
 
         case ForceTransactionType.ERC20_WITHDRAWAL:
-          // TODO: Implement ERC20 withdrawal
+          await forceErc20Withdrawal({
+            customClient,
+            userAddress,
+            amount: parseTokenUnits(amount),
+            to: to as Address,
+            l1TokenAddress: selectedToken?.address as Address,
+            l2TokenAddress: toToken?.address as Address,
+          });
           return;
       }
     }

@@ -1,15 +1,13 @@
-import { Hex } from 'viem';
+import { Address, Hex } from 'viem';
 
-import { useTransactionData, useToken, useCustomClient, useTokenList, useChain } from '~/hooks';
+import { useTransactionData, useToken, useCustomClient } from '~/hooks';
 import { depositERC20, depositETH, depositMessage } from '~/utils';
 import { useForceTx } from './useForceTx';
 
 export const useDeposit = () => {
   const { mint, userAddress, data, isForceTransaction } = useTransactionData();
-  const { selectedToken, amount, allowance, approve, parseTokenUnits } = useToken();
+  const { selectedToken, amount, allowance, toToken, approve, parseTokenUnits } = useToken();
   const { customClient } = useCustomClient();
-  const { toTokens } = useTokenList();
-  const { toChain } = useChain();
   const forceTx = useForceTx();
 
   const deposit = async () => {
@@ -33,13 +31,12 @@ export const useDeposit = () => {
       } else {
         await depositERC20({
           customClient,
-          selectedToken,
+          l1TokenAddress: selectedToken.address as Address,
+          l2TokenAddress: toToken?.address as Address,
           amount: parseTokenUnits(amount),
           userAddress,
           allowance,
           approve,
-          toChain,
-          toTokens,
         });
       }
     }

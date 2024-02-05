@@ -1,4 +1,4 @@
-import { Address, Hex } from 'viem';
+import { Hex } from 'viem';
 
 import { DepositERC20Props, DepositETHProps, DepositMessageProps } from '~/types';
 import { L1CrossDomainMessengerProxy, L1StandardBridgeProxy } from '../variables';
@@ -25,11 +25,10 @@ export const depositETH = async ({ customClient, mint, to }: DepositETHProps) =>
 export const depositERC20 = async ({
   customClient,
   userAddress,
-  toChain,
-  selectedToken,
   amount,
   allowance,
-  toTokens,
+  l1TokenAddress,
+  l2TokenAddress,
   approve,
 }: DepositERC20Props) => {
   if (BigInt(allowance) < amount) {
@@ -37,10 +36,7 @@ export const depositERC20 = async ({
   }
 
   // temporary fixed values
-  const l1TokenAddress = selectedToken?.address as Address;
   const extraData = '0x';
-  const l2Token = toTokens.find((token) => token.symbol === selectedToken?.symbol && token.chainId === toChain.id);
-  const l2TokenAddress = l2Token?.address as Address;
   const minGasLimit = 132303;
 
   const hash = await customClient.from.wallet?.writeContract({

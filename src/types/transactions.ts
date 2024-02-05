@@ -23,10 +23,9 @@ export interface DepositETHProps {
 export interface DepositERC20Props {
   customClient: CustomClients;
   userAddress: Address;
-  toChain: Chain;
-  selectedToken: TokenData;
   amount: bigint;
-  toTokens: TokenData[];
+  l1TokenAddress: Address;
+  l2TokenAddress: Address;
   allowance: string;
   approve: () => Promise<void>;
 }
@@ -81,4 +80,13 @@ export interface ForceEthWithdrawalProps {
   userAddress: Address;
   to: Address;
   amount: bigint;
+}
+
+export interface ForceErc20WithdrawalProps {
+  customClient: CustomClients;
+  userAddress: Address;
+  to: Address;
+  amount: bigint;
+  l1TokenAddress: Address;
+  l2TokenAddress: Address;
 }

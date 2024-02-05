@@ -2,13 +2,15 @@ import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
 import { Address, erc20Abi, getContract, parseUnits } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
 
-import { useCustomClient } from '~/hooks';
+import { useChain, useCustomClient, useTokenList } from '~/hooks';
 import { L1StandardBridgeProxy } from '~/utils';
 import { TokenData } from '~/types';
 
 type ContextType = {
   selectedToken: TokenData | undefined;
   setSelectedToken: (val?: TokenData) => void;
+
+  toToken: TokenData | undefined;
 
   balance: string;
 
@@ -33,12 +35,16 @@ export const TokenContext = createContext({} as ContextType);
 
 export const TokenProvider = ({ children }: StateProps) => {
   const { address } = useAccount();
+  const { toTokens } = useTokenList();
+  const { toChain } = useChain();
   const { data } = useBalance({
     address,
   });
+
   const {
     customClient: { from },
   } = useCustomClient();
+
   const [selectedToken, setSelectedToken] = useState<TokenData | undefined>();
 
   // amount is the value of the input field
@@ -48,6 +54,12 @@ export const TokenProvider = ({ children }: StateProps) => {
   const [balance, setBalance] = useState<string>('');
   const [ethBalance, setEthBalance] = useState<string>('');
   const [allowance, setAllowance] = useState<string>('');
+
+  // toToken is the token in the destination chain
+  const toToken = useMemo(() => {
+    if (!selectedToken) return;
+    return toTokens.find((token) => token.symbol === selectedToken?.symbol && token.chainId === toChain.id);
+  }, [selectedToken, toChain.id, toTokens]);
 
   const tokenContract = useMemo(() => {
     if (!selectedToken || !from) return;
@@ -137,6 +149,7 @@ export const TokenProvider = ({ children }: StateProps) => {
         setAllowance,
         approve,
         parseTokenUnits,
+        toToken,
       }}
     >
       {children}
