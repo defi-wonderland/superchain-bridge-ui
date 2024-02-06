@@ -1,6 +1,6 @@
 import { encodeFunctionData, parseAbi } from 'viem';
 
-import { finalizeBridgeERC20ABI, finalizeBridgeETHABI, withdrawToABI } from '../parsedAbis';
+import { bridgeERC20ToABI, finalizeBridgeERC20ABI, finalizeBridgeETHABI, withdrawToABI } from '../parsedAbis';
 import {
   ForceErc20TransferProps,
   ForceErc20WithdrawalProps,
@@ -11,7 +11,7 @@ import { excecuteL1Deposit } from './helpers';
 
 export const forceEthTransfer = async ({ customClient, amount, to, userAddress }: ForceEthTransferProps) => {
   // temporary fixed values
-  const gas = 40_000n;
+  const gas = 100_000n;
   const isCreation = false;
 
   const data = encodeFunctionData({
@@ -51,7 +51,7 @@ export const forceErc20Transfer = async ({
   tokenAddress,
 }: ForceErc20TransferProps) => {
   // temporary fixed values
-  const gas = 40_000n;
+  const gas = 100_000n;
   const isCreation = false;
 
   const data = encodeFunctionData({
@@ -60,11 +60,11 @@ export const forceErc20Transfer = async ({
   });
 
   // TODO: check why it fails with the calculated estimateGas value
-  //   const gas = await customClient.to.public.estimateGas({
-  //     account: userAddress,
-  //     tokenAddress,
-  //     data,
-  //   });
+  // const gas = await customClient.to.public.estimateGas({
+  //   account: userAddress,
+  //   to: tokenAddress,
+  //   data,
+  // });
 
   const result = await excecuteL1Deposit({
     customClient,
@@ -138,7 +138,6 @@ export const forceErc20Withdrawal = async ({
 }: ForceErc20WithdrawalProps) => {
   // temporary fixed values
   const extraData = '0x';
-  const ethAddressOnBridge = '0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000'; // optimism sepolia
   const isCreation = false;
 
   const finalizeBridgeERC20Data = encodeFunctionData({
@@ -152,15 +151,15 @@ export const forceErc20Withdrawal = async ({
     data: finalizeBridgeERC20Data,
   });
 
-  const withdrawToData = encodeFunctionData({
-    abi: withdrawToABI,
-    args: [ethAddressOnBridge, to, amount, Number(finalizeBridgeERC20Gas), extraData],
+  const bridgeERC20ToData = encodeFunctionData({
+    abi: bridgeERC20ToABI,
+    args: [l2TokenAddress, l1TokenAddress, to, amount, Number(finalizeBridgeERC20Gas), extraData],
   });
 
-  const withdrawToGas = await customClient.to.public.estimateGas({
+  const bridgeERC20ToGas = await customClient.to.public.estimateGas({
     account: userAddress,
     to: customClient.to.contracts.standardBridge, // l2StandardBridge,
-    data: withdrawToData,
+    data: bridgeERC20ToData,
   });
 
   const result = await excecuteL1Deposit({
@@ -170,9 +169,9 @@ export const forceErc20Withdrawal = async ({
     args: {
       amount,
       to: customClient.to.contracts.standardBridge, //l2StandardBridge,
-      gas: withdrawToGas,
+      gas: bridgeERC20ToGas,
       isCreation,
-      data: withdrawToData,
+      data: bridgeERC20ToData,
     },
   });
 
