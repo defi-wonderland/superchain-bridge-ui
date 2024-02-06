@@ -1,7 +1,4 @@
-import { Hex } from 'viem';
-
 import { DepositERC20Props, DepositETHProps, DepositMessageProps } from '~/types';
-import { L1CrossDomainMessengerProxy, L1StandardBridgeProxy } from '../variables';
 import { bridgeERC20ToABI, sendMessageABI } from '../parsedAbis';
 import { waitForL2TransactionReceipt } from './helpers';
 
@@ -42,10 +39,10 @@ export const depositERC20 = async ({
   const hash = await customClient.from.wallet?.writeContract({
     chain: customClient.from.public.chain,
     account: userAddress,
-    address: L1StandardBridgeProxy,
+    address: customClient.from.contracts.standardBridge,
     abi: bridgeERC20ToABI,
     functionName: 'bridgeERC20To',
-    args: [l1TokenAddress, l2TokenAddress, userAddress!, amount, Number(minGasLimit), extraData],
+    args: [l1TokenAddress, l2TokenAddress, userAddress!, amount, minGasLimit, extraData],
   });
 
   const l2Receipt = await waitForL2TransactionReceipt(customClient.from.public, customClient.to.public, hash);
@@ -56,16 +53,15 @@ export const depositERC20 = async ({
 
 export const depositMessage = async ({ customClient, userAddress, data }: DepositMessageProps) => {
   // temporary fixed values
-  const message = data as Hex;
   const minGasLimit = 200_000;
 
   const hash = await customClient.from.wallet?.writeContract({
     chain: customClient.from.public.chain,
     account: userAddress,
-    address: L1CrossDomainMessengerProxy,
+    address: customClient.from.contracts.standardBridge,
     abi: sendMessageABI,
     functionName: 'sendMessage',
-    args: [userAddress, message, minGasLimit],
+    args: [userAddress, data, minGasLimit],
   });
 
   const l2Receipt = await waitForL2TransactionReceipt(customClient.from.public, customClient.to.public, hash);

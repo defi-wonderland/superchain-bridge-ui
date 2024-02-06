@@ -33,7 +33,7 @@ export const waitForL2TransactionReceipt = async (l1Client: PublicClient, l2Clie
  * @param customClient {@link CustomClients}
  * @param userAddress {@link Address}
  * @param to {@link Address}
- * @param args {@link ExecuteL1DepositProps.args}
+ * @param args {@link ExecuteL1DepositProps}
  * @returns The L1 hash and the L2 receipt.
  */
 export const excecuteL1Deposit = async ({ customClient, userAddress, to, args }: ExecuteL1DepositProps) => {

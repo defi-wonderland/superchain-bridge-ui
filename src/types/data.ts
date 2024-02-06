@@ -1,14 +1,23 @@
-import { PublicClient, WalletClient } from 'viem';
+import { Address, PublicClient, WalletClient } from 'viem';
 import { WalletActionsL1, WalletActionsL2, PublicActionsL1, PublicActionsL2 } from 'viem/op-stack';
+
+export interface OpContracts {
+  standardBridge: Address;
+  crossDomainMessenger: Address;
+  portal?: Address;
+  l2ToL1MessagePasser?: Address;
+}
 
 export interface CustomClients {
   from: {
     wallet?: WalletClient & (WalletActionsL1 & WalletActionsL2);
     public: PublicClient & (PublicActionsL2 & PublicActionsL1);
+    contracts: OpContracts; // contracts for the from chain
   };
   to: {
     wallet: WalletClient & (WalletActionsL1 & WalletActionsL2);
     public: PublicClient & (PublicActionsL2 & PublicActionsL1);
+    contracts: OpContracts; // contracts for the to chain
   };
 }
 

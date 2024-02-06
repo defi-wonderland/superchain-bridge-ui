@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi';
 import { walletActionsL1, walletActionsL2, publicActionsL1, publicActionsL2 } from 'viem/op-stack';
 
 import { useChain } from '~/hooks';
-import { alchemyUrls } from '~/utils';
+import { alchemyUrls, getFromContracts, getToContracts } from '~/utils';
 import { CustomClients } from '~/types';
 
 export const useCustomClient = () => {
@@ -50,13 +50,15 @@ export const useCustomClient = () => {
       from: {
         wallet: fromWalletClient?.extend(walletActionsL1()).extend(walletActionsL2()),
         public: fromPublicClient.extend(publicActionsL2()).extend(publicActionsL1()),
+        contracts: getFromContracts(fromChain, toChain),
       },
       to: {
         wallet: toWalletClient.extend(walletActionsL1()).extend(walletActionsL2()),
         public: toPublicClient.extend(publicActionsL2()).extend(publicActionsL1()),
+        contracts: getToContracts(fromChain, toChain),
       },
     }),
-    [fromPublicClient, fromWalletClient, toPublicClient, toWalletClient],
+    [fromChain, fromPublicClient, fromWalletClient, toChain, toPublicClient, toWalletClient],
   );
 
   return {

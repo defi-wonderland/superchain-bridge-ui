@@ -3,7 +3,7 @@ import { injected, walletConnect } from 'wagmi/connectors';
 import { createConfig } from 'wagmi';
 import * as wagmiChains from 'wagmi/chains';
 import { Transport, http } from 'viem';
-import { sepolia, optimismSepolia, baseSepolia, mainnet, optimism, base } from 'viem/chains';
+import { sepolia, optimismSepolia, baseSepolia } from 'viem/chains';
 
 import { getConfig } from '~/config';
 
@@ -13,9 +13,9 @@ export const alchemyUrls: { [k: string]: string } = {
   [optimismSepolia.id]: `https://opt-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   [sepolia.id]: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   [baseSepolia.id]: `https://base-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
-  [optimism.id]: `https://optimism-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
-  [mainnet.id]: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
-  [base.id]: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  // [optimism.id]: `https://optimism-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  // [mainnet.id]: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  // [base.id]: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
 };
 
 const networkId = Number(process.env.NEXT_PUBLIC_NETWORK ?? sepolia.id);
@@ -24,8 +24,8 @@ export const defaultChain = Object.values(wagmiChains).find((chain) => chain.id 
 const isE2E = process.env.NEXT_PUBLIC_IS_E2E === 'true';
 
 export const supportedChains = isE2E
-  ? ([sepolia, optimismSepolia, baseSepolia] as const)
-  : ([sepolia, optimismSepolia, mainnet, optimism, base] as const);
+  ? ([sepolia, optimismSepolia] as const)
+  : ([sepolia, optimismSepolia, baseSepolia] as const);
 
 export const connectors = [injected(), walletConnect({ projectId: PROJECT_ID })];
 

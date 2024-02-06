@@ -3,7 +3,6 @@ import { Address, erc20Abi, getContract, parseUnits } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
 
 import { useChain, useCustomClient, useTokenList } from '~/hooks';
-import { L1StandardBridgeProxy } from '~/utils';
 import { TokenData } from '~/types';
 
 type ContextType = {
@@ -89,7 +88,7 @@ export const TokenProvider = ({ children }: StateProps) => {
         address: selectedToken?.address as Address,
         functionName: 'approve',
         // temporary fixed spender
-        args: [L1StandardBridgeProxy, parseTokenUnits(amount)],
+        args: [from.contracts.standardBridge, parseTokenUnits(amount)],
       });
       const hash = await from.wallet?.writeContract(request);
 
@@ -117,14 +116,14 @@ export const TokenProvider = ({ children }: StateProps) => {
 
     // get allowance
     tokenContract.read
-      .allowance([address, L1StandardBridgeProxy]) // owner and spender
+      .allowance([address, from.contracts.standardBridge]) // owner and spender
       .then((allowance: bigint) => {
         setAllowance(allowance.toString());
       })
       .catch(() => {
         setAllowance('');
       });
-  }, [address, tokenContract]);
+  }, [address, from.contracts.standardBridge, tokenContract]);
 
   useEffect(
     function reset() {

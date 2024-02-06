@@ -1,5 +1,5 @@
-import { Address, Chain, Hex } from 'viem';
-import { CustomClients, TokenData } from './data';
+import { Address, Hex } from 'viem';
+import { CustomClients } from './data';
 
 export interface ExecuteL1DepositProps {
   customClient: CustomClients;
@@ -36,6 +36,8 @@ export interface DepositMessageProps {
   data: Hex;
 }
 
+// ------------------ Withdraw transactions ------------------
+
 export interface InitiateWithdrawProps {
   customClient: CustomClients;
   userAddress: Address;
@@ -46,10 +48,9 @@ export interface InitiateWithdrawProps {
 export interface InitiateERC20WithdrawProps {
   customClient: CustomClients;
   userAddress: Address;
-  selectedToken: TokenData;
   amount: bigint;
-  toChain: Chain;
-  toTokens: TokenData[];
+  l1TokenAddress: Address;
+  l2TokenAddress: Address;
 }
 
 export interface InitiateMessageWithdrawProps {
@@ -58,7 +59,7 @@ export interface InitiateMessageWithdrawProps {
   message: Hex;
 }
 
-// Force transactions
+// ------------------ Force transactions ------------------
 
 export interface ForceEthTransferProps {
   customClient: CustomClients;

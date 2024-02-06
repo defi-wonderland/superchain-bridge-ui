@@ -1,14 +1,12 @@
-import { Hex } from 'viem';
+import { Address, Hex } from 'viem';
 
-import { useTransactionData, useToken, useCustomClient, useTokenList, useChain } from '~/hooks';
+import { useTransactionData, useToken, useCustomClient } from '~/hooks';
 import { initiateERC20Withdraw, initiateETHWithdraw, initiateMessageWithdraw } from '~/utils';
 
 export const useWithdraw = () => {
   const { mint, userAddress, data } = useTransactionData();
-  const { selectedToken, amount, parseTokenUnits } = useToken();
+  const { selectedToken, amount, toToken, parseTokenUnits } = useToken();
   const { customClient } = useCustomClient();
-  const { toTokens } = useTokenList();
-  const { toChain } = useChain();
 
   const withdraw = async () => {
     if (!userAddress) return;
@@ -29,11 +27,10 @@ export const useWithdraw = () => {
     } else {
       await initiateERC20Withdraw({
         customClient,
-        selectedToken,
         amount: parseTokenUnits(amount),
         userAddress,
-        toChain,
-        toTokens,
+        l1TokenAddress: selectedToken.address as Address,
+        l2TokenAddress: toToken?.address as Address,
       });
     }
   };

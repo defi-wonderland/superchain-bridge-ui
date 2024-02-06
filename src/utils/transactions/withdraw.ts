@@ -1,4 +1,3 @@
-import { Address } from 'viem';
 import { InitiateERC20WithdrawProps, InitiateMessageWithdrawProps, InitiateWithdrawProps } from '~/types';
 import { bridgeERC20ToABI, sendMessageABI } from '../parsedAbis';
 
@@ -26,23 +25,18 @@ export const initiateETHWithdraw = async ({ customClient, userAddress, mint, to 
 export const initiateERC20Withdraw = async ({
   customClient,
   userAddress,
-  selectedToken,
   amount,
-  toChain,
-  toTokens,
+  l1TokenAddress,
+  l2TokenAddress,
 }: InitiateERC20WithdrawProps) => {
   // temporary fixed values
-  const l2StandardBridge = '0x4200000000000000000000000000000000000010';
   const extraData = '0x';
   const minGasLimit = 218_874;
-  const l1TokenAddress = selectedToken?.address as Address;
-  const l2Token = toTokens.find((token) => token.symbol === selectedToken?.symbol && token.chainId === toChain.id);
-  const l2TokenAddress = l2Token?.address as Address;
 
   const hash = await customClient.from.wallet?.writeContract({
     chain: customClient.from.public.chain,
     account: userAddress,
-    address: l2StandardBridge,
+    address: customClient.from.contracts.standardBridge,
     abi: bridgeERC20ToABI,
     functionName: 'bridgeERC20To',
     args: [l1TokenAddress, l2TokenAddress, userAddress!, amount, minGasLimit, extraData],
@@ -59,13 +53,12 @@ export const initiateERC20Withdraw = async ({
 
 export const initiateMessageWithdraw = async ({ customClient, userAddress, message }: InitiateMessageWithdrawProps) => {
   // temporary fixed values
-  const l2CrossDomainMessenger = '0x4200000000000000000000000000000000000007';
   const minGasLimit = 200_000; // TODO - get this from the contract
 
   const hash = await customClient.from.wallet?.writeContract({
     chain: customClient.from.public.chain,
     account: userAddress,
-    address: l2CrossDomainMessenger,
+    address: customClient.from.contracts.crossDomainMessenger,
     abi: sendMessageABI,
     functionName: 'sendMessage',
     args: [userAddress, message, minGasLimit],

@@ -12,7 +12,6 @@ import { excecuteL1Deposit } from './helpers';
 export const forceEthTransfer = async ({ customClient, amount, to, userAddress }: ForceEthTransferProps) => {
   // temporary fixed values
   const gas = 40_000n;
-  const portal = '0x16Fc5058F25648194471939df75CF27A2fdC48BC';
   const isCreation = false;
 
   const data = encodeFunctionData({
@@ -30,7 +29,7 @@ export const forceEthTransfer = async ({ customClient, amount, to, userAddress }
   const result = await excecuteL1Deposit({
     customClient,
     userAddress,
-    to: portal,
+    to: customClient.from.contracts.portal!, //portal,
     args: {
       amount,
       to,
@@ -53,7 +52,6 @@ export const forceErc20Transfer = async ({
 }: ForceErc20TransferProps) => {
   // temporary fixed values
   const gas = 40_000n;
-  const portal = '0x16Fc5058F25648194471939df75CF27A2fdC48BC';
   const isCreation = false;
 
   const data = encodeFunctionData({
@@ -71,7 +69,7 @@ export const forceErc20Transfer = async ({
   const result = await excecuteL1Deposit({
     customClient,
     userAddress,
-    to: portal,
+    to: customClient.from.contracts.portal!, //portal,
     args: {
       amount,
       to: tokenAddress,
@@ -88,11 +86,7 @@ export const forceErc20Transfer = async ({
 export const forceEthWithdrawal = async ({ customClient, userAddress, to, amount }: ForceEthWithdrawalProps) => {
   // temporary fixed values
   const extraData = '0x';
-  const l1CrossDomainMessenger = '0x25ace71c97B33Cc4729CF772ae268934F7ab5fA1'; // sepolia
-  const l1StandardBridge = '0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1'; // sepolia
-  const portal = '0x16Fc5058F25648194471939df75CF27A2fdC48BC'; // sepolia
   const ethAddressOnBridge = '0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000'; // optimism sepolia
-  const l2StandardBridge = '0x4200000000000000000000000000000000000010'; // optimism sepolia
   const isCreation = false;
 
   const finalizeBridgeETHData = encodeFunctionData({
@@ -101,8 +95,8 @@ export const forceEthWithdrawal = async ({ customClient, userAddress, to, amount
   });
 
   const finalizeBridgeEthGas = await customClient.from.public.estimateGas({
-    account: l1CrossDomainMessenger,
-    to: l1StandardBridge,
+    account: customClient.from.contracts.crossDomainMessenger, //l1CrossDomainMessenger,
+    to: customClient.from.contracts.standardBridge, //l1StandardBridge,
     data: finalizeBridgeETHData,
   });
 
@@ -113,17 +107,17 @@ export const forceEthWithdrawal = async ({ customClient, userAddress, to, amount
 
   const withdrawToGas = await customClient.to.public.estimateGas({
     account: userAddress,
-    to: l2StandardBridge,
+    to: customClient.to.contracts.standardBridge, //l2StandardBridge,
     data: withdrawToData,
   });
 
   const result = await excecuteL1Deposit({
     customClient,
     userAddress,
-    to: portal,
+    to: customClient.from.contracts.portal!, // portal
     args: {
       amount,
-      to: l2StandardBridge,
+      to: customClient.to.contracts.standardBridge, //l2StandardBridge,
       gas: withdrawToGas,
       isCreation,
       data: withdrawToData,
@@ -144,11 +138,7 @@ export const forceErc20Withdrawal = async ({
 }: ForceErc20WithdrawalProps) => {
   // temporary fixed values
   const extraData = '0x';
-  const l1CrossDomainMessenger = '0x25ace71c97B33Cc4729CF772ae268934F7ab5fA1'; // sepolia
-  const l1StandardBridge = '0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1'; // sepolia
-  const portal = '0x16Fc5058F25648194471939df75CF27A2fdC48BC'; // sepolia
   const ethAddressOnBridge = '0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000'; // optimism sepolia
-  const l2StandardBridge = '0x4200000000000000000000000000000000000010'; // optimism sepolia
   const isCreation = false;
 
   const finalizeBridgeERC20Data = encodeFunctionData({
@@ -157,8 +147,8 @@ export const forceErc20Withdrawal = async ({
   });
 
   const finalizeBridgeERC20Gas = await customClient.from.public.estimateGas({
-    account: l1CrossDomainMessenger,
-    to: l1StandardBridge,
+    account: customClient.from.contracts.crossDomainMessenger, //l1CrossDomainMessenger,
+    to: customClient.from.contracts.standardBridge, //l1StandardBridge,
     data: finalizeBridgeERC20Data,
   });
 
@@ -169,17 +159,17 @@ export const forceErc20Withdrawal = async ({
 
   const withdrawToGas = await customClient.to.public.estimateGas({
     account: userAddress,
-    to: l2StandardBridge,
+    to: customClient.to.contracts.standardBridge, // l2StandardBridge,
     data: withdrawToData,
   });
 
   const result = await excecuteL1Deposit({
     customClient,
     userAddress,
-    to: portal,
+    to: customClient.from.contracts.portal!, //portal,
     args: {
       amount,
-      to: l2StandardBridge,
+      to: customClient.to.contracts.standardBridge, //l2StandardBridge,
       gas: withdrawToGas,
       isCreation,
       data: withdrawToData,
