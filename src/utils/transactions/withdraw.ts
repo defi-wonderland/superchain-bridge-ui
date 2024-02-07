@@ -1,17 +1,21 @@
 import { InitiateERC20WithdrawProps, InitiateMessageWithdrawProps, InitiateWithdrawProps } from '~/types';
-import { bridgeERC20ToABI, sendMessageABI } from '../parsedAbis';
+import { bridgeERC20ToABI, bridgeETHToABI, sendMessageABI } from '../parsedAbis';
 
 export const initiateETHWithdraw = async ({ customClient, userAddress, mint, to }: InitiateWithdrawProps) => {
-  const args = await customClient.to.public.buildInitiateWithdrawal({
-    chain: customClient.to.public.chain,
+  // temporary fixed values
+  const extraData = '0x';
+  const minGasLimit = 218_874;
+
+  const { request } = await customClient.from.public.simulateContract({
     account: userAddress,
-    to: to,
+    address: customClient.from.contracts.standardBridge,
+    abi: bridgeETHToABI,
+    functionName: bridgeETHToABI[0].name,
+    args: [to, minGasLimit, extraData],
     value: mint,
   });
 
-  // Execute the initiate withdrawal transaction on the L2.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const hash = await customClient.from.wallet?.initiateWithdrawal(args as any);
+  const hash = await customClient.from.wallet?.writeContract(request);
 
   if (!hash) throw new Error('No hash returned');
 
@@ -33,14 +37,16 @@ export const initiateERC20Withdraw = async ({
   const extraData = '0x';
   const minGasLimit = 218_874;
 
-  const hash = await customClient.from.wallet?.writeContract({
+  const { request } = await customClient.from.public.simulateContract({
     chain: customClient.from.public.chain,
     account: userAddress,
     address: customClient.from.contracts.standardBridge,
     abi: bridgeERC20ToABI,
-    functionName: 'bridgeERC20To',
+    functionName: bridgeERC20ToABI[0].name,
     args: [l1TokenAddress, l2TokenAddress, userAddress!, amount, minGasLimit, extraData],
   });
+
+  const hash = await customClient.from.wallet?.writeContract(request);
 
   if (!hash) throw new Error('No hash returned');
 
@@ -55,7 +61,7 @@ export const initiateMessageWithdraw = async ({ customClient, userAddress, messa
   // temporary fixed values
   const minGasLimit = 200_000; // TODO - get this from the contract
 
-  const hash = await customClient.from.wallet?.writeContract({
+  const { request } = await customClient.from.public.simulateContract({
     chain: customClient.from.public.chain,
     account: userAddress,
     address: customClient.from.contracts.crossDomainMessenger,
@@ -63,6 +69,8 @@ export const initiateMessageWithdraw = async ({ customClient, userAddress, messa
     functionName: 'sendMessage',
     args: [userAddress, message, minGasLimit],
   });
+
+  const hash = await customClient.from.wallet?.writeContract(request);
 
   if (!hash) throw new Error('No hash returned');
 
