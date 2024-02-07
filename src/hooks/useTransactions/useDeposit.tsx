@@ -25,6 +25,7 @@ export const useDeposit = () => {
       } else if (selectedToken?.symbol === 'ETH') {
         await depositETH({
           customClient,
+          userAddress,
           mint: parseTokenUnits(mint),
           to: userAddress,
         });

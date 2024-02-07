@@ -16,6 +16,7 @@ export interface ExecuteL1DepositProps {
 
 export interface DepositETHProps {
   customClient: CustomClients;
+  userAddress: Address;
   mint: bigint;
   to: Address;
 }
