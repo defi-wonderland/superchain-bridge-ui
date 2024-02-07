@@ -25,6 +25,11 @@ export const useCustomClient = () => {
     return createPublicClient({
       chain: fromChain,
       transport: http(alchemyUrls[fromChain.id]),
+      batch: {
+        multicall: {
+          wait: 40,
+        },
+      },
     });
   }, [fromChain]);
 
@@ -42,6 +47,11 @@ export const useCustomClient = () => {
     return createPublicClient({
       chain: toChain,
       transport: http(alchemyUrls[toChain.id]),
+      batch: {
+        multicall: {
+          wait: 40,
+        },
+      },
     });
   }, [toChain]);
 
