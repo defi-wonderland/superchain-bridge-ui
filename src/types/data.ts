@@ -6,7 +6,13 @@ import {
   PublicActionsL2,
   GetWithdrawalStatusReturnType,
 } from 'viem/op-stack';
-import { messagePassedAbi, transactionDepositedABI } from '~/utils';
+import {
+  erc20BridgeInitiatedABI,
+  ethBridgeInitiatedABI,
+  messagePassedAbi,
+  sentMessageABI,
+  transactionDepositedABI,
+} from '~/utils';
 
 export interface OpContracts {
   standardBridge: Address;
@@ -57,10 +63,15 @@ export enum ForceTransactionType {
   ERC20_TRANSFER = 'erc20Transfer',
 }
 
-export type DepositLogs = { logs: GetLogsReturnType<typeof transactionDepositedABI>; receipts: TransactionReceipt[] };
+export type DepositLogs = {
+  logs: GetLogsReturnType<typeof transactionDepositedABI>;
+  receipts: TransactionReceipt[];
+};
 
 export type WithdrawLogs = {
-  logs: GetLogsReturnType<typeof messagePassedAbi>;
+  logs: GetLogsReturnType<
+    typeof messagePassedAbi | typeof erc20BridgeInitiatedABI | typeof ethBridgeInitiatedABI | typeof sentMessageABI
+  >;
   receipts: TransactionReceipt[];
   status: GetWithdrawalStatusReturnType[];
 };

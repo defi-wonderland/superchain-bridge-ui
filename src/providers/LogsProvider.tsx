@@ -1,19 +1,10 @@
 import { createContext, useEffect, useState } from 'react';
 import { useQueries } from '@tanstack/react-query';
-import { GetLogsReturnType, TransactionReceipt } from 'viem';
-import { GetWithdrawalStatusReturnType } from 'viem/op-stack';
 import { useAccount } from 'wagmi';
 
-import { messagePassedAbi, transactionDepositedABI } from '~/utils';
 import { useCustomClient } from '~/hooks';
 import { getDepositLogs, getWithdrawLogs } from '~/utils/transactions/logs';
-
-type DepositLogs = { logs: GetLogsReturnType<typeof transactionDepositedABI>; receipts: TransactionReceipt[] };
-type WithdrawLogs = {
-  logs: GetLogsReturnType<typeof messagePassedAbi>;
-  receipts: TransactionReceipt[];
-  status: GetWithdrawalStatusReturnType[];
-};
+import { DepositLogs, WithdrawLogs } from '~/types';
 
 type ContextType = {
   depositLogs?: DepositLogs;
@@ -45,6 +36,7 @@ export const LogsProvider = ({ children }: StateProps) => {
         queryFn: () => getWithdrawLogs({ userAddress, customClient }),
         enabled: !!userAddress,
         refetchOnWindowFocus: false, // temporary disable refetch on window focus
+        retry: 1,
       },
     ],
   });
