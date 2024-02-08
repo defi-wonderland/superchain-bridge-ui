@@ -1,5 +1,5 @@
-import { Box, Button, Paper } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { Box, Button, Paper } from '@mui/material';
 import { TransactionReceipt, isAddress } from 'viem';
 import { useAccount } from 'wagmi';
 
