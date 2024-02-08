@@ -7,6 +7,7 @@ import {
   ethBridgeInitiatedABI,
   messagePassedAbi,
   sentMessageABI,
+  sentMessageExtensionABI,
   transactionDepositedABI,
 } from '../parsedEvents';
 
@@ -100,9 +101,9 @@ interface GetDepositLogsParameters {
 export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLogsParameters): Promise<DepositLogs> => {
   if (!userAddress) throw new Error('No user address provided');
 
-  const logs = await customClient.from.public.getLogs({
-    address: customClient.from.contracts.portal, // L1 portal,
-    event: transactionDepositedABI,
+  const logsFromEthDepositedPromise = customClient.from.public.getLogs({
+    address: customClient.from.contracts.standardBridge, // L1 standard bridge
+    event: ethBridgeInitiatedABI,
     args: {
       from: userAddress,
     },
@@ -110,7 +111,66 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
     toBlock: 'latest',
   });
 
-  // temporary disabled
+  const logsFromErc20DepositedPromise = customClient.from.public.getLogs({
+    address: customClient.from.contracts.standardBridge, // L1 standard bridge
+    event: erc20BridgeInitiatedABI,
+    args: {
+      from: userAddress,
+    },
+    fromBlock: 'earliest',
+    toBlock: 'latest',
+  });
+
+  const logsFromMessagesDepositedPromise = customClient.from.public.getLogs({
+    address: customClient.from.contracts.crossDomainMessenger, // L1 cross domain messenger
+    event: sentMessageExtensionABI,
+    args: {
+      sender: userAddress,
+    },
+    fromBlock: 'earliest',
+    toBlock: 'latest',
+  });
+
+  const logsFromForcedTransactionsPromise = customClient.from.public.getLogs({
+    address: customClient.from.contracts.portal, // L1 portal
+    event: transactionDepositedABI,
+    args: {
+      from: userAddress,
+    },
+    fromBlock: 'earliest',
+    toBlock: 'latest',
+    strict: false,
+  });
+
+  const [logsFromEthDeposited, logsFromErc20Deposited, logsFromMessagesDeposited, logsFromForcedTransactions] =
+    await Promise.all([
+      logsFromEthDepositedPromise,
+      logsFromErc20DepositedPromise,
+      logsFromMessagesDepositedPromise,
+      logsFromForcedTransactionsPromise,
+    ]);
+
+  // TODO: required to format the message deposits for the user history page
+  // const messageTransactions = await Promise.all(
+  //   logsFromMessagesDeposited.map(({ transactionHash }) => {
+  //     return customClient.from.public.getTransaction({ hash: transactionHash });
+  //   }),
+  // );
+
+  // TODO: implement the following (depends on the final design of the user history page)
+  // - formatEthDeposits()
+  // - formatErc20Deposits()
+  // - formatMessageDeposits()
+  // - formatForcedTransactions()
+
+  const logs = [
+    ...logsFromEthDeposited,
+    ...logsFromErc20Deposited,
+    ...logsFromMessagesDeposited,
+    ...logsFromForcedTransactions,
+  ];
+
+  // Receipts to get the L2 transaction status
   // const receipts = await Promise.all(
   //   logs.map(({ transactionHash }) => {
   //     return customClient.from.public.getTransactionReceipt({ hash: transactionHash });

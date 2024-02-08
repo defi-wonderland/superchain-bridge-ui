@@ -1,6 +1,16 @@
 import { parseAbiItem } from 'viem';
 
 /**
+ * @notice Additional event data to emit, required as of Bedrock. Cannot be merged with the
+ *         SentMessage event without breaking the ABI of this contract, this is good enough.
+ * @param sender Address of the sender of the message.
+ * @param value  ETH value sent along with the message to the recipient.
+ */
+export const sentMessageExtensionABI = parseAbiItem(
+  'event SentMessageExtension1(address indexed sender,uint256 value)',
+);
+
+/**
  * @notice Emitted whenever a message is sent to the other chain.
  * @param target       Address of the recipient of the message.
  * @param sender       Address of the sender of the message.

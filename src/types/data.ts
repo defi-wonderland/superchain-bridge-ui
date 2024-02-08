@@ -11,6 +11,7 @@ import {
   ethBridgeInitiatedABI,
   messagePassedAbi,
   sentMessageABI,
+  sentMessageExtensionABI,
   transactionDepositedABI,
 } from '~/utils';
 
@@ -64,7 +65,12 @@ export enum ForceTransactionType {
 }
 
 export type DepositLogs = {
-  logs: GetLogsReturnType<typeof transactionDepositedABI>;
+  logs: GetLogsReturnType<
+    | typeof transactionDepositedABI
+    | typeof ethBridgeInitiatedABI
+    | typeof erc20BridgeInitiatedABI
+    | typeof sentMessageExtensionABI
+  >;
   receipts: TransactionReceipt[];
 };
 
