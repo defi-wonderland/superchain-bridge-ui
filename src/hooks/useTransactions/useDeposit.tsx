@@ -5,7 +5,7 @@ import { depositERC20, depositETH, depositMessage } from '~/utils';
 import { useForceTx } from './useForceTx';
 
 export const useDeposit = () => {
-  const { mint, userAddress, data, isForceTransaction } = useTransactionData();
+  const { mint, userAddress, data, isForceTransaction, to } = useTransactionData();
   const { selectedToken, amount, allowance, toToken, approve, parseTokenUnits } = useToken();
   const { customClient } = useCustomClient();
   const forceTx = useForceTx();
@@ -21,6 +21,7 @@ export const useDeposit = () => {
           customClient,
           userAddress: userAddress,
           data: data as Hex,
+          target: to as Address,
         });
       } else if (selectedToken?.symbol === 'ETH') {
         await depositETH({

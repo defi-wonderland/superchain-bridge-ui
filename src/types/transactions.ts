@@ -34,6 +34,7 @@ export interface DepositERC20Props {
 export interface DepositMessageProps {
   customClient: CustomClients;
   userAddress: Address;
+  target: Address;
   data: Hex;
 }
 

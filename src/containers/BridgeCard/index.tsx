@@ -49,12 +49,8 @@ export const BridgeCard = () => {
           </Button>
         )}
 
-        {isForceTransaction && (
-          <>
-            <InputField label='To' value={to} setValue={setTo} error={!!to && !isHex(to)} />
-            <br />
-          </>
-        )}
+        <InputField label='To' value={to} setValue={setTo} error={!!to && !isHex(to)} />
+        <br />
 
         {!isAdvanceMode && <TokenSection />}
 

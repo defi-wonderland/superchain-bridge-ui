@@ -58,17 +58,17 @@ export const depositERC20 = async ({
   console.log(l2Receipt);
 };
 
-export const depositMessage = async ({ customClient, userAddress, data }: DepositMessageProps) => {
+export const depositMessage = async ({ customClient, userAddress, target, data }: DepositMessageProps) => {
   // temporary fixed values
   const minGasLimit = 200_000;
 
   const { request } = await customClient.from.public.simulateContract({
     chain: customClient.from.public.chain,
     account: userAddress,
-    address: customClient.from.contracts.standardBridge,
+    address: customClient.from.contracts.crossDomainMessenger,
     abi: sendMessageABI,
     functionName: sendMessageABI[0].name,
-    args: [userAddress, data, minGasLimit],
+    args: [target, data, minGasLimit],
   });
 
   const hash = await customClient.from.wallet?.writeContract(request);
@@ -77,4 +77,14 @@ export const depositMessage = async ({ customClient, userAddress, data }: Deposi
 
   // temporary log
   console.log(l2Receipt);
+};
+
+// This is a test function that simulates a failed deposit transaction, it will not used in the application
+// it'll be removed in the future
+export const testDepositFailedTransaction = async ({ customClient, userAddress }: DepositMessageProps) => {
+  const target = '0xEF60cF6C6D0C1c755be104843bb72CDa3D778630';
+  const data =
+    '0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000774657374696e6700000000000000000000000000000000000000000000000000';
+
+  await depositMessage({ customClient, userAddress, target, data });
 };
