@@ -5,6 +5,7 @@ import { GetWithdrawalStatusParameters } from 'viem/op-stack';
 import {
   erc20BridgeInitiatedABI,
   ethBridgeInitiatedABI,
+  failedRelayedMessageABI,
   messagePassedAbi,
   sentMessageABI,
   sentMessageExtensionABI,
@@ -178,4 +179,26 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
   // );
 
   return { logs, receipts: [] };
+};
+
+interface GetFailedTransactionLogsParameters {
+  customClient: CustomClients;
+  userAddress: Address;
+  depositLogs: DepositLogs;
+}
+export const getFailedTransactionLogs = async ({ customClient }: GetFailedTransactionLogsParameters) => {
+  // temporary fixed value
+  const msgHash = '0x'; // TODO: get the msgHash from the depositLogs
+
+  const errorLogs = await customClient.to.public.getLogs({
+    address: customClient.to.contracts.crossDomainMessenger, // L2 cross domain messenger
+    event: failedRelayedMessageABI,
+    args: {
+      msgHash: msgHash,
+    },
+    fromBlock: 'earliest',
+    toBlock: 'latest',
+  });
+
+  console.log(errorLogs);
 };

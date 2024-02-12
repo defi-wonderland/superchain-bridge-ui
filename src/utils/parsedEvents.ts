@@ -74,3 +74,9 @@ export const transactionDepositedABI = parseAbiItem(
 export const messagePassedAbi = parseAbiItem(
   'event MessagePassed(uint256 indexed nonce,address indexed sender,address indexed target,uint256 value,uint256 gasLimit,bytes data,bytes32 withdrawalHash)',
 );
+
+/**
+ * @notice Emitted whenever a message fails to be relayed on this chain.
+ * @param msgHash Hash of the message that failed to be relayed.
+ */
+export const failedRelayedMessageABI = parseAbiItem('event FailedRelayedMessage(bytes32 indexed msgHash)');
