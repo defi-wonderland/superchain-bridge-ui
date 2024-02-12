@@ -7,7 +7,6 @@ import {
   ethBridgeInitiatedABI,
   failedRelayedMessageABI,
   messagePassedAbi,
-  sentMessageABI,
   sentMessageExtensionABI,
   transactionDepositedABI,
 } from '../parsedEvents';
@@ -34,9 +33,9 @@ export const getWithdrawLogs = async ({
 
   const logsFromL2CrossDomainPromise = customClient.to.public.getLogs({
     address: customClient.to.contracts.crossDomainMessenger, // L2 cross domain messenger
-    event: sentMessageABI,
+    event: sentMessageExtensionABI,
     args: {
-      target: userAddress,
+      sender: userAddress,
     },
     fromBlock: 'earliest',
     toBlock: 'latest',
@@ -91,6 +90,15 @@ export const getWithdrawLogs = async ({
       } as GetWithdrawalStatusParameters);
     }),
   );
+
+  // temporary loga
+  console.log({
+    logsFromL2ToL1MessagePasser,
+    logsFromL2CrossDomain,
+    ethLogsFromL2StandarBridge,
+    erc20LogsFromL2StandarBridge,
+  });
+  console.log({ logs, receipts, status });
 
   return { logs, receipts, status };
 };
@@ -170,6 +178,14 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
     ...logsFromMessagesDeposited,
     ...logsFromForcedTransactions,
   ];
+
+  // temporary log
+  console.log({
+    logsFromEthDeposited,
+    logsFromErc20Deposited,
+    logsFromMessagesDeposited,
+    logsFromForcedTransactions,
+  });
 
   // Receipts to get the L2 transaction status
   // const receipts = await Promise.all(

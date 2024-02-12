@@ -81,10 +81,10 @@ export const depositMessage = async ({ customClient, userAddress, target, data }
 
 // This is a test function that simulates a failed deposit transaction, it will not used in the application
 // it'll be removed in the future
-export const testDepositFailedTransaction = async ({ customClient, userAddress }: DepositMessageProps) => {
-  const target = '0xEF60cF6C6D0C1c755be104843bb72CDa3D778630';
-  const data =
-    '0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000774657374696e6700000000000000000000000000000000000000000000000000';
+// export const testDepositFailedTransaction = async ({ customClient, userAddress }: DepositMessageProps) => {
+//   const target = '0xEF60cF6C6D0C1c755be104843bb72CDa3D778630';
+//   const data =
+//     '0xa41368620000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000774657374696e6700000000000000000000000000000000000000000000000000';
 
-  await depositMessage({ customClient, userAddress, target, data });
-};
+//   await depositMessage({ customClient, userAddress, target, data });
+// };

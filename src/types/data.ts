@@ -10,7 +10,6 @@ import {
   erc20BridgeInitiatedABI,
   ethBridgeInitiatedABI,
   messagePassedAbi,
-  sentMessageABI,
   sentMessageExtensionABI,
   transactionDepositedABI,
 } from '~/utils';
@@ -76,7 +75,10 @@ export type DepositLogs = {
 
 export type WithdrawLogs = {
   logs: GetLogsReturnType<
-    typeof messagePassedAbi | typeof erc20BridgeInitiatedABI | typeof ethBridgeInitiatedABI | typeof sentMessageABI
+    | typeof messagePassedAbi
+    | typeof erc20BridgeInitiatedABI
+    | typeof ethBridgeInitiatedABI
+    | typeof sentMessageExtensionABI
   >;
   receipts: TransactionReceipt[];
   status: GetWithdrawalStatusReturnType[];

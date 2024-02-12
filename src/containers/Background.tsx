@@ -34,6 +34,7 @@ const SquarePattern = styled('canvas')`
   background-size: 80px 80px;
   width: 100%;
   height: 100%;
+  opacity: 0.3;
   position: absolute;
   top: 0;
   left: 0;
