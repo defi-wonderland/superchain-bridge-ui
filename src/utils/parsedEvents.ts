@@ -6,9 +6,8 @@ import { parseAbiItem } from 'viem';
  * @param sender Address of the sender of the message.
  * @param value  ETH value sent along with the message to the recipient.
  */
-export const sentMessageExtensionABI = parseAbiItem(
-  'event SentMessageExtension1(address indexed sender,uint256 value)',
-);
+export const sentMessageExtensionEvent = 'event SentMessageExtension1(address indexed sender,uint256 value)';
+export const sentMessageExtensionABI = parseAbiItem(sentMessageExtensionEvent);
 
 /**
  * @notice Emitted whenever a message is sent to the other chain.
@@ -18,9 +17,9 @@ export const sentMessageExtensionABI = parseAbiItem(
  * @param messageNonce Unique nonce attached to the message.
  * @param gasLimit     Minimum gas limit that the message can be executed with.
  */
-export const sentMessageABI = parseAbiItem(
-  'event SentMessage(address indexed target, address sender, bytes message, uint256 messageNonce, uint256 gasLimit)',
-);
+export const sentMessageEvent =
+  'event SentMessage(address indexed target, address sender, bytes message, uint256 messageNonce, uint256 gasLimit)';
+export const sentMessageABI = parseAbiItem(sentMessageEvent);
 
 /**
  * @notice Emitted when an ERC20 bridge is initiated to the other chain.

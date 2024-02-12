@@ -1,4 +1,4 @@
-import { Address, GetLogsReturnType, PublicClient, TransactionReceipt, WalletClient } from 'viem';
+import { Address, GetLogsReturnType, Hex, PublicClient, TransactionReceipt, WalletClient } from 'viem';
 import {
   WalletActionsL1,
   WalletActionsL2,
@@ -71,6 +71,7 @@ export type DepositLogs = {
     | typeof sentMessageExtensionABI
   >;
   receipts: TransactionReceipt[];
+  msgHashes: Hex[];
 };
 
 export type WithdrawLogs = {

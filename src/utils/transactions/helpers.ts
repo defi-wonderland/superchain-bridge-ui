@@ -1,8 +1,9 @@
-import { Hex, PublicClient, TransactionReceipt } from 'viem';
+import { Hex, PublicClient, TransactionReceipt, decodeEventLog, encodeFunctionData, keccak256, parseAbi } from 'viem';
 import { getL2TransactionHashes } from 'viem/op-stack';
 
 import { ExecuteL1DepositProps } from '~/types';
-import { depositTransactionABI } from '../parsedAbis';
+import { depositTransactionABI, relayMessageABI } from '../parsedAbis';
+import { sentMessageEvent, sentMessageExtensionEvent } from '../parsedEvents';
 
 /**
  * Receives a L1 transaction hash and waits for the L2 transaction receipt.
@@ -57,4 +58,51 @@ export const excecuteL1Deposit = async ({ customClient, userAddress, to, args }:
     l1Hash,
     l2Receipt,
   };
+};
+
+export const getMsgHashes = (messageReceipts: TransactionReceipt[], receiptType: 'erc20' | 'message') => {
+  // if receipts are from messages:
+  // - sentMessage log index = 1
+  // - sentMessageExtension log index = 2
+
+  // if receipts are from erc20 deposits:
+  // - sentMessage log index = 5
+  // - sentMessageExtension log index = 6
+
+  const sentMessageLogIndex = receiptType === 'message' ? 1 : 5;
+  const sentMessageExtensionLogIndex = receiptType === 'message' ? 2 : 6;
+
+  const sentMessageDecoded = messageReceipts.map(({ logs }) =>
+    decodeEventLog({
+      abi: parseAbi([sentMessageEvent]),
+      data: logs[sentMessageLogIndex].data,
+      topics: logs[sentMessageLogIndex].topics,
+    }),
+  );
+
+  const sentMessageExtensionDecoded = messageReceipts.map(({ logs }) =>
+    decodeEventLog({
+      abi: parseAbi([sentMessageExtensionEvent]),
+      data: logs[sentMessageExtensionLogIndex].data,
+      topics: logs[sentMessageExtensionLogIndex].topics,
+    }),
+  );
+
+  const msgHashes = sentMessageDecoded.map(({ args }, index) =>
+    keccak256(
+      encodeFunctionData({
+        abi: relayMessageABI,
+        args: [
+          args.messageNonce,
+          args.sender,
+          args.target,
+          sentMessageExtensionDecoded[index].args.value,
+          args.gasLimit,
+          args.message,
+        ],
+      }),
+    ),
+  );
+
+  return msgHashes;
 };

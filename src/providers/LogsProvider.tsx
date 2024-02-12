@@ -3,7 +3,7 @@ import { useQueries } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
 
 import { useCustomClient } from '~/hooks';
-import { getDepositLogs, getWithdrawLogs } from '~/utils/transactions/logs';
+import { getDepositLogs, getWithdrawLogs } from '~/utils';
 import { DepositLogs, WithdrawLogs } from '~/types';
 
 type ContextType = {
