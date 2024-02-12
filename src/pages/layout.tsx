@@ -1,5 +1,6 @@
 import { CssBaseline, styled } from '@mui/material';
 import { ConfirmModal, Header, LoadingModal, ReviewModal, SuccessModal } from '~/containers';
+import { Background } from '~/containers';
 
 export const Modals = () => {
   return (
@@ -16,6 +17,7 @@ export const Modals = () => {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <Background />
       <CssBaseline />
       <Modals />
       <Header />

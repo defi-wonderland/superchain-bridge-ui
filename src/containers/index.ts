@@ -4,3 +4,4 @@ export * from './Header';
 export * from './Landing';
 export * from './Layout';
 export * from './Modals';
+export * from './Background';

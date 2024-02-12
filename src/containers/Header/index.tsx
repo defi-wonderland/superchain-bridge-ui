@@ -65,7 +65,6 @@ const HeaderContainer = styled('nav')(() => {
     width: '100%',
     maxWidth: '100vw',
     zIndex: 100,
-    borderBottom: `0.5px solid ${currentTheme.borderColor}`,
     h1: {
       color: currentTheme.titleColor,
     },
