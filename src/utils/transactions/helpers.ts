@@ -60,17 +60,9 @@ export const excecuteL1Deposit = async ({ customClient, userAddress, to, args }:
   };
 };
 
-export const getMsgHashes = (messageReceipts: TransactionReceipt[], receiptType: 'erc20' | 'message') => {
-  // if receipts are from messages:
-  // - sentMessage log index = 1
-  // - sentMessageExtension log index = 2
-
-  // if receipts are from erc20 deposits:
-  // - sentMessage log index = 5
-  // - sentMessageExtension log index = 6
-
-  const sentMessageLogIndex = receiptType === 'message' ? 1 : 5;
-  const sentMessageExtensionLogIndex = receiptType === 'message' ? 2 : 6;
+export const getMsgHashes = (messageReceipts: TransactionReceipt[], receiptType: 'erc20' | 'message' | 'eth') => {
+  const sentMessageLogIndex = getSenMessageLogIndex(receiptType);
+  const sentMessageExtensionLogIndex = getSentMessageExtensionLogIndex(receiptType);
 
   const sentMessageDecoded = messageReceipts.map(({ logs }) =>
     decodeEventLog({
@@ -114,4 +106,34 @@ export const getMsgHashes = (messageReceipts: TransactionReceipt[], receiptType:
   );
 
   return { msgHashes, args };
+};
+
+const getSenMessageLogIndex = (receiptType: 'erc20' | 'message' | 'eth') => {
+  // if receipts are from messages:
+  // - sentMessage log index = 1
+
+  // if receipts are from erc20 transactions:
+  // - sentMessage log index = 5
+
+  // if receipts are from eth transactions:
+  // - sentMessage log index = 3
+
+  if (receiptType === 'message') return 1;
+  if (receiptType === 'erc20') return 5;
+  return 3;
+};
+
+const getSentMessageExtensionLogIndex = (receiptType: 'erc20' | 'message' | 'eth') => {
+  // if receipts are from messages:
+  // - sentMessageExtension1 log index = 2
+
+  // if receipts are from erc20 transactions:
+  // - sentMessageExtension1 log index = 6
+
+  // if receipts are from eth transactions:
+  // - sentMessageExtension1 log index = 4
+
+  if (receiptType === 'message') return 2;
+  if (receiptType === 'erc20') return 6;
+  return 4;
 };

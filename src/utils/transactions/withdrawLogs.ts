@@ -8,6 +8,8 @@ import {
   messagePassedAbi,
   sentMessageExtensionABI,
 } from '../parsedEvents';
+import { getMsgHashes } from './helpers';
+import { getFailedTransactionLogs } from './getFailedTxs';
 
 interface GetWithdrawalLogsParameters {
   customClient: CustomClients;
@@ -74,12 +76,14 @@ export const getWithdrawLogs = async ({
     ...erc20LogsFromL2StandarBridge,
   ];
 
+  // Get all receipts
   const receipts = await Promise.all(
     logs.map(({ transactionHash }) => {
       return customClient.to.public.getTransactionReceipt({ hash: transactionHash });
     }),
   );
 
+  // Get all status of the withdrawals
   const status = await Promise.all(
     receipts.map((receipt) => {
       return customClient.from.public.getWithdrawalStatus({
@@ -89,6 +93,40 @@ export const getWithdrawLogs = async ({
     }),
   );
 
+  // Get the message hashes and args
+
+  const messageReceipts = await Promise.all(
+    logsFromL2CrossDomain.map(({ transactionHash }) => {
+      return customClient.to.public.getTransactionReceipt({ hash: transactionHash });
+    }),
+  );
+
+  const erc20Receipts = await Promise.all(
+    erc20LogsFromL2StandarBridge.map(({ transactionHash }) => {
+      return customClient.to.public.getTransactionReceipt({ hash: transactionHash });
+    }),
+  );
+  const ethReceipts = await Promise.all(
+    ethLogsFromL2StandarBridge.map(({ transactionHash }) => {
+      return customClient.to.public.getTransactionReceipt({ hash: transactionHash });
+    }),
+  );
+
+  const { msgHashes: msgHashesFromMessages, args: argsFromMessages } = getMsgHashes(messageReceipts, 'message');
+  const { msgHashes: msgHashesFromErc20, args: argsFromErc20 } = getMsgHashes(erc20Receipts, 'erc20');
+  const { msgHashes: msgHashesFromEth, args: argsFromEth } = getMsgHashes(ethReceipts, 'eth');
+
+  const msgHashes = [...msgHashesFromMessages, ...msgHashesFromErc20, ...msgHashesFromEth];
+  const args = [...argsFromMessages, ...argsFromErc20, ...argsFromEth];
+
+  const failedTxs = await getFailedTransactionLogs({
+    // for withdrawal txs, should be the L1 client
+    publicClient: customClient.from.public,
+    crossDomainMessenger: customClient.from.contracts.crossDomainMessenger,
+    userAddress,
+    msgHashes,
+  });
+
   // temporary logs
   console.log({
     logsFromL2ToL1MessagePasser,
@@ -97,7 +135,17 @@ export const getWithdrawLogs = async ({
     erc20LogsFromL2StandarBridge,
     receipts,
     status,
+    msgHashes,
+    failedTxs,
+    args,
   });
 
-  return { logs, receipts, status };
+  return {
+    logs,
+    receipts,
+    status,
+    msgHashes,
+    failedTxs,
+    args,
+  };
 };

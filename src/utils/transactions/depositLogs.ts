@@ -1,14 +1,14 @@
 import { CustomClients, DepositLogs } from '~/types';
-import { Address, GetLogsReturnType, Hex } from 'viem';
+import { Address } from 'viem';
 
 import {
   erc20BridgeInitiatedABI,
   ethBridgeInitiatedABI,
-  failedRelayedMessageABI,
   sentMessageExtensionABI,
   transactionDepositedABI,
 } from '../parsedEvents';
 import { getMsgHashes } from './helpers';
+import { getFailedTransactionLogs } from './getFailedTxs';
 
 interface GetDepositLogsParameters {
   customClient: CustomClients;
@@ -98,7 +98,13 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
   const msgHashes = [...msgHashesFromMessages, ...msgHashesFromErc20];
   const args = [...argsFromMessages, ...argsFromErc20];
 
-  const failedTxs = await getFailedTransactionLogs({ customClient, userAddress, msgHashes });
+  const failedTxs = await getFailedTransactionLogs({
+    // for deposit txs, should be the L2 client
+    publicClient: customClient.to.public,
+    crossDomainMessenger: customClient.to.contracts.crossDomainMessenger,
+    userAddress,
+    msgHashes,
+  });
 
   // temporary log
   console.log({
@@ -120,26 +126,4 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
     failedTxs,
     args,
   };
-};
-
-interface GetFailedTransactionLogsParameters {
-  customClient: CustomClients;
-  userAddress: Address;
-  msgHashes: Hex[];
-}
-export const getFailedTransactionLogs = async ({
-  customClient,
-  msgHashes,
-}: GetFailedTransactionLogsParameters): Promise<GetLogsReturnType<typeof failedRelayedMessageABI>> => {
-  const errorLogs = await customClient.to.public.getLogs({
-    address: customClient.to.contracts.crossDomainMessenger, // L2 cross domain messenger
-    event: failedRelayedMessageABI,
-    args: {
-      msgHash: msgHashes,
-    },
-    fromBlock: 'earliest',
-    toBlock: 'latest',
-  });
-
-  return errorLogs;
 };

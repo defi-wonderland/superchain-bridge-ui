@@ -86,6 +86,10 @@ export type WithdrawLogs = {
   >;
   receipts: TransactionReceipt[];
   status: GetWithdrawalStatusReturnType[];
+
+  msgHashes: Hex[];
+  args: RelayMessageArgs[];
+  failedTxs: GetLogsReturnType<typeof failedRelayedMessageABI>;
 };
 
 export interface RelayMessageArgs {
