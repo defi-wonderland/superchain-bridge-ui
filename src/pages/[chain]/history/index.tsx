@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Paper } from '@mui/material';
 import { TransactionReceipt, isAddress } from 'viem';
 import { useAccount } from 'wagmi';
@@ -12,7 +12,7 @@ const History = () => {
   const [searchAddress, setSearchAddress] = useState(currentAddress || '');
   const { updateQueryParams, getParam } = useQueryParams();
   const [address, setAddress] = useState(currentAddress || '');
-  const { withdrawLogs } = useLogs();
+  const { withdrawLogs, depositLogs } = useLogs();
   const { customClient } = useCustomClient();
 
   // update local state and searchParams on input change
@@ -44,10 +44,24 @@ const History = () => {
       <span>search Address</span> <input value={searchAddress} onChange={onInputAddressChange} />
       <br />
       <h3>Searching for address: {currentAddress ?? address}</h3>
-      {withdrawLogs?.receipts.map((receipt, index) => (
-        <>
+      {depositLogs?.failedTxs.map((failedLog) => (
+        <React.Fragment key={failedLog.transactionHash}>
           {/* Temporary inline styles */}
-          <Paper square={false} sx={{ mt: 2, p: 2 }} key={receipt.transactionHash}>
+          <Paper square={false} sx={{ mt: 2, p: 2 }}>
+            <Box>
+              <Box>
+                <h4>Transaction: {failedLog.transactionHash}</h4>
+                <p>Status: {failedLog.eventName}</p>
+              </Box>
+            </Box>
+            <Button onClick={() => null}>Initiate Replay</Button>
+          </Paper>
+        </React.Fragment>
+      ))}
+      {withdrawLogs?.receipts.map((receipt, index) => (
+        <React.Fragment key={receipt.transactionHash}>
+          {/* Temporary inline styles */}
+          <Paper square={false} sx={{ mt: 2, p: 2 }}>
             <Box>
               <Box>
                 <h4>Transaction: {receipt.transactionHash}</h4>
@@ -58,7 +72,7 @@ const History = () => {
               Initiate transaction
             </Button>
           </Paper>
-        </>
+        </React.Fragment>
       ))}
     </Box>
   );

@@ -88,6 +88,15 @@ export const getMsgHashes = (messageReceipts: TransactionReceipt[], receiptType:
     }),
   );
 
+  const args = sentMessageDecoded.map(({ args }, index) => ({
+    messageNonce: args.messageNonce,
+    sender: args.sender,
+    target: args.target,
+    value: sentMessageExtensionDecoded[index].args.value,
+    gasLimit: args.gasLimit,
+    message: args.message,
+  }));
+
   const msgHashes = sentMessageDecoded.map(({ args }, index) =>
     keccak256(
       encodeFunctionData({
@@ -104,5 +113,5 @@ export const getMsgHashes = (messageReceipts: TransactionReceipt[], receiptType:
     ),
   );
 
-  return msgHashes;
+  return { msgHashes, args };
 };

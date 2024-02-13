@@ -9,6 +9,7 @@ import {
 import {
   erc20BridgeInitiatedABI,
   ethBridgeInitiatedABI,
+  failedRelayedMessageABI,
   messagePassedAbi,
   sentMessageExtensionABI,
   transactionDepositedABI,
@@ -72,6 +73,8 @@ export type DepositLogs = {
   >;
   receipts: TransactionReceipt[];
   msgHashes: Hex[];
+  args: RelayMessageArgs[];
+  failedTxs: GetLogsReturnType<typeof failedRelayedMessageABI>;
 };
 
 export type WithdrawLogs = {
@@ -84,3 +87,12 @@ export type WithdrawLogs = {
   receipts: TransactionReceipt[];
   status: GetWithdrawalStatusReturnType[];
 };
+
+export interface RelayMessageArgs {
+  messageNonce: bigint;
+  sender: Address;
+  target: Address;
+  value: bigint;
+  gasLimit: bigint;
+  message: Address;
+}

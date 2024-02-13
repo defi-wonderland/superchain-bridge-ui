@@ -1,5 +1,5 @@
 import { CustomClients, DepositLogs } from '~/types';
-import { Address, Hex } from 'viem';
+import { Address, GetLogsReturnType, Hex } from 'viem';
 
 import {
   erc20BridgeInitiatedABI,
@@ -66,6 +66,13 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
       logsFromForcedTransactionsPromise,
     ]);
 
+  // Receipts to get the L2 transaction status
+  // const receipts = await Promise.all(
+  //   logs.map(({ transactionHash }) => {
+  //     return customClient.from.public.getTransactionReceipt({ hash: transactionHash });
+  //   }),
+  // );
+
   const messageReceipts = await Promise.all(
     logsFromMessagesDeposited.map(({ transactionHash }) => {
       return customClient.from.public.getTransactionReceipt({ hash: transactionHash });
@@ -78,14 +85,8 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
     }),
   );
 
-  const msgHashesFromMessages = getMsgHashes(messageReceipts, 'message');
-  const msgHashesFromErc20 = getMsgHashes(erc20Receipts, 'erc20');
-
-  // TODO: implement the following (depends on the final design of the user history page)
-  // - formatEthDeposits()
-  // - formatErc20Deposits()
-  // - formatMessageDeposits()
-  // - formatForcedTransactions()
+  const { msgHashes: msgHashesFromMessages, args: argsFromMessages } = getMsgHashes(messageReceipts, 'message');
+  const { msgHashes: msgHashesFromErc20, args: argsFromErc20 } = getMsgHashes(erc20Receipts, 'erc20');
 
   const logs = [
     ...logsFromEthDeposited,
@@ -95,27 +96,30 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
   ];
 
   const msgHashes = [...msgHashesFromMessages, ...msgHashesFromErc20];
+  const args = [...argsFromMessages, ...argsFromErc20];
 
-  // Receipts to get the L2 transaction status
-  // const receipts = await Promise.all(
-  //   logs.map(({ transactionHash }) => {
-  //     return customClient.from.public.getTransactionReceipt({ hash: transactionHash });
-  //   }),
-  // );
+  const failedTxs = await getFailedTransactionLogs({ customClient, userAddress, msgHashes });
 
   // temporary log
   console.log({
+    messageReceipts,
+    erc20Receipts,
     logsFromEthDeposited,
     logsFromErc20Deposited,
     logsFromMessagesDeposited,
     logsFromForcedTransactions,
     msgHashes,
+    failedTxs,
+    args,
   });
 
-  // temporary call, to be removed
-  getFailedTransactionLogs({ customClient, userAddress, msgHashes });
-
-  return { logs, receipts: [], msgHashes };
+  return {
+    logs,
+    receipts: [],
+    msgHashes,
+    failedTxs,
+    args,
+  };
 };
 
 interface GetFailedTransactionLogsParameters {
@@ -123,7 +127,10 @@ interface GetFailedTransactionLogsParameters {
   userAddress: Address;
   msgHashes: Hex[];
 }
-export const getFailedTransactionLogs = async ({ customClient, msgHashes }: GetFailedTransactionLogsParameters) => {
+export const getFailedTransactionLogs = async ({
+  customClient,
+  msgHashes,
+}: GetFailedTransactionLogsParameters): Promise<GetLogsReturnType<typeof failedRelayedMessageABI>> => {
   const errorLogs = await customClient.to.public.getLogs({
     address: customClient.to.contracts.crossDomainMessenger, // L2 cross domain messenger
     event: failedRelayedMessageABI,
@@ -134,5 +141,5 @@ export const getFailedTransactionLogs = async ({ customClient, msgHashes }: GetF
     toBlock: 'latest',
   });
 
-  console.log({ errorLogs });
+  return errorLogs;
 };

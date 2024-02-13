@@ -4,4 +4,5 @@ export * from './forceTransactions';
 export * from './helpers';
 export * from './withdrawLogs';
 export * from './proveAndFinalize';
+export * from './replay';
 export * from './withdraw';

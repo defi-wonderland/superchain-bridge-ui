@@ -95,8 +95,9 @@ export const getWithdrawLogs = async ({
     logsFromL2CrossDomain,
     ethLogsFromL2StandarBridge,
     erc20LogsFromL2StandarBridge,
+    receipts,
+    status,
   });
-  console.log({ logs, receipts, status });
 
   return { logs, receipts, status };
 };
