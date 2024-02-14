@@ -1,5 +1,5 @@
 import { CssBaseline, styled } from '@mui/material';
-import { ConfirmModal, Header, LoadingModal, ReviewModal, SuccessModal } from '~/containers';
+import { ConfirmModal, Footer, Header, LoadingModal, ReviewModal, SuccessModal } from '~/containers';
 import { Background } from '~/containers';
 
 export const Modals = () => {
@@ -20,8 +20,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Background />
       <CssBaseline />
       <Modals />
-      <Header />
-      <MainContent>{children}</MainContent>
+      <MainContent>
+        <Header />
+        {children}
+        <Footer />
+      </MainContent>
     </>
   );
 }
@@ -29,9 +32,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 const MainContent = styled('main')`
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 12.8rem); // temporary until design is ready
-  padding: 0 8rem;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
+
+  max-width: 120rem;
+  padding: 0 4rem;
+  height: 100vh;
+  margin: 0 auto;
 `;

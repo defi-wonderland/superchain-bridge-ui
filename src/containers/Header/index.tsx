@@ -1,12 +1,14 @@
 import { Badge, Box, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SettingsIcon from '@mui/icons-material/Settings';
-import HistoryIcon from '@mui/icons-material/History';
+import Image from 'next/image';
 import Link from 'next/link';
 
-import { Connect, LangButton, ThemeButton } from '~/components';
+import { Connect } from '~/components';
 import { useChain, useCustomTheme } from '~/hooks';
 import { replaceSpacesWithHyphens } from '~/utils';
+import logo from '~/assets/logo.svg';
+import historyIcon from '~/assets/icons/clock-rewind.svg';
+import settingsIcon from '~/assets/icons/settings.svg';
 
 export const Header = () => {
   const { fromChain } = useChain();
@@ -18,52 +20,50 @@ export const Header = () => {
       {/* Left section */}
       <LeftSection>
         <Link href='/' replace>
-          <h1>Superchain Bridge</h1>
+          <Image src={logo} alt='Superchain Bridge' />
         </Link>
       </LeftSection>
 
       {/* Right section */}
       <RightSection>
         <IconButton>
-          <Link
-            href={{
-              pathname: '/[chain]/history',
-              query: { chain: chainPath },
-            }}
-            replace
-          >
-            <Badge badgeContent={4} variant='dot' color='primary'>
-              <SHistoryIcon color='action' />
-            </Badge>
+          <Badge badgeContent={4} variant='dot' color='primary' overlap='circular'>
+            <Link
+              href={{
+                pathname: '/[chain]/history',
+                query: { chain: chainPath },
+              }}
+              replace
+            >
+              <SHistoryIcon src={historyIcon} alt='Transaction History' />
+            </Link>
+          </Badge>
+        </IconButton>
+
+        <IconButton>
+          <Link href='/settings' replace>
+            <StyledSettingsIcon src={settingsIcon} alt='Settings' />
           </Link>
         </IconButton>
 
         <Connect />
 
-        <LangButton />
+        {/* <LangButton /> */}
 
-        <ThemeButton />
-
-        <IconButton>
-          <Link href='/settings' replace>
-            <SettingsIcon color='action' />
-          </Link>
-        </IconButton>
+        {/* <ThemeButton /> */}
       </RightSection>
     </HeaderContainer>
   );
 };
 
-const HeaderContainer = styled('nav')(() => {
+const HeaderContainer = styled('header')(() => {
   const { currentTheme } = useCustomTheme();
   return {
     display: 'flex',
-    height: '6.4rem',
-    padding: '0 8rem',
+    height: '8rem',
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    maxWidth: '100vw',
     zIndex: 100,
     h1: {
       color: currentTheme.titleColor,
@@ -74,12 +74,32 @@ const HeaderContainer = styled('nav')(() => {
   };
 });
 
-const RightSection = styled(Box)({
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  gap: '1.6rem',
+const RightSection = styled(Box)(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '0.4rem',
+
+    button: {
+      padding: '1rem',
+    },
+
+    a: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+
+    svg: {
+      color: currentTheme.steel[500],
+    },
+
+    '.MuiBadge-badge.MuiBadge-dot': {
+      backgroundColor: currentTheme.errorPrimary,
+    },
+  };
 });
 
 const LeftSection = styled(Box)({
@@ -90,6 +110,12 @@ const LeftSection = styled(Box)({
   gap: '5rem',
 });
 
-const SHistoryIcon = styled(HistoryIcon)({
-  fontSize: '3.2rem',
+const SHistoryIcon = styled(Image)({
+  height: '2.4rem',
+  width: '2.4rem',
+});
+
+const StyledSettingsIcon = styled(Image)({
+  height: '2.4rem',
+  width: '2.4rem',
 });

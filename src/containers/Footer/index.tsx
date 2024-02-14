@@ -1,39 +1,46 @@
-import { styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
+import Link from 'next/link';
+import { MadeByWonderland } from '~/components/MadeByWonderland';
+import { useCustomTheme } from '~/hooks';
 
 export const Footer = () => {
   return (
     <FooterContainer>
-      <h1>Footer</h1>
-      <Subtitle>
-        <p>Made with 💜 by</p>
-        <a href='https://defi.sucks'>Wonderland</a>
-      </Subtitle>
+      <RightSide>
+        <Link href='/'>Legal</Link>
+        <Link href='/'>Docs</Link>
+      </RightSide>
+
+      <Box>
+        <MadeByWonderland />
+      </Box>
     </FooterContainer>
   );
 };
 
-const FooterContainer = styled('div')`
+const FooterContainer = styled('footer')`
   display: flex;
   height: 6.4rem;
-  padding: 0 8rem;
   align-items: center;
   justify-content: space-between;
 
   width: 100%;
-  max-width: 100vw;
 `;
 
-const Subtitle = styled('div')`
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-
-  p {
-    display: inline-block;
-  }
-
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
-`;
+const RightSide = styled(Box)(({ theme }) => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    display: 'flex',
+    gap: '2.7rem',
+    alignItems: 'center',
+    justifyContent: 'center',
+    a: {
+      color: currentTheme.steel[500],
+      fontSize: theme.typography.body1.fontSize,
+      '&:hover': {
+        transition: currentTheme.transition,
+        color: currentTheme.steel[100],
+      },
+    },
+  };
+});

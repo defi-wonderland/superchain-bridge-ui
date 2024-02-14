@@ -40,6 +40,9 @@ export const getMuiThemeConfig = (currentTheme: Theme, themeName: ThemeName) => 
         '"Segoe UI Emoji"',
         '"Segoe UI Symbol"',
       ].join(','),
+      body1: {
+        fontSize: '1.2rem',
+      },
     },
   });
 };
