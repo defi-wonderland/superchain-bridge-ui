@@ -33,7 +33,7 @@ export const BridgeCard = () => {
 
   return (
     <MainCardContainer>
-      <Typography variant='h5'>Bridge</Typography>
+      <Typography variant='h5'>Superchain Bridge</Typography>
 
       <ChainSection />
 
@@ -75,7 +75,7 @@ const MainCardContainer = styled('main')(() => {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'start',
     padding: '2rem 2.4rem 3.2rem 2.4rem',
     width: '51.2rem',
     gap: '2.4rem',
