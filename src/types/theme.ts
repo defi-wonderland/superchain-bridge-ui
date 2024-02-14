@@ -14,6 +14,7 @@ export interface Theme {
   headerBackground: string;
   border: string;
   borderColor: string;
+  errorPrimary: string;
   transition: string;
   steel: { [key: number]: string };
   ghost: { [key: number]: string };
