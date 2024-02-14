@@ -49,6 +49,8 @@ const SquarePattern = styled('canvas')`
 
 const ImageContainer = styled('div')`
   position: absolute;
+  height: 100vh;
+  overflow: hidden;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
