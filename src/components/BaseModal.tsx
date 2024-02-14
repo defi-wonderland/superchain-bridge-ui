@@ -98,16 +98,3 @@ export const ModalHeader = styled(Box)(() => {
     },
   };
 });
-
-// temporary disabled
-// const SCustomScrollbar = styled(CustomScrollbar)(() => {
-//   return {
-//     overflowX: 'hidden',
-//     maxHeight: '75vh',
-//     padding: '1.8rem',
-
-//     '@media (max-width: 600px)': {
-//       maxHeight: '60vh',
-//     },
-//   };
-// });
