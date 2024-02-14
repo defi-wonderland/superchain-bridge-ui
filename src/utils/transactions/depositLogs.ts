@@ -1,5 +1,5 @@
-import { CustomClients, DepositLogs } from '~/types';
 import { Address } from 'viem';
+import { CustomClients, DepositLogs } from '~/types';
 
 import {
   erc20BridgeInitiatedABI,

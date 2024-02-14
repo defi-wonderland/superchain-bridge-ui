@@ -31,7 +31,7 @@ const SquarePattern = styled('canvas')`
   // temporary fixed colors
   background-image: linear-gradient(#5c63b0 1px, transparent 1px),
     linear-gradient(to right, #5c63b0 1px, transparent 1px);
-  background-size: 80px 80px;
+  background-size: 8rem 8rem;
   width: 100%;
   height: 100%;
   opacity: 0.23;
