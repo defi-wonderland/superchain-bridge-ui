@@ -4,5 +4,7 @@ export enum ModalType {
   LOADING = 'LOADING',
   SUCCESS = 'SUCCESS',
   REVIEW = 'REVIEW',
+  SETTINGS = 'SETTINGS',
+  SELECT_TOKEN = 'SELECT_TOKEN',
   // Add new modal types here...
 }

@@ -4,16 +4,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { Connect } from '~/components';
-import { useChain, useCustomTheme } from '~/hooks';
+import { useChain, useCustomTheme, useModal } from '~/hooks';
 import { replaceSpacesWithHyphens } from '~/utils';
+import { ModalType } from '~/types';
 import logo from '~/assets/logo.svg';
 import historyIcon from '~/assets/icons/clock-rewind.svg';
 import settingsIcon from '~/assets/icons/settings.svg';
 
 export const Header = () => {
   const { fromChain } = useChain();
-
+  const { setModalOpen } = useModal();
   const chainPath = replaceSpacesWithHyphens(fromChain?.name || '');
+
+  const openSettings = () => {
+    setModalOpen(ModalType.SETTINGS);
+  };
 
   return (
     <HeaderContainer>
@@ -40,10 +45,8 @@ export const Header = () => {
           </Badge>
         </IconButton>
 
-        <IconButton>
-          <Link href='/settings' replace>
-            <StyledSettingsIcon src={settingsIcon} alt='Settings' />
-          </Link>
+        <IconButton onClick={openSettings}>
+          <StyledSettingsIcon src={settingsIcon} alt='Settings' />
         </IconButton>
 
         <Connect />
@@ -90,10 +93,6 @@ const RightSection = styled(Box)(() => {
     a: {
       display: 'flex',
       alignItems: 'center',
-    },
-
-    svg: {
-      color: currentTheme.steel[500],
     },
 
     '.MuiBadge-badge.MuiBadge-dot': {

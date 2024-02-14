@@ -1,23 +1,34 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { Modal, styled, Box } from '@mui/material';
+import { Modal, styled, Box, Typography, IconButton } from '@mui/material';
+import Image from 'next/image';
 
-import { useModal } from '~/hooks';
-import { CustomScrollbar } from '~/components';
+import closeIcon from '~/assets/icons/x-mark.svg';
+import { useCustomTheme, useModal } from '~/hooks';
 import { ModalType } from '~/types';
 import { zIndex } from '~/utils';
 
 interface BaseModalProps {
   children: React.ReactNode;
   type: ModalType;
+  title?: string;
 }
 
-const BaseModal = ({ children, type }: BaseModalProps) => {
+const BaseModal = ({ children, type, title }: BaseModalProps) => {
   const { modalOpen, closeModal } = useModal();
   return (
     <StyledModal open={type === modalOpen} onClose={closeModal} slots={{ backdrop: StyledBackdrop }}>
       <SModal>
-        <SCustomScrollbar>{children}</SCustomScrollbar>
+        {title && (
+          <ModalHeader>
+            <Typography variant='h2'>{title}</Typography>
+            <IconButton onClick={closeModal}>
+              <Image src={closeIcon} alt='Close modal' />
+            </IconButton>
+          </ModalHeader>
+        )}
+
+        {children}
       </SModal>
     </StyledModal>
   );
@@ -55,13 +66,18 @@ export const StyledBackdrop = styled(Backdrop)`
   -webkit-tap-highlight-color: transparent;
 `;
 
-export const SModal = styled(Box)((props) => {
+export const SModal = styled(Box)(() => {
+  const { currentTheme } = useCustomTheme();
   return {
-    backgroundColor: props.theme.palette.background.default,
-    minWidth: '40rem',
-    borderRadius: '1.2rem',
-    padding: '0.6rem',
-    boxShadow: props.theme.shadows[24],
+    minWidth: '44.8rem',
+    borderRadius: currentTheme.borderRadius,
+    backgroundColor: currentTheme.steel[900],
+    border: `1px solid ${currentTheme.steel[700]}`,
+    display: 'flex',
+    padding: '2rem 3.2rem 3.2rem 2.4rem',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: '2rem',
 
     '@media (max-width: 600px)': {
       minWidth: '100%',
@@ -70,14 +86,28 @@ export const SModal = styled(Box)((props) => {
   };
 });
 
-const SCustomScrollbar = styled(CustomScrollbar)(() => {
+export const ModalHeader = styled(Box)(() => {
   return {
-    overflowX: 'hidden',
-    maxHeight: '75vh',
-    padding: '1.8rem',
-
-    '@media (max-width: 600px)': {
-      maxHeight: '60vh',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    button: {
+      padding: '0.4rem',
+      marginRight: '-0.4rem',
     },
   };
 });
+
+// temporary disabled
+// const SCustomScrollbar = styled(CustomScrollbar)(() => {
+//   return {
+//     overflowX: 'hidden',
+//     maxHeight: '75vh',
+//     padding: '1.8rem',
+
+//     '@media (max-width: 600px)': {
+//       maxHeight: '60vh',
+//     },
+//   };
+// });

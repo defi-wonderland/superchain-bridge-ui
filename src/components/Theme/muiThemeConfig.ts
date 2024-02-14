@@ -43,6 +43,17 @@ export const getMuiThemeConfig = (currentTheme: Theme, themeName: ThemeName) => 
       body1: {
         fontSize: '1.2rem',
       },
+      // Modal title
+      h2: {
+        fontSize: '2.4rem',
+        fontStyle: 'normal',
+        fontWeight: '500',
+        lineHeight: '150%',
+      },
+      h3: {
+        fontSize: '1.6rem',
+        lineHeight: '150%',
+      },
     },
   });
 };

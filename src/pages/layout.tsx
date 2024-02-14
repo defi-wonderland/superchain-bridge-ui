@@ -1,5 +1,14 @@
 import { CssBaseline, styled } from '@mui/material';
-import { ConfirmModal, Footer, Header, LoadingModal, ReviewModal, SuccessModal } from '~/containers';
+import {
+  ConfirmModal,
+  Footer,
+  Header,
+  LoadingModal,
+  ReviewModal,
+  SuccessModal,
+  SettingsModal,
+  TokensModal,
+} from '~/containers';
 import { Background } from '~/containers';
 
 export const Modals = () => {
@@ -10,6 +19,8 @@ export const Modals = () => {
       <ReviewModal />
       <LoadingModal />
       <SuccessModal />
+      <SettingsModal />
+      <TokensModal />
     </>
   );
 };

@@ -2,10 +2,12 @@ import { Box, SelectChangeEvent } from '@mui/material';
 import { formatUnits } from 'viem';
 
 import { InputField, TokenSelect } from '~/components';
-import { useToken, useTokenList, useTransactionData } from '~/hooks';
+import { useModal, useToken, useTokenList, useTransactionData } from '~/hooks';
+import { ModalType } from '~/types';
 
 export const TokenSection = () => {
   const { fromTokens, toTokens } = useTokenList();
+  const { setModalOpen } = useModal();
   const { mint, setMint, isForceTransaction, value, setValue } = useTransactionData();
   const {
     selectedToken,
@@ -33,6 +35,7 @@ export const TokenSection = () => {
 
   return (
     <Box>
+      <button onClick={() => setModalOpen(ModalType.SELECT_TOKEN)}>open tokens modal</button>
       {!!tokenList.length && (
         <TokenSelect label='Token' value={selectedToken?.symbol || ''} setValue={handleToken} list={tokenList} />
       )}
