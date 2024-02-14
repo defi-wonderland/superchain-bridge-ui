@@ -39,14 +39,17 @@ export const darkTheme: Theme = {
   headerBackground: '#1A191F',
   titleFontFamily: 'Open Sans',
   textFontFamily: 'Open Sans',
-  borderRadius: '0.8rem',
+  borderRadius: '1.6rem',
   secondaryBorderRadius: '0.4rem',
   border: '0.1rem solid #9ca3af',
   borderColor: 'rgba(232,232,232,0.2)',
+
   transition: 'all 0.3s ease-in-out',
   steel,
   ghost,
   errorPrimary: '#F04438',
+  mainCardBorder: '1px solid #2C2E40',
+  mainCardBoxShadow: '0px 0px 64px 0px #251F3C, 0px 0px 14px 0px rgba(216, 201, 255, 0.06)',
 };
 
 export const lightTheme: Theme = {
@@ -59,12 +62,15 @@ export const lightTheme: Theme = {
   headerBackground: '#ffffff',
   titleFontFamily: 'Open Sans',
   textFontFamily: 'Open Sans',
-  borderRadius: '0.8rem',
+  borderRadius: '1.6rem',
   secondaryBorderRadius: '0.4rem',
   border: '0.1rem solid rgba(153, 164, 184, 0.3)',
   borderColor: 'rgba(153, 164, 184, 0.3)',
+
   transition: 'all 0.3s ease-in-out',
   steel,
   ghost,
   errorPrimary: '#F04438',
+  mainCardBorder: '1px solid #2C2E40',
+  mainCardBoxShadow: '0px 0px 64px 0px #251F3C, 0px 0px 14px 0px rgba(216, 201, 255, 0.06)',
 };

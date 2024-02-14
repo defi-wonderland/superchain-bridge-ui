@@ -1,11 +1,17 @@
+import Image from 'next/image';
 import { styled } from '@mui/material';
+
 import { useCustomTheme } from '~/hooks';
+import cone from '~/assets/cone.svg';
 
 export const Background = () => {
   return (
     <>
       <Mask />
       <SquarePattern />
+      <ImageContainer>
+        <Image src={cone} alt='' />
+      </ImageContainer>
     </>
   );
 };
@@ -39,4 +45,12 @@ const SquarePattern = styled('canvas')`
   top: 0;
   left: 0;
   z-index: -2;
+`;
+
+const ImageContainer = styled('div')`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
 `;

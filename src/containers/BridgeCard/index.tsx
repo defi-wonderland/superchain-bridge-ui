@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import { Button, Paper } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import { isHex } from 'viem';
 
-import { useModal, useToken, useTransactionData } from '~/hooks';
+import { useCustomTheme, useModal, useToken, useTransactionData } from '~/hooks';
 import { ChainSection } from './ChainSection';
 import { TokenSection } from './TokenSection';
 import { InputField } from '~/components';
@@ -33,46 +32,52 @@ export const BridgeCard = () => {
     (!!data && !isHex(data));
 
   return (
-    // temporary inline-style
-    <Paper elevation={3} sx={{ minWidth: '32rem' }}>
-      <CardContent>
-        <Typography variant='h5'>Bridge</Typography>
-        <br />
+    <MainCardContainer>
+      <Typography variant='h5'>Bridge</Typography>
 
-        <ChainSection />
-        <br />
-        <br />
+      <ChainSection />
 
-        {transactionType === TransactionType.DEPOSIT && (
-          <Button onClick={() => setIsForceTransaction(!isForceTransaction)} fullWidth>
-            Force transaction ({isForceTransaction ? 'On' : 'Off'})
-          </Button>
-        )}
-
-        <InputField label='To' value={to} setValue={setTo} error={!!to && !isHex(to)} />
-        <br />
-
-        {!isAdvanceMode && <TokenSection />}
-
-        {isAdvanceMode && (
-          <>
-            <InputField label='Custom message' value={data} setValue={setData} error={!!data && !isHex(data)} />
-            {/* Temporary spacing */}
-            <br />
-            <br />
-            <br />
-            <br />
-          </>
-        )}
-
-        <Button variant='contained' color='primary' fullWidth onClick={handleReview} disabled={isButtonDisabled}>
-          Review Transaction
+      {transactionType === TransactionType.DEPOSIT && (
+        <Button onClick={() => setIsForceTransaction(!isForceTransaction)} fullWidth>
+          Force transaction ({isForceTransaction ? 'On' : 'Off'})
         </Button>
+      )}
 
-        <Button onClick={handleAdvanceMode} fullWidth>
-          {isAdvanceMode ? 'Basic Mode' : 'Advance Mode'}
-        </Button>
-      </CardContent>
-    </Paper>
+      <InputField label='To' value={to} setValue={setTo} error={!!to && !isHex(to)} />
+
+      {!isAdvanceMode && <TokenSection />}
+
+      {isAdvanceMode && (
+        <>
+          <InputField label='Custom message' value={data} setValue={setData} error={!!data && !isHex(data)} />
+          {/* Temporary spacing */}
+        </>
+      )}
+
+      <Button variant='contained' color='primary' fullWidth onClick={handleReview} disabled={isButtonDisabled}>
+        Review Transaction
+      </Button>
+
+      <Button onClick={handleAdvanceMode} fullWidth>
+        {isAdvanceMode ? 'Basic Mode' : 'Advance Mode'}
+      </Button>
+    </MainCardContainer>
   );
 };
+
+const MainCardContainer = styled('main')(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    backgroundColor: currentTheme.steel[900],
+    boxShadow: currentTheme.mainCardBoxShadow,
+    borderRadius: currentTheme.borderRadius,
+    border: currentTheme.mainCardBorder,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '2rem 2.4rem 3.2rem 2.4rem',
+    width: '51.2rem',
+    gap: '2.4rem',
+  };
+});

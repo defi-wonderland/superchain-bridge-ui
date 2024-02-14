@@ -1,0 +1,19 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='620' height='1279' viewBox='0 0 620 1279' fill='none'>
+    <g filter='url(#filter0_f_572_3465)'>
+        <path d='M310 94L94 1185H526L310 94L94 1185H526L310 94Z' fill='url(#paint0_linear_572_3465)' />
+    </g>
+    <defs>
+        <filter id='filter0_f_572_3465' x='0' y='0' width='620' height='1279' filterUnits='userSpaceOnUse'
+            color-interpolation-filters='sRGB'>
+            <feFlood flood-opacity='0' result='BackgroundImageFix' />
+            <feBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape' />
+            <feGaussianBlur stdDeviation='47' result='effect1_foregroundBlur_572_3465' />
+        </filter>
+        <linearGradient id='paint0_linear_572_3465' x1='310' y1='94' x2='310' y2='1185' gradientUnits='userSpaceOnUse'>
+            <stop stop-color='#846AEE' stop-opacity='0.4' />
+            <stop offset='0.24' stop-color='#8475C6' />
+            <stop offset='0.535' stop-color='#6C5CB0' />
+            <stop offset='1' stop-opacity='0' />
+        </linearGradient>
+    </defs>
+</svg>

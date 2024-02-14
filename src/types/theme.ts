@@ -14,6 +14,9 @@ export interface Theme {
   headerBackground: string;
   border: string;
   borderColor: string;
+
+  mainCardBorder: string;
+  mainCardBoxShadow: string;
   errorPrimary: string;
   transition: string;
   steel: { [key: number]: string };
