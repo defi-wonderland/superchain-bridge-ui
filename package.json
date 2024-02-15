@@ -29,7 +29,6 @@
     "@emotion/server": "11.11.0",
     "@emotion/styled": "11.11.0",
     "@eth-optimism/tokenlist": "9.0.25",
-    "@fontsource-variable/inter": "5.0.16",
     "@mui/icons-material": "5.15.6",
     "@mui/material": "5.15.5",
     "@mui/material-nextjs": "5.15.6",

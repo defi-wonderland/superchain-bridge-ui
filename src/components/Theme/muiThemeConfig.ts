@@ -26,9 +26,10 @@ export const getMuiThemeConfig = (currentTheme: Theme, themeName: ThemeName) => 
     },
     typography: {
       fontSize: 22.5,
+      fontWeightRegular: 500,
       // set your global font family here
       fontFamily: [
-        'Inter Variable',
+        'GeneralSans-Variable',
         '-apple-system',
         'BlinkMacSystemFont',
         '"Segoe UI"',
@@ -45,7 +46,7 @@ export const getMuiThemeConfig = (currentTheme: Theme, themeName: ThemeName) => 
       },
       // Modal title
       h2: {
-        fontSize: '2.4rem',
+        fontSize: '2rem',
         fontStyle: 'normal',
         fontWeight: '500',
         lineHeight: '150%',

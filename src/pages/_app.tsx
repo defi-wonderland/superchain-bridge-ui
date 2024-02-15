@@ -1,6 +1,8 @@
+import '~/assets/font/css/general-sans.css';
+import '~/i18n';
+
 import { AppCacheProvider } from '@mui/material-nextjs/v13-pagesRouter';
 import { AppProps } from 'next/app';
-import '~/i18n';
 
 import { Providers } from '~/providers';
 import Layout from './layout';

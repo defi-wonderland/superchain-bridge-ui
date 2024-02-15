@@ -26,6 +26,10 @@ export const BridgeCard = () => {
     setIsAdvanceMode(!isAdvanceMode);
   };
 
+  const openSelectAccountModal = () => {
+    setModalOpen(ModalType.SELECT_ACCOUNT);
+  };
+
   const isButtonDisabled =
     (selectedToken?.symbol === 'ETH' && !mint) ||
     (selectedToken && selectedToken?.symbol !== 'ETH' && !amount) ||
@@ -53,6 +57,7 @@ export const BridgeCard = () => {
           {/* Temporary spacing */}
         </>
       )}
+      <button onClick={openSelectAccountModal}>Select account</button>
 
       <Button variant='contained' color='primary' fullWidth onClick={handleReview} disabled={isButtonDisabled}>
         Review Transaction

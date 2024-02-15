@@ -8,6 +8,7 @@ import {
   SuccessModal,
   SettingsModal,
   TokensModal,
+  TargetAddress,
 } from '~/containers';
 import { Background } from '~/containers';
 
@@ -21,6 +22,7 @@ export const Modals = () => {
       <SuccessModal />
       <SettingsModal />
       <TokensModal />
+      <TargetAddress />
     </>
   );
 };
