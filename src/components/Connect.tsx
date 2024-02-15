@@ -1,3 +1,5 @@
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+
 export const Connect = () => {
-  return <w3m-button balance='hide' size='sm' />;
+  return <ConnectButton />;
 };

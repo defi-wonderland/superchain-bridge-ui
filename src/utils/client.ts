@@ -1,4 +1,3 @@
-import { createWeb3Modal } from '@web3modal/wagmi/react';
 import { injected, walletConnect } from 'wagmi/connectors';
 import { createConfig } from 'wagmi';
 import * as wagmiChains from 'wagmi/chains';
@@ -40,5 +39,3 @@ export const config = createConfig({
   batch: { multicall: true },
   ssr: true,
 });
-
-createWeb3Modal({ wagmiConfig: config, projectId: PROJECT_ID });
