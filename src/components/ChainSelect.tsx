@@ -25,6 +25,8 @@ export const ChainSelect = ({ label, list, value, setValue }: ChainSelectProps) 
 
   const selectChain = (chain: Chain) => {
     setAnchorEl(null);
+
+    if (!chain?.name) return;
     setValue(chain);
   };
 

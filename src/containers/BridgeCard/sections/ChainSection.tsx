@@ -11,18 +11,14 @@ export const ChainSection = () => {
   const { fromList, toList, setFromChain, setToChain, fromChain, toChain, switchChains } = useChain();
   const { setSelectedToken } = useToken();
 
-  const handleFrom = async (chain: Chain) => {
-    try {
-      setFromChain(chain);
+  const handleFrom = (chain: Chain) => {
+    setFromChain(chain);
 
-      // Reset token when chain is changed
-      setSelectedToken(undefined);
-    } catch (error) {
-      console.warn(error);
-    }
+    // Reset token when chain is changed
+    setSelectedToken(undefined);
   };
 
-  const handleTo = async (chain: Chain) => {
+  const handleTo = (chain: Chain) => {
     setToChain(chain);
   };
 

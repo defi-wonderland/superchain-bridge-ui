@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, createContext } from 'react';
 import { createPublicClient, createWalletClient, custom, http } from 'viem';
 import { useAccount } from 'wagmi';
 import { walletActionsL1, walletActionsL2, publicActionsL1, publicActionsL2 } from 'viem/op-stack';
@@ -7,7 +7,17 @@ import { useChain } from '~/hooks';
 import { alchemyUrls, getFromContracts, getToContracts } from '~/utils';
 import { CustomClients } from '~/types';
 
-export const useCustomClient = () => {
+type ContextType = {
+  customClient: CustomClients;
+};
+
+interface StateProps {
+  children: React.ReactElement;
+}
+
+export const CustomClientConext = createContext({} as ContextType);
+
+export const CustomClientProvider = ({ children }: StateProps) => {
   const { address } = useAccount();
   const { fromChain, toChain } = useChain();
 
@@ -71,7 +81,13 @@ export const useCustomClient = () => {
     [fromChain, fromPublicClient, fromWalletClient, toChain, toPublicClient, toWalletClient],
   );
 
-  return {
-    customClient,
-  };
+  return (
+    <CustomClientConext.Provider
+      value={{
+        customClient,
+      }}
+    >
+      {children}
+    </CustomClientConext.Provider>
+  );
 };
