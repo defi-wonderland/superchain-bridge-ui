@@ -1,13 +1,27 @@
 import { Box, Typography, styled } from '@mui/material';
 import Image from 'next/image';
 
-import { useCustomTheme, useTokenList } from '~/hooks';
+import { useCustomTheme, useModal, useToken, useTokenList, useTransactionData } from '~/hooks';
 import { CustomScrollbar } from '~/components';
 import BaseModal from '~/components/BaseModal';
-import { ModalType } from '~/types';
+import { ModalType, TokenData } from '~/types';
 
 export const TokensModal = () => {
-  const { fromTokens } = useTokenList();
+  const { closeModal } = useModal();
+  const { fromTokens, toTokens } = useTokenList();
+  const { isForceTransaction } = useTransactionData();
+  const { setSelectedToken } = useToken();
+
+  const tokenList = isForceTransaction ? toTokens : fromTokens;
+
+  const handleToken = async (token: TokenData) => {
+    try {
+      setSelectedToken(token);
+    } catch (error) {
+      console.warn(error);
+    }
+    closeModal();
+  };
 
   return (
     <BaseModal type={ModalType.SELECT_TOKEN} title='Select a token'>
@@ -15,8 +29,8 @@ export const TokensModal = () => {
 
       <TokensContainer>
         <CustomScrollbar>
-          {fromTokens.map((token) => (
-            <Token key={token.address}>
+          {tokenList.map((token) => (
+            <Token key={token.address} onClick={() => handleToken(token)}>
               {/* Token info section */}
               <LeftSection>
                 <Image src={token.logoURI} alt={token.name} width={36} height={36} />

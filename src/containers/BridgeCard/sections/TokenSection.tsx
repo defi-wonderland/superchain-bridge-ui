@@ -1,44 +1,22 @@
-import { Box, SelectChangeEvent } from '@mui/material';
+import { Box } from '@mui/material';
 import { formatUnits } from 'viem';
 
-import { InputField, TokenSelect } from '~/components';
-import { useModal, useToken, useTokenList, useTransactionData } from '~/hooks';
+import { useModal, useToken, useTransactionData } from '~/hooks';
+import { InputField } from '~/components';
 import { ModalType } from '~/types';
 
 export const TokenSection = () => {
-  const { fromTokens, toTokens } = useTokenList();
   const { setModalOpen } = useModal();
   const { mint, setMint, isForceTransaction, value, setValue } = useTransactionData();
-  const {
-    selectedToken,
-    amount,
-    balance: tokenBalance,
-    ethBalance,
-    allowance,
-    setSelectedToken,
-    setAmount,
-  } = useToken();
+  const { selectedToken, amount, balance: tokenBalance, ethBalance, allowance, setAmount } = useToken();
 
   const balance = selectedToken?.symbol === 'ETH' ? ethBalance : tokenBalance;
-  const tokenList = isForceTransaction ? toTokens : fromTokens;
   const ethValue = isForceTransaction ? value : mint;
   const setEthValue = isForceTransaction ? setValue : setMint;
-
-  const handleToken = async (event: SelectChangeEvent) => {
-    try {
-      const token = tokenList.find((token) => token.symbol === event.target.value);
-      setSelectedToken(token);
-    } catch (error) {
-      console.warn(error);
-    }
-  };
 
   return (
     <Box>
       <button onClick={() => setModalOpen(ModalType.SELECT_TOKEN)}>open tokens modal</button>
-      {!!tokenList.length && (
-        <TokenSelect label='Token' value={selectedToken?.symbol || ''} setValue={handleToken} list={tokenList} />
-      )}
 
       <br />
       {selectedToken?.symbol === 'ETH' && <InputField label='ETH Amount' value={ethValue} setValue={setEthValue} />}

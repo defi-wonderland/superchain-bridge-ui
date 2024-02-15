@@ -1,32 +1,24 @@
-import { useState } from 'react';
 import Typography from '@mui/material/Typography';
-import { Button, styled } from '@mui/material';
+import { Box, Button, IconButton, styled } from '@mui/material';
 import { isHex } from 'viem';
+import Image from 'next/image';
+
+import adjustmentsIcon from '~/assets/icons/adjustments.svg';
 
 import { useCustomTheme, useModal, useToken, useTransactionData } from '~/hooks';
-import { ChainSection } from './ChainSection';
-import { TokenSection } from './TokenSection';
-import { InputField } from '~/components';
-import { ModalType, TransactionType } from '~/types';
+import { ChainSection } from './sections/ChainSection';
+import { TokenSection } from './sections/TokenSection';
+import { TargetButtons } from './sections/TargetButtons';
+import { BridgeSection } from './sections/BridgeSection';
+import { ModalType } from '~/types';
 
 export const BridgeCard = () => {
   const { setModalOpen } = useModal();
-  const { amount, selectedToken, setSelectedToken } = useToken();
-  const { mint, data, setData, transactionType, isForceTransaction, setIsForceTransaction } = useTransactionData();
-
-  const [isAdvanceMode, setIsAdvanceMode] = useState(false);
+  const { amount, selectedToken } = useToken();
+  const { mint, data, isForceTransaction, setIsForceTransaction } = useTransactionData();
 
   const handleReview = () => {
     setModalOpen(ModalType.REVIEW);
-  };
-
-  const handleAdvanceMode = () => {
-    setSelectedToken(undefined);
-    setIsAdvanceMode(!isAdvanceMode);
-  };
-
-  const openSelectAccountModal = () => {
-    setModalOpen(ModalType.SELECT_ACCOUNT);
   };
 
   const isButtonDisabled =
@@ -36,33 +28,27 @@ export const BridgeCard = () => {
 
   return (
     <MainCardContainer>
-      <Typography variant='h5'>Superchain Bridge</Typography>
+      <Header>
+        <Typography variant='h5'>Superchain Bridge</Typography>
 
-      <ChainSection />
+        <IconButton onClick={() => setIsForceTransaction(!isForceTransaction)}>
+          <Image src={adjustmentsIcon} alt='Advance mode' />
+        </IconButton>
+      </Header>
 
-      {transactionType === TransactionType.DEPOSIT && (
-        <Button onClick={() => setIsForceTransaction(!isForceTransaction)} fullWidth>
-          Force transaction ({isForceTransaction ? 'On' : 'Off'})
-        </Button>
-      )}
+      <ContentSection>
+        <ChainSection />
 
-      {!isAdvanceMode && <TokenSection />}
+        <TokenSection />
 
-      {isAdvanceMode && (
-        <>
-          <InputField label='Custom message' value={data} setValue={setData} error={!!data && !isHex(data)} />
-          {/* Temporary spacing */}
-        </>
-      )}
-      <button onClick={openSelectAccountModal}>Select account</button>
+        <TargetButtons />
 
-      <Button variant='contained' color='primary' fullWidth onClick={handleReview} disabled={isButtonDisabled}>
+        <BridgeSection />
+      </ContentSection>
+
+      <StyledButton variant='contained' fullWidth onClick={handleReview} disabled={isButtonDisabled}>
         Review Transaction
-      </Button>
-
-      <Button onClick={handleAdvanceMode} fullWidth>
-        {isAdvanceMode ? 'Basic Mode' : 'Advance Mode'}
-      </Button>
+      </StyledButton>
     </MainCardContainer>
   );
 };
@@ -81,5 +67,44 @@ const MainCardContainer = styled('main')(() => {
     padding: '2rem 2.4rem 3.2rem 2.4rem',
     width: '51.2rem',
     gap: '2.4rem',
+  };
+});
+
+const StyledButton = styled(Button)(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    backgroundColor: currentTheme.ghost[400],
+    color: currentTheme.steel[900],
+    border: 'none',
+    padding: '1rem 1.8rem',
+    borderRadius: '0.8rem',
+    textTransform: 'capitalize',
+    fontWeight: 600,
+    fontSize: '1.8rem',
+    height: '6rem',
+    '&:hover': {
+      backgroundColor: currentTheme.ghost[500],
+    },
+  };
+});
+
+const ContentSection = styled('section')(() => {
+  return {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'start',
+    gap: '0.8rem',
+    width: '100%',
+  };
+});
+
+const Header = styled(Box)(() => {
+  return {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
   };
 });

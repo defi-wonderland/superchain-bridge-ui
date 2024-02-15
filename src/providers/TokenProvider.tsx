@@ -103,7 +103,7 @@ export const TokenProvider = ({ children }: StateProps) => {
   };
 
   useEffect(() => {
-    if (!tokenContract || !address) return;
+    if (!tokenContract || !address || !from.contracts.standardBridge) return;
     // get balance
     tokenContract.read
       .balanceOf([address])
@@ -123,7 +123,7 @@ export const TokenProvider = ({ children }: StateProps) => {
       .catch(() => {
         setAllowance('');
       });
-  }, [address, from.contracts.standardBridge, tokenContract]);
+  }, [address, from.contracts?.standardBridge, tokenContract]);
 
   useEffect(
     function reset() {

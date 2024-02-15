@@ -21,11 +21,11 @@ export function InputField({ label, value, setValue, error, placeholder }: Input
       </SInputLabel>
       <BootstrapInput
         error={error}
-        defaultValue={placeholder}
         id={label + '-input'}
         value={value}
         onChange={handleOnChange}
         spellCheck={false}
+        placeholder={placeholder}
       />
     </FormControl>
   );
