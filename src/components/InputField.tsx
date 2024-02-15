@@ -36,7 +36,7 @@ const BootstrapInput = styled(InputBase)(() => {
   return {
     transition: currentTheme.transition,
     'label + &': {
-      marginTop: '2rem',
+      marginTop: '2.2rem',
     },
 
     '& .MuiInputBase-input': {
@@ -66,7 +66,7 @@ export const SInputLabel = styled(InputLabel)(() => {
   const { currentTheme } = useCustomTheme();
   return {
     color: currentTheme.steel[400],
-    fontSize: '1.4rem',
+    fontSize: '1.6rem',
     lineHeight: '2rem',
 
     '&.Mui-focused': {

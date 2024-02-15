@@ -12,8 +12,7 @@ import { ModalType, TransactionType } from '~/types';
 export const BridgeCard = () => {
   const { setModalOpen } = useModal();
   const { amount, selectedToken, setSelectedToken } = useToken();
-  const { mint, data, setData, transactionType, isForceTransaction, setIsForceTransaction, to, setTo } =
-    useTransactionData();
+  const { mint, data, setData, transactionType, isForceTransaction, setIsForceTransaction } = useTransactionData();
 
   const [isAdvanceMode, setIsAdvanceMode] = useState(false);
 
@@ -46,8 +45,6 @@ export const BridgeCard = () => {
           Force transaction ({isForceTransaction ? 'On' : 'Off'})
         </Button>
       )}
-
-      <InputField label='To' value={to} setValue={setTo} error={!!to && !isHex(to)} />
 
       {!isAdvanceMode && <TokenSection />}
 
