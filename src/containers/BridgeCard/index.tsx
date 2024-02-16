@@ -1,21 +1,22 @@
-import Typography from '@mui/material/Typography';
-import { Box, Button, IconButton, styled } from '@mui/material';
+import { useState } from 'react';
+import { Box, Button, IconButton, styled, Typography } from '@mui/material';
 import { isHex } from 'viem';
 import Image from 'next/image';
 
 import adjustmentsIcon from '~/assets/icons/adjustments.svg';
+import adjustmentsActivated from '~/assets/icons/adjustments-horizontal.svg';
 
 import { useCustomTheme, useModal, useToken, useTransactionData } from '~/hooks';
-import { ChainSection } from './sections/ChainSection';
-import { TokenSection } from './sections/TokenSection';
-import { TargetButtons } from './sections/TargetButtons';
-import { BridgeSection } from './sections/BridgeSection';
+
 import { ModalType } from '~/types';
+import { BasicMode } from './BasicMode';
+import { ExpertMode } from './ExpertMode';
 
 export const BridgeCard = () => {
   const { setModalOpen } = useModal();
   const { amount, selectedToken } = useToken();
-  const { mint, data, isForceTransaction, setIsForceTransaction } = useTransactionData();
+  const { mint, data } = useTransactionData();
+  const [isExpertMode, setIsExpertMode] = useState(false);
 
   const handleReview = () => {
     setModalOpen(ModalType.REVIEW);
@@ -29,26 +30,28 @@ export const BridgeCard = () => {
   return (
     <MainCardContainer>
       <Header>
-        <Typography variant='h5'>Superchain Bridge</Typography>
+        <Box>
+          <Typography variant='h1'>Superchain Bridge</Typography>
+          {isExpertMode && <strong>Expert mode</strong>}
+        </Box>
 
-        <IconButton onClick={() => setIsForceTransaction(!isForceTransaction)}>
-          <Image src={adjustmentsIcon} alt='Advance mode' />
-        </IconButton>
+        <StyledAdvanceButton onClick={() => setIsExpertMode(!isExpertMode)}>
+          <Image
+            src={isExpertMode ? adjustmentsActivated : adjustmentsIcon}
+            alt='Advance mode'
+            className={isExpertMode ? 'advance-activated' : ''}
+          />
+        </StyledAdvanceButton>
       </Header>
 
-      <ContentSection>
-        <ChainSection />
+      {isExpertMode && <ExpertMode />}
 
-        <TokenSection />
-
-        <TargetButtons />
-
-        <BridgeSection />
-      </ContentSection>
+      {!isExpertMode && <BasicMode />}
 
       <StyledButton variant='contained' fullWidth onClick={handleReview} disabled={isButtonDisabled}>
-        {isButtonDisabled && 'Enter amount'}
         {!isButtonDisabled && 'Review Transaction'}
+        {isButtonDisabled && !isExpertMode && 'Enter amount'}
+        {isButtonDisabled && isExpertMode && 'Select transaction type'}
       </StyledButton>
     </MainCardContainer>
   );
@@ -98,23 +101,47 @@ const StyledButton = styled(Button)(() => {
   };
 });
 
-const ContentSection = styled('section')(() => {
-  return {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'start',
-    gap: '0.8rem',
-    width: '100%',
-  };
-});
-
 const Header = styled(Box)(() => {
+  const { currentTheme } = useCustomTheme();
   return {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
+
+    h1: {
+      color: currentTheme.steel[50],
+      fontSize: '2.4rem',
+      fontWeight: 500,
+      lineHeight: '3.6rem',
+    },
+
+    div: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'start',
+      gap: '1rem',
+    },
+
+    strong: {
+      background: currentTheme.ghost[800],
+      color: currentTheme.ghost[400],
+      fontWeight: 500,
+      borderRadius: '1.6rem',
+      fontSize: '1.4rem',
+      padding: '0.8rem',
+      lineHeight: 1.2,
+    },
+  };
+});
+
+const StyledAdvanceButton = styled(IconButton)(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    '&:has(.advance-activated)': {
+      background: currentTheme.ghost[800],
+    },
   };
 });

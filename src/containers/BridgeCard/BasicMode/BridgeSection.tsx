@@ -1,9 +1,10 @@
 import { styled } from '@mui/material';
 import Image from 'next/image';
 
+import chevrownDown from '~/assets/icons/chevron-down.svg';
+
 import { BridgeIcons } from '~/components/BridgeIcons';
 import { BasicButton } from '~/components/Buttons';
-import chevrownDown from '~/assets/icons/chevron-down.svg';
 import { useModal } from '~/hooks';
 import { ModalType } from '~/types';
 
