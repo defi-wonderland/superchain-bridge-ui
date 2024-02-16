@@ -3,13 +3,9 @@ import { parseUnits } from 'viem';
 import Image from 'next/image';
 
 import { useCustomTheme, useModal, useToken, useTransactionData } from '~/hooks';
-import { formatDataNumber, getUsdBalance } from '~/utils';
+import { formatDataNumber, getUsdBalance, truncateAddress } from '~/utils';
 import { SInputLabel } from '~/components';
 import { ModalType } from '~/types';
-
-const truncateAddress = (address: string) => {
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
-};
 
 export const TargetButtons = () => {
   const { selectedToken, amount, price } = useToken();

@@ -1,43 +1,132 @@
-import { Box, Button, styled } from '@mui/material';
+import { Box, Divider, Typography, styled } from '@mui/material';
 
 import BaseModal from '~/components/BaseModal';
-import { useTransactionData, useToken, useTransactions } from '~/hooks';
-
+import { useTransactionData, useToken, useTransactions, useCustomTheme, useModal } from '~/hooks';
+import { PrimaryButton, SecondaryButton } from '~/components';
+import { truncateAddress } from '~/utils';
 import { ModalType } from '~/types';
 
 export const ReviewModal = () => {
-  const { transactionType, data } = useTransactionData();
-  const { selectedToken } = useToken();
+  const { closeModal } = useModal();
+  const { transactionType, value, mint, to, userAddress } = useTransactionData();
+  const { selectedToken, amount } = useToken();
   const { executeTransaction } = useTransactions();
+
+  const totalAmount = amount || mint || value;
 
   const handleConfirm = async () => {
     executeTransaction();
   };
 
   return (
-    <BaseModal type={ModalType.REVIEW}>
-      <ModalBody>
-        <h1>Review modal</h1>
-        <p>Transaction type: {transactionType}</p>
+    <BaseModal type={ModalType.REVIEW} title='Review transaction'>
+      {/* Transaction type */}
+      <SBox>
+        <Typography variant='body1'>Transaction type</Typography>
+        <span>{transactionType}</span>
+      </SBox>
 
-        {selectedToken && <p>Token: {selectedToken?.symbol}</p>}
-        {!selectedToken && <p>Message: {data}</p>}
+      {/* Selected Bridge */}
+      <SBox>
+        <Typography variant='body1'>Bridge</Typography>
+        <span>Optimism Gateway</span>
+      </SBox>
 
-        <Button variant='contained' color='primary' fullWidth onClick={handleConfirm}>
-          Initiate Transaction
-        </Button>
-      </ModalBody>
+      {/* Fees */}
+      <SBox>
+        <Typography variant='body1'>Fees</Typography>
+        <span>$21.33</span>
+      </SBox>
+
+      {/* Transaction time */}
+      <SBox>
+        <Typography variant='body1'>Transaction time</Typography>
+        <span>2m</span>
+      </SBox>
+
+      <SDivider />
+
+      {/* Origin address */}
+      <SBox>
+        <Typography variant='body1'>From address</Typography>
+        <span>{truncateAddress(userAddress || '')}</span>
+      </SBox>
+      {/* Destination address */}
+      <SBox>
+        <Typography variant='body1'>To address</Typography>
+        <span>{truncateAddress(to)}</span>
+      </SBox>
+
+      <SDivider />
+
+      {/* Token sent */}
+      <SBox>
+        <Typography variant='body1'>Send</Typography>
+        <span>
+          {totalAmount} {selectedToken?.symbol}
+        </span>
+      </SBox>
+
+      {/* Token received */}
+      <SBox>
+        <Typography variant='body1'>Receive</Typography>
+        <span>
+          {totalAmount} {selectedToken?.symbol}
+        </span>
+      </SBox>
+
+      <ButtonsContainer>
+        <SecondaryButton variant='contained' color='primary' fullWidth onClick={closeModal}>
+          Cancel
+        </SecondaryButton>
+
+        <PrimaryButton variant='contained' color='primary' fullWidth onClick={handleConfirm}>
+          Confirm
+        </PrimaryButton>
+      </ButtonsContainer>
     </BaseModal>
   );
 };
 
-const ModalBody = styled(Box)(() => {
+const SDivider = styled(Divider)(() => {
   return {
-    height: '30rem',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
     width: '100%',
+    border: '1px solid #292B2E', //fixed color
+  };
+});
+
+const SBox = styled(Box)(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
+    p: {
+      fontSize: '1.6rem',
+      color: currentTheme.steel[300],
+      fontWeight: 400,
+      lineHeight: '150%' /* 24px */,
+      letterSpacing: '-0.352px',
+    },
+    span: {
+      fontSize: '1.6rem',
+      color: currentTheme.steel[100],
+      lineHeight: '150%' /* 24px */,
+      letterSpacing: '-0.352px',
+    },
+  };
+});
+
+const ButtonsContainer = styled(Box)(() => {
+  return {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: '1.2rem',
+    marginTop: '2rem',
   };
 });

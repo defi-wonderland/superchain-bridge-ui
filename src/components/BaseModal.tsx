@@ -19,14 +19,12 @@ const BaseModal = ({ children, type, title }: BaseModalProps) => {
   return (
     <StyledModal open={type === modalOpen} onClose={closeModal} slots={{ backdrop: StyledBackdrop }}>
       <SModal>
-        {title && (
-          <ModalHeader>
-            <Typography variant='h2'>{title}</Typography>
-            <IconButton onClick={closeModal} className='close-button'>
-              <Image src={closeIcon} alt='Close modal' />
-            </IconButton>
-          </ModalHeader>
-        )}
+        <ModalHeader>
+          {title && <Typography variant='h2'>{title}</Typography>}
+          <IconButton onClick={closeModal} className='close-button'>
+            <Image src={closeIcon} alt='Close modal' />
+          </IconButton>
+        </ModalHeader>
 
         {children}
       </SModal>
@@ -95,6 +93,7 @@ export const ModalHeader = styled(Box)(() => {
     '.close-button': {
       padding: '0.4rem',
       marginRight: '-0.4rem',
+      marginLeft: 'auto',
     },
   };
 });

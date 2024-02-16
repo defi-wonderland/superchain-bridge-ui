@@ -5,10 +5,11 @@ import { ModalType } from '~/types';
 
 export const LoadingModal = () => {
   return (
-    <BaseModal type={ModalType.LOADING}>
+    <BaseModal type={ModalType.LOADING} title='Transaction pending'>
       <ModalBody>
         <h1>Loading...</h1>
       </ModalBody>
+      You can safely close this modal
     </BaseModal>
   );
 };

@@ -57,6 +57,8 @@ export enum TransactionType {
   SWAP = 'swap',
 }
 
+export type CustomTransactionType = 'custom-tx' | 'force-withdrawal' | 'force-transfer';
+
 export enum ForceTransactionType {
   ETH_WITHDRAWAL = 'ethWithdrawal',
   ERC20_WITHDRAWAL = 'erc20Withdrawal',

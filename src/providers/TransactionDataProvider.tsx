@@ -3,7 +3,7 @@ import { Address } from 'viem';
 import { useAccount } from 'wagmi';
 
 import { useChain } from '~/hooks';
-import { ForceTransactionType, TransactionType } from '~/types';
+import { CustomTransactionType, ForceTransactionType, TransactionType } from '~/types';
 
 type ContextType = {
   userAddress?: Address;
@@ -19,6 +19,9 @@ type ContextType = {
 
   to: string;
   setTo: (val: string) => void;
+
+  customTransactionType?: CustomTransactionType;
+  setCustomTransactionType: (val?: CustomTransactionType) => void;
 
   isForceTransaction: boolean;
   setIsForceTransaction: (val: boolean) => void;
@@ -44,7 +47,7 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
 
   const { fromChain, toChain } = useChain();
   const [isForceTransaction, setIsForceTransaction] = useState<boolean>(false);
-
+  const [customTransactionType, setCustomTransactionType] = useState<CustomTransactionType>();
   const [forceTransactionType, setForceTransactionType] = useState<ForceTransactionType>(
     ForceTransactionType.ETH_TRANSFER, // TODO: remove later
   );
@@ -93,6 +96,8 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
         setIsForceTransaction,
         forceTransactionType,
         setForceTransactionType,
+        customTransactionType,
+        setCustomTransactionType,
       }}
     >
       {children}

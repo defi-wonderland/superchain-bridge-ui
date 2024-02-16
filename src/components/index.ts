@@ -1,5 +1,6 @@
 export * from './Theme';
 export * from './Connect';
+export * from './Buttons';
 export * from './CustomHead';
 export * from './LangButton';
 export * from './InputField';

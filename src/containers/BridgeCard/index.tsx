@@ -1,21 +1,23 @@
-import { useState } from 'react';
-import { Box, Button, IconButton, styled, Typography } from '@mui/material';
+import { useMemo, useState } from 'react';
+import { Button, styled } from '@mui/material';
 import { isHex } from 'viem';
-import Image from 'next/image';
-
-import adjustmentsIcon from '~/assets/icons/adjustments.svg';
-import adjustmentsActivated from '~/assets/icons/adjustments-horizontal.svg';
 
 import { useCustomTheme, useModal, useToken, useTransactionData } from '~/hooks';
 
 import { ModalType } from '~/types';
 import { BasicMode } from './BasicMode';
 import { ExpertMode } from './ExpertMode';
+import { CardHeader } from './CardHeader';
 
 export const BridgeCard = () => {
   const { setModalOpen } = useModal();
   const { amount, selectedToken } = useToken();
-  const { mint, data } = useTransactionData();
+  const {
+    mint,
+    data,
+    customTransactionType: customTransaction,
+    setCustomTransactionType: setCustomTransaction,
+  } = useTransactionData();
   const [isExpertMode, setIsExpertMode] = useState(false);
 
   const handleReview = () => {
@@ -27,31 +29,31 @@ export const BridgeCard = () => {
     (selectedToken && selectedToken?.symbol !== 'ETH' && !Number(amount)) ||
     (!!data && !isHex(data));
 
+  const disableMessage = useMemo(() => {
+    if (!isButtonDisabled) return 'Review transaction';
+    if (!isExpertMode) return 'Enter amount';
+    if (!customTransaction) return 'Select transaction type';
+
+    return 'Enter data';
+  }, [isButtonDisabled, isExpertMode, customTransaction]);
+
   return (
     <MainCardContainer>
-      <Header>
-        <Box>
-          <Typography variant='h1'>Superchain Bridge</Typography>
-          {isExpertMode && <strong>Expert mode</strong>}
-        </Box>
+      <CardHeader
+        isExpertMode={isExpertMode}
+        setIsExpertMode={setIsExpertMode}
+        customTransaction={!!customTransaction}
+        setCustomTransaction={setCustomTransaction}
+      />
 
-        <StyledAdvanceButton onClick={() => setIsExpertMode(!isExpertMode)}>
-          <Image
-            src={isExpertMode ? adjustmentsActivated : adjustmentsIcon}
-            alt='Advance mode'
-            className={isExpertMode ? 'advance-activated' : ''}
-          />
-        </StyledAdvanceButton>
-      </Header>
+      {!isExpertMode && !customTransaction && <BasicMode />}
 
-      {isExpertMode && <ExpertMode />}
+      {isExpertMode && !customTransaction && <ExpertMode setCustomTransaction={setCustomTransaction} />}
 
-      {!isExpertMode && <BasicMode />}
+      {customTransaction && <>test</>}
 
       <StyledButton variant='contained' fullWidth onClick={handleReview} disabled={isButtonDisabled}>
-        {!isButtonDisabled && 'Review Transaction'}
-        {isButtonDisabled && !isExpertMode && 'Enter amount'}
-        {isButtonDisabled && isExpertMode && 'Select transaction type'}
+        {disableMessage}
       </StyledButton>
     </MainCardContainer>
   );
@@ -97,51 +99,6 @@ const StyledButton = styled(Button)(() => {
       backgroundColor: currentTheme.steel[700],
       borderColor: currentTheme.steel[700],
       color: currentTheme.steel[500],
-    },
-  };
-});
-
-const Header = styled(Box)(() => {
-  const { currentTheme } = useCustomTheme();
-  return {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-
-    h1: {
-      color: currentTheme.steel[50],
-      fontSize: '2.4rem',
-      fontWeight: 500,
-      lineHeight: '3.6rem',
-    },
-
-    div: {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'start',
-      gap: '1rem',
-    },
-
-    strong: {
-      background: currentTheme.ghost[800],
-      color: currentTheme.ghost[400],
-      fontWeight: 500,
-      borderRadius: '1.6rem',
-      fontSize: '1.4rem',
-      padding: '0.8rem',
-      lineHeight: 1.2,
-    },
-  };
-});
-
-const StyledAdvanceButton = styled(IconButton)(() => {
-  const { currentTheme } = useCustomTheme();
-  return {
-    '&:has(.advance-activated)': {
-      background: currentTheme.ghost[800],
     },
   };
 });
