@@ -4,8 +4,16 @@ import Image from 'next/image';
 import { BridgeIcons } from '~/components/BridgeIcons';
 import { BasicButton } from '~/components/Buttons';
 import chevrownDown from '~/assets/icons/chevron-down.svg';
+import { useModal } from '~/hooks';
+import { ModalType } from '~/types';
 
 export const BridgeSection = () => {
+  const { setModalOpen } = useModal();
+
+  const openBridgeModal = () => {
+    setModalOpen(ModalType.SELECT_BRIDGE);
+  };
+
   const Icons = (
     <>
       <BridgeIcons gas='$7.21' time='2m' />
@@ -14,7 +22,7 @@ export const BridgeSection = () => {
   );
 
   return (
-    <MenuButton variant='contained' disableElevation onClick={() => null} endIcon={<>{Icons}</>} fullWidth>
+    <MenuButton variant='contained' disableElevation onClick={openBridgeModal} endIcon={<>{Icons}</>} fullWidth>
       Optimism Gateway
     </MenuButton>
   );
@@ -26,9 +34,11 @@ const MenuButton = styled(BasicButton)(() => {
     fontSize: '1.6rem',
     height: '5.6rem',
     justifyContent: 'space-between',
+    alignItems: 'center',
     img: {
-      height: '2.4rem',
-      width: '2.4rem',
+      height: '1.6rem',
+      width: '1.6rem',
+      margin: 'auto 0',
     },
 
     '&:last-child': {

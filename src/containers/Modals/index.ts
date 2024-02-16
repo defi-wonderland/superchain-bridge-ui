@@ -1,3 +1,4 @@
+export * from './Bridge';
 export * from './Confirm';
 export * from './Loading';
 export * from './Review';

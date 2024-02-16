@@ -9,6 +9,7 @@ import {
   SettingsModal,
   TokensModal,
   TargetAddress,
+  BridgeModal,
 } from '~/containers';
 import { Background } from '~/containers';
 import { useCustomTheme } from '~/hooks';
@@ -24,6 +25,7 @@ export const Modals = () => {
       <SettingsModal />
       <TokensModal />
       <TargetAddress />
+      <BridgeModal />
     </>
   );
 };

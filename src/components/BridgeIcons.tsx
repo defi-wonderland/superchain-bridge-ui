@@ -41,8 +41,8 @@ const IconsContainer = styled(Box)(() => {
     },
 
     img: {
-      height: '2.4rem',
-      width: '2.4rem',
+      height: '1.6rem',
+      width: '1.6rem',
     },
   };
 });

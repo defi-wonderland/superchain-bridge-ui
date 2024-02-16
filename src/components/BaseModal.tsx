@@ -22,7 +22,7 @@ const BaseModal = ({ children, type, title }: BaseModalProps) => {
         {title && (
           <ModalHeader>
             <Typography variant='h2'>{title}</Typography>
-            <IconButton onClick={closeModal}>
+            <IconButton onClick={closeModal} className='close-button'>
               <Image src={closeIcon} alt='Close modal' />
             </IconButton>
           </ModalHeader>
@@ -92,7 +92,7 @@ export const ModalHeader = styled(Box)(() => {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    button: {
+    '.close-button': {
       padding: '0.4rem',
       marginRight: '-0.4rem',
     },

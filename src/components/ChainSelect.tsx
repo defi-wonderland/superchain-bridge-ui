@@ -40,7 +40,7 @@ export const ChainSelect = ({ label, list, value, setValue }: ChainSelectProps) 
         variant='contained'
         disableElevation
         onClick={handleClick}
-        endIcon={<Image src={chevrownDown} alt='arrow-down' width={24} height={24} />}
+        endIcon={<Image src={chevrownDown} alt='arrow-down' width={16} height={16} />}
         fullWidth
       >
         {value.name}

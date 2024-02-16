@@ -7,5 +7,6 @@ export enum ModalType {
   SETTINGS = 'SETTINGS',
   SELECT_TOKEN = 'SELECT_TOKEN',
   SELECT_ACCOUNT = 'SELECT_ACCOUNT',
+  SELECT_BRIDGE = 'SELECT_BRIDGE',
   // Add new modal types here...
 }

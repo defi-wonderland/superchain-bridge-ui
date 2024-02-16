@@ -1,4 +1,4 @@
-import { Box, Typography, styled } from '@mui/material';
+import { Box, Button, Typography, styled } from '@mui/material';
 import Image from 'next/image';
 
 import { useCustomTheme, useModal, useToken, useTokenList, useTransactionData } from '~/hooks';
@@ -27,10 +27,10 @@ export const TokensModal = () => {
     <BaseModal type={ModalType.SELECT_TOKEN} title='Select a token'>
       {/* TODO: Input should be here */}
 
-      <TokensContainer>
+      <ListContainer>
         <CustomScrollbar>
           {tokenList.map((token) => (
-            <Token key={token.address} onClick={() => handleToken(token)}>
+            <Token key={token.address} onClick={() => handleToken(token)} fullWidth>
               {/* Token info section */}
               <LeftSection>
                 <Image src={token.logoURI} alt={token.name} width={36} height={36} />
@@ -50,29 +50,32 @@ export const TokensModal = () => {
             </Token>
           ))}
         </CustomScrollbar>
-      </TokensContainer>
+      </ListContainer>
     </BaseModal>
   );
 };
 
-const TokensContainer = styled(Box)(() => {
+export const ListContainer = styled(Box)(() => {
   return {
     display: 'flex',
     flexDirection: 'column',
-    width: '100%',
     maxHeight: '40rem',
+    marginLeft: '-1.2rem',
+    width: 'calc(100% + 2.4rem)',
   };
 });
 
-const Token = styled(Box)(() => {
+const Token = styled(Button)(() => {
   const { currentTheme } = useCustomTheme();
   return {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'start',
     justifyContent: 'space-between',
     padding: '1.2rem',
     cursor: 'pointer',
     borderRadius: '1.2rem',
+    textAlign: 'start',
+    textTransform: 'none',
 
     '&:hover': {
       backgroundColor: currentTheme.steel[700],

@@ -21,6 +21,11 @@ export const getMuiThemeConfig = (currentTheme: Theme, themeName: ThemeName) => 
             color: 'inherit',
             textDecoration: 'none',
           },
+          button: {
+            '.MuiButton-endIcon': {
+              marginRight: '0',
+            },
+          },
         },
       },
     },
