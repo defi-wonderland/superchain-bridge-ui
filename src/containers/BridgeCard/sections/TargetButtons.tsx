@@ -39,7 +39,7 @@ export const TargetButtons = () => {
         <StyledStack direction='row' gap='0.8rem'>
           <Image src={selectedToken.logoURI} alt={selectedToken.name} className='token-image' width={24} height={24} />
           {formattedAmount} {selectedToken?.symbol}
-          {amountToShow && <span>({usdValue})</span>}
+          {amountToShow && <span className='usd-value'>({usdValue})</span>}
         </StyledStack>
       </BasicButton>
 
@@ -90,8 +90,13 @@ const BasicButton = styled(Button)(() => {
 const StyledStack = styled(Stack)(() => {
   const { currentTheme } = useCustomTheme();
   return {
-    '&:not(:has(:nth-of-type(2)))': {
+    color: currentTheme.steel[100],
+    '&:not(:has(.usd-value))': {
       color: currentTheme.steel[600],
+    },
+
+    img: {
+      borderRadius: '100%',
     },
   };
 });
