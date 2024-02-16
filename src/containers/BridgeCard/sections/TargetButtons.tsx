@@ -1,5 +1,6 @@
 import { Button, Stack, styled } from '@mui/material';
 import { parseUnits } from 'viem';
+import Image from 'next/image';
 
 import { useCustomTheme, useModal, useToken, useTransactionData } from '~/hooks';
 import { formatDataNumber, getUsdBalance } from '~/utils';
@@ -35,13 +36,11 @@ export const TargetButtons = () => {
       <BasicButton fullWidth disabled>
         <SInputLabel>You receive</SInputLabel>
 
-        {amountToShow && (
-          <Stack direction='row' gap='0.8rem'>
-            {formattedAmount} {selectedToken?.symbol}
-            <span>({usdValue})</span>
-          </Stack>
-        )}
-        {!amountToShow && '-'}
+        <StyledStack direction='row' gap='0.8rem'>
+          <Image src={selectedToken.logoURI} alt={selectedToken.name} className='token-image' width={24} height={24} />
+          {formattedAmount} {selectedToken?.symbol}
+          {amountToShow && <span>({usdValue})</span>}
+        </StyledStack>
       </BasicButton>
 
       <BasicButton fullWidth onClick={openSelectAccountModal}>
@@ -84,6 +83,15 @@ const BasicButton = styled(Button)(() => {
 
     '&:disabled': {
       color: currentTheme.steel[50],
+    },
+  };
+});
+
+const StyledStack = styled(Stack)(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    '&:not(:has(:nth-of-type(2)))': {
+      color: currentTheme.steel[600],
     },
   };
 });

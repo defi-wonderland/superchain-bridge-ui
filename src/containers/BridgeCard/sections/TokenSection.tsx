@@ -52,6 +52,7 @@ export const TokenSection = () => {
         <StyledInput
           variant='standard'
           type='number'
+          placeholder='0'
           value={inputValue}
           onChange={handleOnChange}
           fullWidth
@@ -64,7 +65,7 @@ export const TokenSection = () => {
       </InputSection>
 
       <BalanceSection>
-        <span>{inputValue && usdValue}</span>
+        <span>{usdValue}</span>
 
         <span>
           Balance: {formattedBalance}
@@ -118,6 +119,11 @@ const StyledInput = styled(TextField)(() => {
       fontSize: '3.2rem',
       lineHeight: 1.2,
       padding: '0',
+    },
+
+    '& .MuiInputBase-input::placeholder': {
+      color: currentTheme.steel[600],
+      opacity: 1,
     },
   };
 });

@@ -11,6 +11,7 @@ import {
   TargetAddress,
 } from '~/containers';
 import { Background } from '~/containers';
+import { useCustomTheme } from '~/hooks';
 
 export const Modals = () => {
   return (
@@ -30,6 +31,9 @@ export const Modals = () => {
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      <NoScriptMessage>
+        <p>This website requires JavaScript to function properly.</p>
+      </NoScriptMessage>
       <Background />
       <CssBaseline />
       <Modals />
@@ -54,3 +58,20 @@ const MainContent = styled('main')`
   height: 100vh;
   margin: 0 auto;
 `;
+
+const NoScriptMessage = styled('noscript')(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    margin: '0 auto',
+    width: '100%',
+    textAlign: 'center',
+    color: currentTheme.steel[100],
+    fontSize: '1.6rem',
+    padding: '1rem 0',
+    Background: currentTheme.steel[900],
+    p: {
+      padding: '1rem 0',
+      margin: 0,
+    },
+  };
+});

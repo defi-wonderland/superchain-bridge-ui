@@ -25,7 +25,7 @@ export const Header = () => {
       {/* Left section */}
       <LeftSection>
         <Link href='/' replace>
-          <Image src={logo} alt='Superchain Bridge' />
+          <Image src={logo} alt='Superchain Bridge' priority />
         </Link>
       </LeftSection>
 
