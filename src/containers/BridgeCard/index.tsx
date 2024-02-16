@@ -47,7 +47,8 @@ export const BridgeCard = () => {
       </ContentSection>
 
       <StyledButton variant='contained' fullWidth onClick={handleReview} disabled={isButtonDisabled}>
-        Review Transaction
+        {isButtonDisabled && 'Enter amount'}
+        {!isButtonDisabled && 'Review Transaction'}
       </StyledButton>
     </MainCardContainer>
   );
@@ -82,8 +83,17 @@ const StyledButton = styled(Button)(() => {
     fontWeight: 600,
     fontSize: '1.8rem',
     height: '6rem',
+    boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
+
     '&:hover': {
       backgroundColor: currentTheme.ghost[500],
+    },
+
+    '&:disabled': {
+      fontWeight: 500,
+      backgroundColor: currentTheme.steel[700],
+      borderColor: currentTheme.steel[700],
+      color: currentTheme.steel[500],
     },
   };
 });

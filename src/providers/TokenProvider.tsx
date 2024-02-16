@@ -6,8 +6,11 @@ import { useChain, useCustomClient, useTokenList } from '~/hooks';
 import { TokenData } from '~/types';
 
 type ContextType = {
-  selectedToken: TokenData | undefined;
-  setSelectedToken: (val?: TokenData) => void;
+  selectedToken: TokenData;
+  setSelectedToken: (val: TokenData) => void;
+
+  price: number;
+  setPrice: (val: number) => void;
 
   toToken: TokenData | undefined;
 
@@ -34,7 +37,7 @@ export const TokenContext = createContext({} as ContextType);
 
 export const TokenProvider = ({ children }: StateProps) => {
   const { address } = useAccount();
-  const { toTokens } = useTokenList();
+  const { toTokens, fromTokens } = useTokenList();
   const { toChain } = useChain();
   const { data } = useBalance({
     address,
@@ -44,7 +47,9 @@ export const TokenProvider = ({ children }: StateProps) => {
     customClient: { from },
   } = useCustomClient();
 
-  const [selectedToken, setSelectedToken] = useState<TokenData | undefined>();
+  const ethToken = fromTokens.find((token) => token.symbol === 'ETH');
+  const [selectedToken, setSelectedToken] = useState<TokenData>(ethToken!);
+  const [price, setPrice] = useState<number>(1242.36);
 
   // amount is the value of the input field
   const [amount, setAmount] = useState<string>('');
@@ -149,6 +154,8 @@ export const TokenProvider = ({ children }: StateProps) => {
         approve,
         parseTokenUnits,
         toToken,
+        price,
+        setPrice,
       }}
     >
       {children}

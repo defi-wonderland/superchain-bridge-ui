@@ -1,6 +1,8 @@
 import { Button, Stack, styled } from '@mui/material';
+import { parseUnits } from 'viem';
 
 import { useCustomTheme, useModal, useToken, useTransactionData } from '~/hooks';
+import { formatDataNumber, getUsdBalance } from '~/utils';
 import { SInputLabel } from '~/components';
 import { ModalType } from '~/types';
 
@@ -9,28 +11,37 @@ const truncateAddress = (address: string) => {
 };
 
 export const TargetButtons = () => {
-  const { selectedToken, amount } = useToken();
+  const { selectedToken, amount, price } = useToken();
   const { to, mint, value } = useTransactionData();
   const { setModalOpen } = useModal();
 
   const openSelectAccountModal = () => {
     setModalOpen(ModalType.SELECT_ACCOUNT);
   };
+  const amountToShow = amount || value || mint;
 
-  const isAmountToShow = amount || value || mint;
+  const formattedAmount = formatDataNumber(
+    parseUnits(amountToShow, selectedToken?.decimals || 18).toString(),
+    selectedToken?.decimals,
+    2,
+    false,
+    true,
+  );
+
+  const usdValue = getUsdBalance(price, amountToShow, selectedToken?.decimals);
 
   return (
     <Stack direction='row' gap='0.8rem' width='100%'>
-      <BasicButton fullWidth>
+      <BasicButton fullWidth disabled>
         <SInputLabel>You receive</SInputLabel>
 
-        {isAmountToShow && (
+        {amountToShow && (
           <Stack direction='row' gap='0.8rem'>
-            {amount || value || mint} {selectedToken?.symbol}
-            <span>($1.231,02)</span>
+            {formattedAmount} {selectedToken?.symbol}
+            <span>({usdValue})</span>
           </Stack>
         )}
-        {!isAmountToShow && '-'}
+        {!amountToShow && '-'}
       </BasicButton>
 
       <BasicButton fullWidth onClick={openSelectAccountModal}>
@@ -69,6 +80,10 @@ const BasicButton = styled(Button)(() => {
 
     '&:hover': {
       backgroundColor: currentTheme.steel[700],
+    },
+
+    '&:disabled': {
+      color: currentTheme.steel[50],
     },
   };
 });

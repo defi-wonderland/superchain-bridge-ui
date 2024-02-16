@@ -48,7 +48,7 @@ export const darkTheme: Theme = {
   steel,
   ghost,
   errorPrimary: '#F04438',
-  mainCardBorder: '1px solid #2C2E40',
+  mainCardBorder: '1px solid #3c3e4e', //'1px solid #2C2E40',
   mainCardBoxShadow: '0px 0px 64px 0px #251F3C, 0px 0px 14px 0px rgba(216, 201, 255, 0.06)',
 };
 

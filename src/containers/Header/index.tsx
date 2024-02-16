@@ -38,7 +38,6 @@ export const Header = () => {
                 pathname: '/[chain]/history',
                 query: { chain: chainPath },
               }}
-              replace
             >
               <SHistoryIcon src={historyIcon} alt='Transaction History' />
             </Link>

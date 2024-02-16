@@ -6,4 +6,5 @@ export * from './InputField';
 export * from './ThemeButton';
 export * from './CustomScrollbar';
 export * from './ChainSelect';
+export * from './TokenButton';
 export * from './TokenSelect';

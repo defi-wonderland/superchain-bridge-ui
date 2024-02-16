@@ -1,32 +1,155 @@
-import { Box } from '@mui/material';
+import { useEffect } from 'react';
+import { Box, Button, TextField, styled } from '@mui/material';
 import { formatUnits } from 'viem';
 
-import { useModal, useToken, useTransactionData } from '~/hooks';
-import { InputField } from '~/components';
+import { useCustomTheme, useModal, useToken, useTransactionData } from '~/hooks';
+import { formatDataNumber, getUsdBalance } from '~/utils';
+import { SInputLabel, TokenButton } from '~/components';
 import { ModalType } from '~/types';
 
 export const TokenSection = () => {
   const { setModalOpen } = useModal();
   const { mint, setMint, isForceTransaction, value, setValue } = useTransactionData();
-  const { selectedToken, amount, balance: tokenBalance, ethBalance, allowance, setAmount } = useToken();
+  const { selectedToken, amount, balance: tokenBalance, ethBalance, price, setAmount } = useToken();
 
   const balance = selectedToken?.symbol === 'ETH' ? ethBalance : tokenBalance;
   const ethValue = isForceTransaction ? value : mint;
   const setEthValue = isForceTransaction ? setValue : setMint;
 
+  const isEth = selectedToken?.symbol === 'ETH';
+  const inputValue = isEth ? ethValue : amount;
+
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    isEth ? setEthValue(e.target.value) : setAmount(e.target.value);
+  };
+
+  const handleOpenTokenModal = () => {
+    setModalOpen(ModalType.SELECT_TOKEN);
+  };
+
+  const handleMax = () => {
+    isEth
+      ? setEthValue(formatUnits(BigInt(ethBalance), 18))
+      : setAmount(formatUnits(BigInt(balance), selectedToken?.decimals || 18));
+  };
+
+  const usdValue = getUsdBalance(price, inputValue, selectedToken?.decimals);
+  const formattedBalance = formatDataNumber(balance, selectedToken?.decimals, 2, false, true);
+
+  // Remove scroll on input
+  useEffect(() => {
+    document.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+    return () => {
+      document.removeEventListener('wheel', (e) => e.preventDefault());
+    };
+  }, []);
+
   return (
-    <Box>
-      <button onClick={() => setModalOpen(ModalType.SELECT_TOKEN)}>open tokens modal</button>
+    <TokensContainer>
+      <SInputLabel>You send</SInputLabel>
 
-      <br />
-      {selectedToken?.symbol === 'ETH' && <InputField label='ETH Amount' value={ethValue} setValue={setEthValue} />}
+      <InputSection>
+        <StyledInput
+          variant='standard'
+          type='number'
+          value={inputValue}
+          onChange={handleOnChange}
+          fullWidth
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
 
-      {selectedToken && selectedToken?.symbol !== 'ETH' && (
-        <InputField label='Token Amount' value={amount} setValue={setAmount} />
-      )}
+        <TokenButton onClick={handleOpenTokenModal} selectedToken={selectedToken} />
+      </InputSection>
 
-      <p>Balance: {formatUnits(BigInt(balance), selectedToken?.decimals || 18)}</p>
-      <p>Allowance: {formatUnits(BigInt(allowance), selectedToken?.decimals || 18)}</p>
-    </Box>
+      <BalanceSection>
+        <span>{inputValue && usdValue}</span>
+
+        <span>
+          Balance: {formattedBalance}
+          <MaxButton variant='text' onClick={handleMax}>
+            Max
+          </MaxButton>
+        </span>
+      </BalanceSection>
+    </TokensContainer>
   );
 };
+
+const TokensContainer = styled(Box)(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'start',
+    width: '100%',
+
+    gap: '0.8rem',
+    border: '1px solid',
+    borderColor: currentTheme.steel[700],
+    backgroundColor: currentTheme.steel[800],
+    borderRadius: '1.2rem',
+    padding: '1.2rem 1.6rem',
+
+    label: {
+      fontSize: '1.4rem',
+    },
+  };
+});
+
+const StyledInput = styled(TextField)(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    padding: '0 0.8rem 0 0',
+
+    '& .MuiInputBase-root::after, & .MuiInputBase-root::before, & .MuiInputBase-root:hover': {
+      content: 'none',
+    },
+
+    '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+      WebkitAppearance: 'none',
+      margin: 0,
+    },
+
+    '& .MuiInputBase-input': {
+      color: currentTheme.steel[100],
+      fontSize: '3.2rem',
+      lineHeight: 1.2,
+      padding: '0',
+    },
+  };
+});
+
+const InputSection = styled(Box)(() => {
+  return {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+  };
+});
+
+const BalanceSection = styled(InputSection)(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    fontSize: '1.4rem',
+    color: currentTheme.steel[400],
+    fontWeight: 400,
+  };
+});
+
+const MaxButton = styled(Button)(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    color: currentTheme.ghost[400],
+    fontSize: '1.4rem',
+    fontWeight: 600,
+    textTransform: 'none',
+    padding: '0',
+    marginLeft: '0.8rem',
+    minWidth: 'fit-content',
+  };
+});

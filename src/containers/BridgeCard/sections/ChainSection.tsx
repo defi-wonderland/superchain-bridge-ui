@@ -4,18 +4,20 @@ import Image from 'next/image';
 
 import arrowRightIcon from '~/assets/icons/arrow-right.svg';
 
-import { useChain, useCustomTheme, useToken } from '~/hooks';
+import { useChain, useCustomTheme, useToken, useTokenList } from '~/hooks';
 import { ChainSelect } from '~/components';
 
 export const ChainSection = () => {
   const { fromList, toList, setFromChain, setToChain, fromChain, toChain, switchChains } = useChain();
   const { setSelectedToken } = useToken();
+  const { fromTokens } = useTokenList();
 
   const handleFrom = (chain: Chain) => {
     setFromChain(chain);
 
     // Reset token when chain is changed
-    setSelectedToken(undefined);
+    const ethtoken = fromTokens.find((token) => token.symbol === 'ETH');
+    setSelectedToken(ethtoken!);
   };
 
   const handleTo = (chain: Chain) => {
