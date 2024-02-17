@@ -1,6 +1,7 @@
 import { Box, styled } from '@mui/material';
 import Link from 'next/link';
-import { MadeByWonderland } from '~/components/MadeByWonderland';
+
+import { MadeByWonderland } from '~/components';
 import { useCustomTheme } from '~/hooks';
 
 export const Footer = () => {

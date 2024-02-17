@@ -1,19 +1,20 @@
+import { useState } from 'react';
 import { Box, Button, Typography, styled } from '@mui/material';
 // import Image from 'next/image';
 
 import BaseModal from '~/components/BaseModal';
-import { CustomScrollbar } from '~/components';
+import { CustomScrollbar, SearchInput, BridgeIcons } from '~/components';
 import { useCustomTheme, useModal } from '~/hooks';
-import { ModalType } from '~/types';
-import { BridgeIcons } from '~/components/BridgeIcons';
 import { ListContainer } from './SelectToken';
+import { ModalType } from '~/types';
 
 export const BridgeModal = () => {
   const { closeModal } = useModal();
+  const [searchValue, setSearchValue] = useState('');
 
   return (
     <BaseModal type={ModalType.SELECT_BRIDGE} title='Select bridge'>
-      {/* TODO: Input should be here */}
+      <SearchInput value={searchValue} setValue={setSearchValue} placeholder='Search name' />
 
       <ListContainer>
         <CustomScrollbar>

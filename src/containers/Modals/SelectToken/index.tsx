@@ -1,8 +1,9 @@
+import { useMemo, useState } from 'react';
 import { Box, Button, Typography, styled } from '@mui/material';
 import Image from 'next/image';
 
 import { useCustomTheme, useModal, useToken, useTokenList, useTransactionData } from '~/hooks';
-import { CustomScrollbar } from '~/components';
+import { CustomScrollbar, SearchInput } from '~/components';
 import BaseModal from '~/components/BaseModal';
 import { ModalType, TokenData } from '~/types';
 
@@ -12,7 +13,21 @@ export const TokensModal = () => {
   const { isForceTransaction } = useTransactionData();
   const { setSelectedToken } = useToken();
 
-  const tokenList = isForceTransaction ? toTokens : fromTokens;
+  const [searchValue, setSearchValue] = useState('');
+
+  // filter with the searchValue
+  const tokenList = useMemo(() => {
+    const search = searchValue.toLowerCase();
+
+    const filterToken = (token: TokenData) =>
+      token.symbol.toLowerCase().includes(search) ||
+      token.address.toLowerCase().includes(search) ||
+      token.name.toLowerCase().includes(search);
+
+    return isForceTransaction
+      ? toTokens.filter((token) => filterToken(token))
+      : fromTokens.filter((token) => filterToken(token));
+  }, [fromTokens, isForceTransaction, searchValue, toTokens]);
 
   const handleToken = async (token: TokenData) => {
     try {
@@ -25,7 +40,8 @@ export const TokensModal = () => {
 
   return (
     <BaseModal type={ModalType.SELECT_TOKEN} title='Select a token'>
-      {/* TODO: Input should be here */}
+      {/* Search bar */}
+      <SearchInput value={searchValue} setValue={setSearchValue} placeholder='Search name or paste address' />
 
       <ListContainer>
         <CustomScrollbar>
@@ -60,8 +76,9 @@ export const ListContainer = styled(Box)(() => {
     display: 'flex',
     flexDirection: 'column',
     maxHeight: '40rem',
-    marginLeft: '-1.2rem',
-    width: 'calc(100% + 2.4rem)',
+    // marginLeft: '-1.2rem',
+    // width: 'calc(100% + 2.4rem)',
+    width: '100%',
   };
 });
 

@@ -1,4 +1,5 @@
 export * from './Theme';
+export * from './BridgeIcons';
 export * from './Connect';
 export * from './Buttons';
 export * from './CustomHead';
@@ -6,6 +7,8 @@ export * from './LangButton';
 export * from './InputField';
 export * from './ThemeButton';
 export * from './CustomScrollbar';
+export * from './MadeByWonderland';
+export * from './SearchField';
 export * from './ChainSelect';
 export * from './TokenButton';
 export * from './TokenSelect';

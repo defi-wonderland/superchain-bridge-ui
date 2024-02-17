@@ -53,6 +53,10 @@ const BootstrapInput = styled(InputBase)(() => {
       marginTop: '2.2rem',
     },
 
+    '&:hover .MuiInputBase-input': {
+      borderColor: currentTheme.steel[500],
+    },
+
     '& .MuiInputBase-input': {
       borderRadius: '1.2rem',
       position: 'relative',
@@ -80,8 +84,8 @@ export const SInputLabel = styled(Typography)(() => {
   const { currentTheme } = useCustomTheme();
   return {
     color: currentTheme.steel[400],
-    fontSize: '1.6rem',
-    lineHeight: '2rem',
+    fontSize: '1.4rem',
+    lineHeight: 1.5,
 
     '&.Mui-focused': {
       color: currentTheme.steel[300],
