@@ -59,13 +59,6 @@ export enum TransactionType {
 
 export type CustomTransactionType = 'custom-tx' | 'force-withdrawal' | 'force-transfer';
 
-export enum ForceTransactionType {
-  ETH_WITHDRAWAL = 'ethWithdrawal',
-  ERC20_WITHDRAWAL = 'erc20Withdrawal',
-  ETH_TRANSFER = 'ethTransfer',
-  ERC20_TRANSFER = 'erc20Transfer',
-}
-
 export type DepositLogs = {
   logs: GetLogsReturnType<
     | typeof transactionDepositedABI

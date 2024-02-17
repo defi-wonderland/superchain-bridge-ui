@@ -27,6 +27,8 @@ type ContextType = {
   approve: () => Promise<void>;
 
   parseTokenUnits: (val: string) => bigint;
+
+  resetValues: () => void;
 };
 
 interface StateProps {
@@ -107,6 +109,12 @@ export const TokenProvider = ({ children }: StateProps) => {
     }
   };
 
+  const resetValues = () => {
+    setAmount('');
+    setBalance('');
+    setAllowance('');
+  };
+
   useEffect(() => {
     if (!tokenContract || !address || !from.contracts.standardBridge) return;
     // get balance
@@ -156,6 +164,7 @@ export const TokenProvider = ({ children }: StateProps) => {
         toToken,
         price,
         setPrice,
+        resetValues,
       }}
     >
       {children}

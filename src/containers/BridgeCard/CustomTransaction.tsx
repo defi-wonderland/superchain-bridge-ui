@@ -15,11 +15,11 @@ export const CustomTransaction = () => {
 
   useEffect(() => {
     if (address && isAddress(address)) setTo(address);
-  }, [address, setTo, to]);
+  }, [address, setTo]);
 
   return (
     <SBox>
-      {(customTransactionType === 'force-withdrawal' || customTransactionType === 'force-transfer') && (
+      {customTransactionType && customTransactionType !== 'custom-tx' && (
         <>
           <ChainSection />
           <TokenSection />

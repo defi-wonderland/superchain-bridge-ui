@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Button, styled } from '@mui/material';
-import { isHex } from 'viem';
 
-import { useCustomTheme, useModal, useToken, useTransactionData } from '~/hooks';
+import { useCustomTheme, useModal, useTransactionData } from '~/hooks';
 
 import { ModalType } from '~/types';
 import { BasicMode } from './BasicMode';
@@ -12,10 +11,8 @@ import { CustomTransaction } from './CustomTransaction';
 
 export const BridgeCard = () => {
   const { setModalOpen } = useModal();
-  const { amount, selectedToken } = useToken();
   const {
-    mint,
-    data,
+    isReady,
     customTransactionType: customTransaction,
     setCustomTransactionType: setCustomTransaction,
   } = useTransactionData();
@@ -25,15 +22,13 @@ export const BridgeCard = () => {
     setModalOpen(ModalType.REVIEW);
   };
 
-  const isButtonDisabled =
-    (selectedToken?.symbol === 'ETH' && !Number(mint)) ||
-    (selectedToken && selectedToken?.symbol !== 'ETH' && !Number(amount)) ||
-    (!!data && !isHex(data));
+  const isButtonDisabled = !isReady;
 
   const disableMessage = useMemo(() => {
     if (!isButtonDisabled) return 'Review transaction';
     if (!isExpertMode) return 'Enter amount';
     if (!customTransaction) return 'Select transaction type';
+    if (customTransaction.includes('force')) return 'Enter amount';
 
     return 'Enter data';
   }, [isButtonDisabled, isExpertMode, customTransaction]);
@@ -43,7 +38,7 @@ export const BridgeCard = () => {
       <CardHeader
         isExpertMode={isExpertMode}
         setIsExpertMode={setIsExpertMode}
-        customTransaction={!!customTransaction}
+        customTransaction={customTransaction}
         setCustomTransaction={setCustomTransaction}
       />
 

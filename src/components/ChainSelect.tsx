@@ -13,9 +13,10 @@ interface ChainSelectProps {
   value: Chain;
   setValue: (chain: Chain) => void;
   list: Chain[];
+  disabled?: boolean;
 }
 
-export const ChainSelect = ({ label, list, value, setValue }: ChainSelectProps) => {
+export const ChainSelect = ({ label, list, value, setValue, disabled }: ChainSelectProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -42,6 +43,7 @@ export const ChainSelect = ({ label, list, value, setValue }: ChainSelectProps) 
         onClick={handleClick}
         endIcon={<Image src={chevrownDown} alt='arrow-down' width={16} height={16} />}
         fullWidth
+        disabled={disabled || list.length < 2}
       >
         {value.name}
       </MenuButton>

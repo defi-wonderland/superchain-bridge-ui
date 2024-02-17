@@ -9,12 +9,12 @@ import { ModalType } from '~/types';
 
 export const TokenSection = () => {
   const { setModalOpen } = useModal();
-  const { mint, setMint, isForceTransaction, value, setValue } = useTransactionData();
+  const { mint, setMint, customTransactionType, value, setValue } = useTransactionData();
   const { selectedToken, amount, balance: tokenBalance, ethBalance, price, setAmount } = useToken();
 
   const balance = selectedToken?.symbol === 'ETH' ? ethBalance : tokenBalance;
-  const ethValue = isForceTransaction ? value : mint;
-  const setEthValue = isForceTransaction ? setValue : setMint;
+  const ethValue = customTransactionType ? value : mint;
+  const setEthValue = customTransactionType ? setValue : setMint;
 
   const isEth = selectedToken?.symbol === 'ETH';
   const inputValue = isEth ? ethValue : amount;

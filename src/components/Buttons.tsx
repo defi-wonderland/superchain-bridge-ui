@@ -18,6 +18,13 @@ export const BasicButton = styled(Button)(() => {
     '&:hover': {
       backgroundColor: currentTheme.steel[700],
     },
+
+    '&:disabled': {
+      fontWeight: 500,
+      backgroundColor: currentTheme.steel[700],
+      borderColor: currentTheme.steel[700],
+      color: currentTheme.steel[500],
+    },
   };
 });
 

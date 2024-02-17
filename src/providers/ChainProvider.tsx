@@ -13,7 +13,11 @@ type ContextType = {
   fromList: Chain[];
   toList: Chain[];
 
+  l1Chains: Chain[];
+  l2Chains: Chain[];
+
   switchChains: () => void;
+  resetChains: () => void;
 };
 
 interface StateProps {
@@ -45,6 +49,14 @@ export const ChainProvider = ({ children }: StateProps) => {
     [availableChains, fromChain.id],
   );
 
+  const resetChains = useCallback(() => {
+    setFromChain(availableChains[0] as Chain);
+    setToChain(availableChains[1] as Chain);
+  }, [availableChains]);
+
+  const l1Chains = useMemo(() => availableChains.filter((chain) => !chain.sourceId), [availableChains]);
+  const l2Chains = useMemo(() => availableChains.filter((chain) => chain.sourceId), [availableChains]);
+
   return (
     <ChainContext.Provider
       value={{
@@ -56,6 +68,10 @@ export const ChainProvider = ({ children }: StateProps) => {
         toList,
         availableChains,
         switchChains,
+        resetChains,
+
+        l1Chains,
+        l2Chains,
       }}
     >
       {children}

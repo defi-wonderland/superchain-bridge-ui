@@ -5,7 +5,7 @@ import { depositERC20, depositETH, depositMessage } from '~/utils';
 import { useForceTx } from './useForceTx';
 
 export const useDeposit = () => {
-  const { mint, userAddress, data, isForceTransaction, to } = useTransactionData();
+  const { mint, userAddress, data, to, customTransactionType } = useTransactionData();
   const { selectedToken, amount, allowance, toToken, approve, parseTokenUnits } = useToken();
   const { customClient } = useCustomClient();
   const forceTx = useForceTx();
@@ -13,17 +13,24 @@ export const useDeposit = () => {
   const deposit = async () => {
     if (!userAddress) return;
 
-    if (isForceTransaction) {
+    if (customTransactionType === 'custom-tx') {
+      // temporary logs
+      console.log('calling depositMessage');
+
+      await depositMessage({
+        customClient,
+        userAddress: userAddress,
+        data: data as Hex,
+        target: to as Address,
+      });
+    } else if (customTransactionType?.includes('force')) {
+      console.log('calling forceTx');
+
       await forceTx();
     } else {
-      if (!selectedToken) {
-        await depositMessage({
-          customClient,
-          userAddress: userAddress,
-          data: data as Hex,
-          target: to as Address,
-        });
-      } else if (selectedToken?.symbol === 'ETH') {
+      if (selectedToken?.symbol === 'ETH') {
+        console.log('calling depositETH');
+
         await depositETH({
           customClient,
           userAddress,
@@ -31,6 +38,8 @@ export const useDeposit = () => {
           to: userAddress,
         });
       } else {
+        console.log('calling depositERC20');
+
         await depositERC20({
           customClient,
           l1TokenAddress: selectedToken.address as Address,

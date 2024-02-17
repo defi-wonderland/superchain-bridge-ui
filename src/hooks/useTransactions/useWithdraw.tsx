@@ -12,12 +12,17 @@ export const useWithdraw = () => {
     if (!userAddress) return;
 
     if (!selectedToken) {
+      // temporary logs
+      console.log('calling initiateMessageWithdraw');
+
       await initiateMessageWithdraw({
         customClient,
         userAddress: userAddress,
         message: data as Hex,
       });
     } else if (selectedToken?.symbol === 'ETH') {
+      console.log('calling initiateETHWithdraw');
+
       await initiateETHWithdraw({
         customClient,
         userAddress,
@@ -25,6 +30,8 @@ export const useWithdraw = () => {
         to: userAddress,
       });
     } else {
+      console.log('calling initiateERC20Withdraw');
+
       await initiateERC20Withdraw({
         customClient,
         amount: parseTokenUnits(amount),

@@ -10,8 +10,8 @@ import { ModalType, TokenData } from '~/types';
 export const TokensModal = () => {
   const { closeModal } = useModal();
   const { fromTokens, toTokens } = useTokenList();
-  const { isForceTransaction } = useTransactionData();
-  const { setSelectedToken } = useToken();
+  const { customTransactionType, resetValues: resetTransactionData } = useTransactionData();
+  const { setSelectedToken, resetValues: resetTokenValues } = useToken();
 
   const [searchValue, setSearchValue] = useState('');
 
@@ -24,17 +24,15 @@ export const TokensModal = () => {
       token.address.toLowerCase().includes(search) ||
       token.name.toLowerCase().includes(search);
 
-    return isForceTransaction
+    return customTransactionType
       ? toTokens.filter((token) => filterToken(token))
       : fromTokens.filter((token) => filterToken(token));
-  }, [fromTokens, isForceTransaction, searchValue, toTokens]);
+  }, [fromTokens, customTransactionType, searchValue, toTokens]);
 
   const handleToken = async (token: TokenData) => {
-    try {
-      setSelectedToken(token);
-    } catch (error) {
-      console.warn(error);
-    }
+    resetTokenValues();
+    resetTransactionData();
+    setSelectedToken(token);
     closeModal();
   };
 

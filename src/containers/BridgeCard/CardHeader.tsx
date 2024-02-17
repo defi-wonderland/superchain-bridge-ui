@@ -5,13 +5,13 @@ import adjustmentsIcon from '~/assets/icons/adjustments.svg';
 import adjustmentsActivated from '~/assets/icons/adjustments-horizontal.svg';
 import arrowLeft from '~/assets/icons/arrow-left.svg';
 
-import { useCustomTheme } from '~/hooks';
+import { useChain, useCustomTheme } from '~/hooks';
 import { CustomTransactionType } from '~/types';
 
 interface CardHeaderProps {
   isExpertMode: boolean;
   setIsExpertMode: (isExpertMode: boolean) => void;
-  customTransaction: boolean;
+  customTransaction?: CustomTransactionType;
   setCustomTransaction: (customTransaction?: CustomTransactionType) => void;
 }
 
@@ -21,6 +21,24 @@ export const CardHeader = ({
   setIsExpertMode,
   setCustomTransaction,
 }: CardHeaderProps) => {
+  const { resetChains } = useChain();
+
+  const cardTitle = (() => {
+    if (customTransaction === 'custom-tx') return 'Custom transaction';
+    if (customTransaction === 'force-withdrawal') return 'Force Withdrawal';
+    if (customTransaction === 'force-transfer') return 'Force Transfer';
+  })();
+
+  const activateExpertMode = () => {
+    setIsExpertMode(!isExpertMode);
+    resetChains();
+  };
+
+  const handleBack = () => {
+    setCustomTransaction(undefined);
+    resetChains();
+  };
+
   return (
     <Header>
       {!customTransaction && (
@@ -30,7 +48,7 @@ export const CardHeader = ({
             {isExpertMode && <strong>Expert mode</strong>}
           </Box>
 
-          <StyledAdvanceButton onClick={() => setIsExpertMode(!isExpertMode)}>
+          <StyledAdvanceButton onClick={activateExpertMode}>
             <Image
               src={isExpertMode ? adjustmentsActivated : adjustmentsIcon}
               alt='Advance mode'
@@ -42,10 +60,10 @@ export const CardHeader = ({
 
       {customTransaction && (
         <Box>
-          <IconButton onClick={() => setCustomTransaction(undefined)}>
+          <IconButton onClick={handleBack}>
             <Image src={arrowLeft} alt='back' className={isExpertMode ? 'advance-activated' : ''} />
           </IconButton>
-          <Typography variant='h1'>Custom transaction</Typography>
+          <Typography variant='h1'>{cardTitle}</Typography>
         </Box>
       )}
     </Header>

@@ -2,8 +2,8 @@ import { createContext, useEffect, useMemo, useState } from 'react';
 import { Address } from 'viem';
 import { useAccount } from 'wagmi';
 
-import { useChain } from '~/hooks';
-import { CustomTransactionType, ForceTransactionType, TransactionType } from '~/types';
+import { useChain, useToken } from '~/hooks';
+import { CustomTransactionType, TransactionType } from '~/types';
 
 type ContextType = {
   userAddress?: Address;
@@ -20,14 +20,12 @@ type ContextType = {
   to: string;
   setTo: (val: string) => void;
 
+  isReady: boolean;
+
   customTransactionType?: CustomTransactionType;
   setCustomTransactionType: (val?: CustomTransactionType) => void;
 
-  isForceTransaction: boolean;
-  setIsForceTransaction: (val: boolean) => void;
-
-  forceTransactionType?: ForceTransactionType;
-  setForceTransactionType: (val: ForceTransactionType) => void;
+  resetValues: () => void;
 
   transactionType: TransactionType;
 };
@@ -45,12 +43,9 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
   const [data, setData] = useState<string>('');
   const [to, setTo] = useState<string>(address?.toString() || '');
 
+  const { amount } = useToken();
   const { fromChain, toChain } = useChain();
-  const [isForceTransaction, setIsForceTransaction] = useState<boolean>(false);
   const [customTransactionType, setCustomTransactionType] = useState<CustomTransactionType>();
-  const [forceTransactionType, setForceTransactionType] = useState<ForceTransactionType>(
-    ForceTransactionType.ETH_TRANSFER, // TODO: remove later
-  );
 
   // If the selected chain has a sourceId, its because it's a L2 chain
   const isFromAnL2 = !!fromChain?.sourceId;
@@ -72,6 +67,17 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
     }
   }, [isFromAnL2, isToAnL2]);
 
+  const isReady = useMemo(() => {
+    return !!(mint || value || amount || data);
+  }, [mint, value, amount, data]);
+
+  const resetValues = () => {
+    setMint('');
+    setValue('');
+    setData('');
+    setTo(address?.toString() || '');
+  };
+
   useEffect(() => {
     if (address) {
       // temporary
@@ -92,12 +98,10 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
         setTo,
         transactionType,
         userAddress: address,
-        isForceTransaction,
-        setIsForceTransaction,
-        forceTransactionType,
-        setForceTransactionType,
         customTransactionType,
         setCustomTransactionType,
+        isReady,
+        resetValues,
       }}
     >
       {children}
