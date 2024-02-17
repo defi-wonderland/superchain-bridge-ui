@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 
-import { ChainSection } from './ChainSection';
-import { TokenSection } from './TokenSection';
+import { ChainSection } from '../ChainSection';
+import { TokenSection } from '../TokenSection';
 import { TargetButtons } from './TargetButtons';
 import { BridgeSection } from './BridgeSection';
 

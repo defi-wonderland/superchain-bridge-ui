@@ -8,6 +8,7 @@ import { ModalType } from '~/types';
 import { BasicMode } from './BasicMode';
 import { ExpertMode } from './ExpertMode';
 import { CardHeader } from './CardHeader';
+import { CustomTransaction } from './CustomTransaction';
 
 export const BridgeCard = () => {
   const { setModalOpen } = useModal();
@@ -50,7 +51,7 @@ export const BridgeCard = () => {
 
       {isExpertMode && !customTransaction && <ExpertMode setCustomTransaction={setCustomTransaction} />}
 
-      {customTransaction && <>test</>}
+      {customTransaction && <CustomTransaction />}
 
       <StyledButton variant='contained' fullWidth onClick={handleReview} disabled={isButtonDisabled}>
         {disableMessage}
