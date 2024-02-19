@@ -28,14 +28,14 @@ export const supportedChains = isE2E
 
 export const connectors = [injected(), walletConnect({ projectId: PROJECT_ID })];
 
-const trasnport: Record<[wagmiChains.Chain, ...wagmiChains.Chain[]][number]['id'], Transport> = Object.fromEntries(
+const transport: Record<[wagmiChains.Chain, ...wagmiChains.Chain[]][number]['id'], Transport> = Object.fromEntries(
   Object.entries(alchemyUrls).map(([chainId, url]) => [chainId, http(url)]),
 );
 
 export const config = createConfig({
   chains: supportedChains,
   connectors,
-  transports: trasnport,
+  transports: transport,
   batch: { multicall: true },
   ssr: true,
 });

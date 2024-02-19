@@ -49,7 +49,7 @@ export const CustomTransaction = () => {
             setValue={setAbi}
             modal={false}
             multiline
-            placeholder='Pase contract ABI...'
+            placeholder='Paste contract ABI...'
           />
 
           <SDataContainer>
