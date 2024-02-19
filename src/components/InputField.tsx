@@ -2,22 +2,24 @@ import { FormControl, InputBase, Typography, styled } from '@mui/material';
 import { useCustomTheme } from '~/hooks';
 
 interface InputFieldProps {
-  label: string;
+  label?: string;
   value: string;
   setValue: (val: string) => void;
   error?: boolean;
   placeholder?: string;
   modal?: boolean;
+  multiline?: boolean;
 }
 
-export function InputField({ label, value, setValue, error, placeholder, modal = true }: InputFieldProps) {
+export function InputField({ label, value, setValue, error, placeholder, multiline, modal = true }: InputFieldProps) {
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
 
   return (
     <SFormControl variant='standard' fullWidth>
-      <SInputLabel>{label}</SInputLabel>
+      {label && <SInputLabel>{label}</SInputLabel>}
+
       <BootstrapInput
         error={error}
         aria-label={label + '-input'}
@@ -26,6 +28,7 @@ export function InputField({ label, value, setValue, error, placeholder, modal =
         spellCheck={false}
         placeholder={placeholder}
         className={modal ? 'modal' : 'basic-input'}
+        multiline={multiline}
       />
     </SFormControl>
   );
@@ -40,6 +43,12 @@ const SFormControl = styled(FormControl)(() => {
     '&:has(.basic-input)': {
       '.MuiInputBase-input': {
         backgroundColor: currentTheme.steel[800],
+      },
+    },
+
+    '&:has(.MuiInputBase-inputMultiline)': {
+      '& .MuiInputBase-input.MuiInputBase-inputMultiline': {
+        minHeight: '12.4rem',
       },
     },
   };

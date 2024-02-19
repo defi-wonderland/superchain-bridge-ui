@@ -8,6 +8,7 @@ export * from './InputField';
 export * from './ThemeButton';
 export * from './CustomScrollbar';
 export * from './MadeByWonderland';
+export * from './RadioButtons';
 export * from './SearchField';
 export * from './ChainSelect';
 export * from './TokenButton';
