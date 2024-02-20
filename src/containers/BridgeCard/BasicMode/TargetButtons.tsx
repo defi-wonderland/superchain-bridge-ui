@@ -60,7 +60,7 @@ const BasicButton = styled(Button)(() => {
     borderColor: currentTheme.steel[700],
     backgroundColor: currentTheme.steel[800],
     borderRadius: '1.2rem',
-    padding: '1.2rem 1.4rem',
+    padding: '1.2rem 1.6rem',
     textTransform: 'none',
     color: currentTheme.steel[50],
 
@@ -74,7 +74,8 @@ const BasicButton = styled(Button)(() => {
     },
 
     '&:hover': {
-      backgroundColor: currentTheme.steel[700],
+      backgroundColor: currentTheme.steel[800],
+      borderColor: currentTheme.steel[600],
     },
 
     '&:disabled': {

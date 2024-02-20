@@ -57,7 +57,8 @@ const SwitchIcon = styled(IconButton)(() => {
     height: '5.6rem',
 
     '&:hover': {
-      backgroundColor: currentTheme.steel[700],
+      backgroundColor: currentTheme.steel[800],
+      borderColor: currentTheme.steel[600],
     },
 
     '&:disabled': {

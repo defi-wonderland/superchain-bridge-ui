@@ -68,6 +68,7 @@ export const SModal = styled(Box)(() => {
   const { currentTheme } = useCustomTheme();
   return {
     minWidth: '44.8rem',
+    minHeight: '38.6rem',
     borderRadius: currentTheme.borderRadius,
     backgroundColor: currentTheme.steel[900],
     border: `1px solid ${currentTheme.steel[700]}`,

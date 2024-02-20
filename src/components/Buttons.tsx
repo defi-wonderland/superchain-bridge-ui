@@ -16,7 +16,8 @@ export const BasicButton = styled(Button)(() => {
     color: currentTheme.steel[100],
 
     '&:hover': {
-      backgroundColor: currentTheme.steel[700],
+      backgroundColor: currentTheme.steel[800],
+      borderColor: currentTheme.steel[600],
     },
 
     '&:disabled': {

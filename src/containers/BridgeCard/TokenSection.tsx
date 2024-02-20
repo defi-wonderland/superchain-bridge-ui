@@ -94,6 +94,14 @@ const TokensContainer = styled(Box)(() => {
     borderRadius: '1.2rem',
     padding: '1.2rem 1.6rem',
 
+    '&:hover': {
+      borderColor: currentTheme.steel[600],
+    },
+
+    '&:has(.Mui-focused)': {
+      boxShadow: '0px 0px 0px 3px #362E58', // fixed color
+    },
+
     label: {
       fontSize: '1.4rem',
     },

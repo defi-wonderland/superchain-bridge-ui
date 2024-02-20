@@ -63,6 +63,11 @@ export const TokensModal = () => {
               </RightSection>
             </Token>
           ))}
+          {tokenList.length === 0 && (
+            <NoResultsContainer>
+              <Typography variant='h3'>No results found.</Typography>
+            </NoResultsContainer>
+          )}
         </CustomScrollbar>
       </ListContainer>
     </BaseModal>
@@ -130,5 +135,16 @@ const LeftSection = styled(Box)(() => {
 const RightSection = styled(LeftSection)(() => {
   return {
     textAlign: 'end',
+  };
+});
+
+const NoResultsContainer = styled(Box)(() => {
+  return {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '1.2rem',
+    marginTop: '1.2rem',
   };
 });

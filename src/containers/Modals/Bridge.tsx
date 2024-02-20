@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Box, Button, Typography, styled } from '@mui/material';
-// import Image from 'next/image';
+import Image from 'next/image';
+
+import optimismLogo from '~/assets/chains/optimism.svg';
 
 import BaseModal from '~/components/BaseModal';
 import { CustomScrollbar, SearchInput, BridgeIcons } from '~/components';
 import { useCustomTheme, useModal } from '~/hooks';
-import { ListContainer } from './SelectToken';
+import { ListContainer } from './Token';
 import { ModalType } from '~/types';
 
 export const BridgeModal = () => {
@@ -21,7 +23,7 @@ export const BridgeModal = () => {
           <Bridge onClick={closeModal} fullWidth>
             {/* Bridge logo and name */}
             <LeftSection>
-              {/* <Image src={token.logoURI} alt={token.name} width={36} height={36} className='bridge-image' /> */}
+              <Image src={optimismLogo} alt='' className='bridge-image' />
               <Box>
                 <Typography variant='h3'>Optimism Gateway</Typography>
               </Box>
@@ -61,8 +63,8 @@ const Bridge = styled(Button)(() => {
     },
 
     '.bridge-image': {
-      width: '3.6rem',
-      height: '3.6rem',
+      width: '2.4rem',
+      height: '2.4rem',
       borderRadius: '50%',
     },
   };

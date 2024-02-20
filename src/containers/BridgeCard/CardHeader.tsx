@@ -59,12 +59,12 @@ export const CardHeader = ({
       )}
 
       {customTransaction && (
-        <Box>
+        <SBox>
           <IconButton onClick={handleBack}>
             <Image src={arrowLeft} alt='back' className={isExpertMode ? 'advance-activated' : ''} />
           </IconButton>
           <Typography variant='h1'>{cardTitle}</Typography>
-        </Box>
+        </SBox>
       )}
     </Header>
   );
@@ -111,6 +111,14 @@ const StyledAdvanceButton = styled(IconButton)(() => {
   return {
     '&:has(.advance-activated)': {
       background: currentTheme.ghost[800],
+    },
+  };
+});
+
+export const SBox = styled(Box)(() => {
+  return {
+    h1: {
+      fontSize: '2rem',
     },
   };
 });
