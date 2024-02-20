@@ -17,10 +17,13 @@ export interface Theme {
 
   mainCardBorder: string;
   mainCardBoxShadow: string;
-  errorPrimary: string;
   transition: string;
   steel: { [key: number]: string };
   ghost: { [key: number]: string };
+
+  errorPrimary: string;
+  warningPrimary: string;
+  successPrimary: string;
 }
 
 export interface PropTheme {

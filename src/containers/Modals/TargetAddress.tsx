@@ -2,6 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Typography, styled } from '@mui/material';
 import { useAccount } from 'wagmi';
 import { isAddress } from 'viem';
+import Image from 'next/image';
+
+import checkIcon from '~/assets/icons/check.svg';
+import warningIcon from '~/assets/icons/exclamation-triangle.svg';
 
 import { useCustomTheme, useModal, useTransactionData } from '~/hooks';
 import BaseModal from '~/components/BaseModal';
@@ -43,7 +47,10 @@ export const TargetAddress = () => {
         />
 
         <TextContainer>
-          <Typography variant='body2' color='error'>
+          {!isError && (
+            <Image src={targetAddress === address ? checkIcon : warningIcon} alt='' width={16} height={16} />
+          )}
+          <Typography variant='body2' className={isError ? 'error' : targetAddress === address ? '' : 'warning'}>
             {supportText}
           </Typography>
         </TextContainer>
@@ -85,12 +92,27 @@ const ModalContainer = styled(Box)(() => {
 });
 
 const TextContainer = styled(Box)(() => {
+  const { currentTheme } = useCustomTheme();
   return {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'start',
+    justifyContent: 'center',
     height: '2rem',
+    gap: '0.4rem',
     marginTop: '0.6rem',
+    color: currentTheme.successPrimary,
+
+    img: {
+      marginTop: '0.1rem',
+    },
+
+    '&:has(.error)': {
+      color: currentTheme.errorPrimary,
+    },
+
+    '&:has(.warning)': {
+      color: currentTheme.warningPrimary,
+    },
   };
 });

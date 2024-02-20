@@ -47,9 +47,12 @@ export const darkTheme: Theme = {
   transition: 'all 0.3s ease-in-out',
   steel,
   ghost,
-  errorPrimary: '#F04438',
   mainCardBorder: '1px solid #3c3e4e', //'1px solid #2C2E40',
   mainCardBoxShadow: '0px 0px 64px 0px #251F3C, 0px 0px 14px 0px rgba(216, 201, 255, 0.06)',
+
+  errorPrimary: '#F04438',
+  warningPrimary: '#FFD27A',
+  successPrimary: '#86D5A5',
 };
 
 export const lightTheme: Theme = {
@@ -70,7 +73,10 @@ export const lightTheme: Theme = {
   transition: 'all 0.3s ease-in-out',
   steel,
   ghost,
-  errorPrimary: '#F04438',
   mainCardBorder: '1px solid #2C2E40',
   mainCardBoxShadow: '0px 0px 64px 0px #251F3C, 0px 0px 14px 0px rgba(216, 201, 255, 0.06)',
+
+  errorPrimary: '#F04438',
+  warningPrimary: '#FFD27A',
+  successPrimary: '#86D5A5',
 };
