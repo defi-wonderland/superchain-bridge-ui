@@ -1,6 +1,6 @@
 import { encodeFunctionData, parseAbi } from 'viem';
 
-import { bridgeERC20ToABI, finalizeBridgeERC20ABI, finalizeBridgeETHABI, withdrawToABI } from '../parsedAbis';
+import { bridgeERC20ToABI, withdrawToABI } from '../parsedAbis';
 import {
   ForceErc20TransferProps,
   ForceErc20WithdrawalProps,
@@ -88,17 +88,20 @@ export const forceEthWithdrawal = async ({ customClient, userAddress, to, amount
   const extraData = '0x';
   const ethAddressOnBridge = '0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000'; // optimism sepolia
   const isCreation = false;
+  const finalizeBridgeEthGas = 200_000n;
 
-  const finalizeBridgeETHData = encodeFunctionData({
-    abi: finalizeBridgeETHABI,
-    args: [userAddress, to, amount, extraData],
-  });
+  // const finalizeBridgeETHData = encodeFunctionData({
+  //   abi: finalizeBridgeETHABI,
+  //   args: [userAddress, to, amount, extraData],
+  // });
 
-  const finalizeBridgeEthGas = await customClient.from.public.estimateGas({
-    account: customClient.from.contracts.crossDomainMessenger, //l1CrossDomainMessenger,
-    to: customClient.from.contracts.standardBridge, //l1StandardBridge,
-    data: finalizeBridgeETHData,
-  });
+  // const finalizeBridgeEthGas = await customClient.to.public.simulateContract({
+  //   account: customClient.to.contracts.crossDomainMessenger, //l1CrossDomainMessenger,
+  //   address: customClient.to.contracts.standardBridge, //l1StandardBridge,
+  //   abi: finalizeBridgeETHABI,
+  //   functionName: 'finalizeBridgeETH',
+  //   args: [userAddress, to, amount, extraData],
+  // });
 
   const withdrawToData = encodeFunctionData({
     abi: withdrawToABI,
@@ -109,6 +112,7 @@ export const forceEthWithdrawal = async ({ customClient, userAddress, to, amount
     account: userAddress,
     to: customClient.to.contracts.standardBridge, //l2StandardBridge,
     data: withdrawToData,
+    value: amount,
   });
 
   const result = await excecuteL1Deposit({
@@ -139,17 +143,18 @@ export const forceErc20Withdrawal = async ({
   // temporary fixed values
   const extraData = '0x';
   const isCreation = false;
+  const finalizeBridgeERC20Gas = 200_000n;
 
-  const finalizeBridgeERC20Data = encodeFunctionData({
-    abi: finalizeBridgeERC20ABI,
-    args: [l1TokenAddress, l2TokenAddress, userAddress, to, amount, extraData],
-  });
+  // const finalizeBridgeERC20Data = encodeFunctionData({
+  //   abi: finalizeBridgeERC20ABI,
+  //   args: [l1TokenAddress, l2TokenAddress, userAddress, to, amount, extraData],
+  // });
 
-  const finalizeBridgeERC20Gas = await customClient.from.public.estimateGas({
-    account: customClient.from.contracts.crossDomainMessenger, //l1CrossDomainMessenger,
-    to: customClient.from.contracts.standardBridge, //l1StandardBridge,
-    data: finalizeBridgeERC20Data,
-  });
+  // const finalizeBridgeERC20Gas = await customClient.to.public.estimateGas({
+  //   account: customClient.to.contracts.crossDomainMessenger, //l1CrossDomainMessenger,
+  //   to: customClient.to.contracts.standardBridge, //l1StandardBridge,
+  //   data: finalizeBridgeERC20Data,
+  // });
 
   const bridgeERC20ToData = encodeFunctionData({
     abi: bridgeERC20ToABI,
@@ -167,7 +172,7 @@ export const forceErc20Withdrawal = async ({
     userAddress,
     to: customClient.from.contracts.portal!, //portal,
     args: {
-      amount,
+      amount: 0n,
       to: customClient.to.contracts.standardBridge, //l2StandardBridge,
       gas: bridgeERC20ToGas,
       isCreation,

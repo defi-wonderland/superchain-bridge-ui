@@ -13,6 +13,7 @@ type ContextType = {
   setPrice: (val: number) => void;
 
   toToken: TokenData | undefined;
+  fromToken: TokenData | undefined;
 
   balance: string;
 
@@ -40,7 +41,7 @@ export const TokenContext = createContext({} as ContextType);
 export const TokenProvider = ({ children }: StateProps) => {
   const { address } = useAccount();
   const { toTokens, fromTokens } = useTokenList();
-  const { toChain } = useChain();
+  const { toChain, fromChain } = useChain();
   const { data } = useBalance({
     address,
   });
@@ -66,6 +67,11 @@ export const TokenProvider = ({ children }: StateProps) => {
     if (!selectedToken) return;
     return toTokens.find((token) => token.symbol === selectedToken?.symbol && token.chainId === toChain.id);
   }, [selectedToken, toChain.id, toTokens]);
+
+  const fromToken = useMemo(() => {
+    if (!toToken) return;
+    return fromTokens.find((token) => token.symbol === toToken?.symbol && token.chainId === fromChain.id);
+  }, [toToken, fromTokens, fromChain.id]);
 
   const parseTokenUnits = useCallback(
     (amount?: string) => {
@@ -161,6 +167,7 @@ export const TokenProvider = ({ children }: StateProps) => {
         approve,
         parseTokenUnits,
         toToken,
+        fromToken,
         price,
         setPrice,
         resetValues,

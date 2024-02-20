@@ -5,7 +5,7 @@ import { forceErc20Transfer, forceErc20Withdrawal, forceEthTransfer, forceEthWit
 
 export const useForceTx = () => {
   const { userAddress, to, value, customTransactionType } = useTransactionData();
-  const { selectedToken, amount, toToken, parseTokenUnits } = useToken();
+  const { selectedToken, amount, toToken, fromToken, parseTokenUnits } = useToken();
   const { customClient } = useCustomClient();
 
   const forceTx = async () => {
@@ -31,7 +31,7 @@ export const useForceTx = () => {
           userAddress,
           amount: parseTokenUnits(amount),
           to: to as Address,
-          l1TokenAddress: selectedToken.address as Address,
+          l1TokenAddress: fromToken?.address as Address,
           l2TokenAddress: toToken?.address as Address,
         });
       }
