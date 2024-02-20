@@ -1,6 +1,7 @@
-import { styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import Image from 'next/image';
 
+import optimismLogo from '~/assets/chains/optimism.svg';
 import chevrownDown from '~/assets/icons/chevron-down.svg';
 
 import { BridgeIcons } from '~/components/BridgeIcons';
@@ -23,8 +24,11 @@ export const BridgeSection = () => {
   );
 
   return (
-    <MenuButton variant='contained' disableElevation onClick={openBridgeModal} endIcon={<>{Icons}</>} fullWidth>
-      Optimism Gateway
+    <MenuButton variant='contained' disableElevation onClick={openBridgeModal} endIcon={Icons} fullWidth>
+      <Box className='bridge-name'>
+        <Image src={optimismLogo} alt='' className='bridge-image' />
+        Optimism Gateway
+      </Box>
     </MenuButton>
   );
 };
@@ -40,6 +44,17 @@ const MenuButton = styled(BasicButton)(() => {
       height: '1.6rem',
       width: '1.6rem',
       margin: 'auto 0',
+    },
+
+    '.bridge-name': {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.8rem',
+
+      img: {
+        height: '2.4rem',
+        width: '2.4rem',
+      },
     },
 
     '&:last-child': {
