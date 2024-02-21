@@ -10,6 +10,7 @@ export const Footer = () => {
       <RightSide>
         <Link href='/'>Legal</Link>
         <Link href='/'>Docs</Link>
+        <Link href='/'>Github</Link>
       </RightSide>
 
       <Box>
@@ -21,10 +22,11 @@ export const Footer = () => {
 
 const FooterContainer = styled('footer')`
   display: flex;
-  height: 6.4rem;
+  height: 8rem;
   align-items: center;
+  padding: 3.2rem 0 4.8rem 0;
   justify-content: space-between;
-
+  margin-top: auto;
   width: 100%;
 `;
 

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Paper } from '@mui/material';
-import { TransactionReceipt, isAddress } from 'viem';
+import { Box, styled } from '@mui/material';
+import { isAddress } from 'viem';
 import { useAccount } from 'wagmi';
 
-import { useCustomClient, useLogs, useQueryParams } from '~/hooks';
-import { finalizeWithdrawal, proveWithdrawal } from '~/utils';
+// import { finalizeWithdrawal, proveWithdrawal } from '~/utils';
+import { MainCardContainer } from '~/containers';
+import { useQueryParams } from '~/hooks';
 import { QueryParamKey } from '~/types';
 
 const History = () => {
@@ -12,8 +13,8 @@ const History = () => {
   const [searchAddress, setSearchAddress] = useState(currentAddress || '');
   const { updateQueryParams, getParam } = useQueryParams();
   const [address, setAddress] = useState(currentAddress || '');
-  const { withdrawLogs, depositLogs } = useLogs();
-  const { customClient } = useCustomClient();
+  // const { withdrawLogs, depositLogs } = useLogs();
+  // const { customClient } = useCustomClient();
 
   // update local state and searchParams on input change
   const onInputAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,53 +30,73 @@ const History = () => {
     }
   }, [getParam, searchAddress]);
 
-  const initateTransaction = async (status: string, receipt: TransactionReceipt) => {
-    if (status === 'ready-to-prove') {
-      await proveWithdrawal({ customClient, receipt, userAddress: currentAddress! });
-    } else if (status === 'ready-to-finalize') {
-      await finalizeWithdrawal({ customClient, receipt, userAddress: currentAddress! });
-    }
-  };
+  // const initateTransaction = async (status: string, receipt: TransactionReceipt) => {
+  //   if (status === 'ready-to-prove') {
+  //     await proveWithdrawal({ customClient, receipt, userAddress: currentAddress! });
+  //   } else if (status === 'ready-to-finalize') {
+  //     await finalizeWithdrawal({ customClient, receipt, userAddress: currentAddress! });
+  //   }
+  // };
 
   return (
-    <Box>
-      <h1>History Page</h1>
-      <br />
-      <span>search Address</span> <input value={searchAddress} onChange={onInputAddressChange} />
-      <br />
-      <h3>Searching for address: {currentAddress ?? address}</h3>
-      {depositLogs?.failedTxs.map((failedLog) => (
-        <React.Fragment key={failedLog.transactionHash}>
-          {/* Temporary inline styles */}
-          <Paper square={false} sx={{ mt: 2, p: 2 }}>
-            <Box>
+    <Container>
+      <SMainCardContainer>
+        <h1>History Page</h1>
+        <br />
+        <span>search Address</span> <input value={searchAddress} onChange={onInputAddressChange} />
+        <br />
+        <h3>Searching for address: {currentAddress ?? address}</h3>
+        {/* {depositLogs?.failedTxs.map((failedLog) => (
+          <React.Fragment key={failedLog.transactionHash}>
+            <Paper square={false} sx={{ mt: 2, p: 2 }}>
               <Box>
-                <h4>Transaction: {failedLog.transactionHash}</h4>
-                <p>Status: {failedLog.eventName}</p>
+                <Box>
+                  <h4>Transaction: {failedLog.transactionHash}</h4>
+                  <p>Status: {failedLog.eventName}</p>
+                </Box>
               </Box>
-            </Box>
-            <Button onClick={() => null}>Initiate Replay</Button>
-          </Paper>
-        </React.Fragment>
-      ))}
-      {withdrawLogs?.receipts.map((receipt, index) => (
-        <React.Fragment key={receipt.transactionHash}>
-          {/* Temporary inline styles */}
-          <Paper square={false} sx={{ mt: 2, p: 2 }}>
-            <Box>
+              <Button onClick={() => null}>Initiate Replay</Button>
+            </Paper>
+          </React.Fragment>
+        ))}
+        {withdrawLogs?.receipts.map((receipt, index) => (
+          <React.Fragment key={receipt.transactionHash}>
+            <Paper square={false} sx={{ mt: 2, p: 2 }}>
               <Box>
-                <h4>Transaction: {receipt.transactionHash}</h4>
-                <p>Status: {withdrawLogs.status[index]}</p>
+                <Box>
+                  <h4>Transaction: {receipt.transactionHash}</h4>
+                  <p>Status: {withdrawLogs.status[index]}</p>
+                </Box>
               </Box>
-            </Box>
-            <Button onClick={() => initateTransaction(withdrawLogs.status[index], receipt)}>
-              Initiate transaction
-            </Button>
-          </Paper>
-        </React.Fragment>
-      ))}
-    </Box>
+              <Button onClick={() => initateTransaction(withdrawLogs.status[index], receipt)}>
+                Initiate transaction
+              </Button>
+            </Paper>
+          </React.Fragment>
+        ))} */}
+      </SMainCardContainer>
+    </Container>
   );
 };
 
 export default History;
+
+export const SMainCardContainer = styled(MainCardContainer)(() => {
+  // const { currentTheme } = useCustomTheme();
+  return {
+    overflow: 'auto',
+    width: '84.3rem',
+    maxHeight: '68rem',
+    boxShadow: 'none',
+  };
+});
+
+const Container = styled(Box)(() => {
+  return {
+    marginTop: '4rem',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  };
+});

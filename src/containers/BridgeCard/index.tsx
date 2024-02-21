@@ -55,7 +55,7 @@ export const BridgeCard = () => {
   );
 };
 
-const MainCardContainer = styled('main')(() => {
+export const MainCardContainer = styled('main')(() => {
   const { currentTheme } = useCustomTheme();
   return {
     backgroundColor: currentTheme.steel[900],

@@ -1,4 +1,8 @@
 import { OpContracts } from '~/types';
+import { base, baseSepolia, optimismSepolia, sepolia } from 'viem/chains';
+import sepoliaLogo from '~/assets/chains/ethereum.svg';
+import opSepoliaLogo from '~/assets/chains/optimism.svg';
+import baseSepoliaLogo from '~/assets/chains/base.svg';
 
 /*=============================================
 =                Misc Variables               =
@@ -6,6 +10,25 @@ import { OpContracts } from '~/types';
 
 export const THEME_KEY = 'superbridge_theme_key';
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
+export const chainData: { [k: number]: { logo: string; apiUrl: string } } = {
+  [sepolia.id]: {
+    logo: sepoliaLogo.src,
+    apiUrl: 'https://api-sepolia.etherscan.io/api',
+  },
+  [optimismSepolia.id]: {
+    logo: opSepoliaLogo.src,
+    apiUrl: 'https://api-optimism-sepolia.etherscan.io/api',
+  },
+  [baseSepolia.id]: {
+    logo: baseSepoliaLogo.src,
+    apiUrl: 'https://api-sepolia.basescan.org/api',
+  },
+  [base.id]: {
+    logo: baseSepoliaLogo.src,
+    apiUrl: 'https://api.basescan.org/api',
+  },
+};
 
 export const contracts: { [key: string]: OpContracts } = {
   // -------- L1 --------
