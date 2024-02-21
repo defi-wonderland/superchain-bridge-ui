@@ -15,8 +15,9 @@ export const ChainSection = () => {
   const { setSelectedToken } = useToken();
   const { fromTokens } = useTokenList();
 
-  const fromChainList = customTransactionType?.includes('force') ? l1Chains : fromList;
-  const toChainList = customTransactionType?.includes('force') ? l2Chains : toList;
+  const transactionTypeForce = customTransactionType?.includes('force');
+  const fromChainList = transactionTypeForce ? l1Chains : fromList;
+  const toChainList = transactionTypeForce ? l2Chains : toList;
 
   const handleFrom = (chain: Chain) => {
     setFromChain(chain);
