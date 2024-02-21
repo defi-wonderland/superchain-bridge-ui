@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 import { Landing } from '~/containers';
 import { useChain } from '~/hooks';
@@ -15,7 +16,14 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromChain]);
 
-  return <Landing />;
+  return (
+    <>
+      <Head>
+        <title>Superchain Bridge</title>
+      </Head>
+      <Landing />
+    </>
+  );
 };
 
 export default Home;
