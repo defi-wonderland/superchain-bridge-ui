@@ -35,7 +35,7 @@ export const ChainSection = () => {
     <ChainSectionContainer>
       <ChainSelect label='From' value={fromChain} setValue={handleFrom} list={fromChainList} />
 
-      <SwitchIcon onClick={switchChains} disabled={customTransactionType?.includes('force')}>
+      <SwitchIcon onClick={switchChains} disabled={transactionTypeForce}>
         <Image src={arrowRightIcon} alt='Switch' width={24} height={24} />
       </SwitchIcon>
 
