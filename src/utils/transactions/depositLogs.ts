@@ -66,13 +66,6 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
       logsFromForcedTransactionsPromise,
     ]);
 
-  // Receipts to get the L2 transaction status
-  // const receipts = await Promise.all(
-  //   logs.map(({ transactionHash }) => {
-  //     return customClient.from.public.getTransactionReceipt({ hash: transactionHash });
-  //   }),
-  // );
-
   const messageReceipts = await Promise.all(
     logsFromMessagesDeposited.map(({ transactionHash }) => {
       return customClient.from.public.getTransactionReceipt({ hash: transactionHash });
@@ -84,6 +77,14 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
       return customClient.from.public.getTransactionReceipt({ hash: transactionHash });
     }),
   );
+
+  // Receipts to get the L2 transaction status
+  const receipts = [...messageReceipts, ...erc20Receipts];
+  // const receipts = await Promise.all(
+  //   logs.map(({ transactionHash }) => {
+  //     return customClient.from.public.getTransactionReceipt({ hash: transactionHash });
+  //   }),
+  // );
 
   const { msgHashes: msgHashesFromMessages, args: argsFromMessages } = getMsgHashes(messageReceipts, 'message');
   const { msgHashes: msgHashesFromErc20, args: argsFromErc20 } = getMsgHashes(erc20Receipts, 'erc20');
@@ -121,7 +122,7 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
 
   return {
     logs,
-    receipts: [],
+    receipts,
     msgHashes,
     failedTxs,
     args,

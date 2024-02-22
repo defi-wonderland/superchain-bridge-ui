@@ -1,5 +1,6 @@
 import { Badge, Box, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useAccount } from 'wagmi';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -12,6 +13,7 @@ import historyIcon from '~/assets/icons/clock-rewind.svg';
 import settingsIcon from '~/assets/icons/settings.svg';
 
 export const Header = () => {
+  const { address } = useAccount();
   const { fromChain } = useChain();
   const { setModalOpen } = useModal();
   const chainPath = replaceSpacesWithHyphens(fromChain?.name || '');
@@ -36,7 +38,7 @@ export const Header = () => {
             <Link
               href={{
                 pathname: '/[chain]/history',
-                query: { chain: chainPath },
+                query: { chain: chainPath, account: address },
               }}
             >
               <SHistoryIcon src={historyIcon} alt='Transaction History' />

@@ -1,4 +1,4 @@
-import { CssBaseline, styled } from '@mui/material';
+import { Box, CssBaseline, styled } from '@mui/material';
 import {
   ConfirmModal,
   Footer,
@@ -48,7 +48,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-const MainContent = styled('main')`
+const MainContent = styled(Box)`
   display: flex;
   flex-direction: column;
   align-items: center;

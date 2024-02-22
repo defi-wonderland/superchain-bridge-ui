@@ -1,4 +1,4 @@
-import { Chain, formatUnits, parseUnits } from 'viem';
+import { Chain, PublicClient, formatUnits, parseUnits } from 'viem';
 import { contracts } from './variables';
 import { OpContracts } from '~/types';
 
@@ -54,4 +54,22 @@ export function formatDataNumber(
 
 export const truncateAddress = (address: string) => {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
+};
+
+export const formatTimestamp = (timestamp: string): string => {
+  if (!timestamp) return '-';
+  const date = new Date(Number(timestamp) * 1000);
+
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+};
+
+export const getTimestamp = async (publicClient: PublicClient, blockNumber: bigint) => {
+  const blockData = await publicClient.getBlock({ blockNumber });
+  return blockData.timestamp.toString();
 };
