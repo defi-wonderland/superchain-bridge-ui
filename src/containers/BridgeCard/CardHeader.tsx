@@ -7,6 +7,7 @@ import arrowLeft from '~/assets/icons/arrow-left.svg';
 
 import { useChain, useCustomTheme } from '~/hooks';
 import { CustomTransactionType } from '~/types';
+import { STooltip } from '~/components';
 
 interface CardHeaderProps {
   isExpertMode: boolean;
@@ -22,6 +23,8 @@ export const CardHeader = ({
   setCustomTransaction,
 }: CardHeaderProps) => {
   const { resetChains } = useChain();
+
+  const tooltipTitle = isExpertMode ? 'Disable expert mode' : 'Enable expert mode';
 
   const cardTitle = (() => {
     if (customTransaction === 'custom-tx') return 'Custom transaction';
@@ -48,13 +51,15 @@ export const CardHeader = ({
             {isExpertMode && <strong>Expert mode</strong>}
           </Box>
 
-          <StyledAdvanceButton onClick={activateExpertMode}>
-            <Image
-              src={isExpertMode ? adjustmentsActivated : adjustmentsIcon}
-              alt='Advance mode'
-              className={isExpertMode ? 'advance-activated' : ''}
-            />
-          </StyledAdvanceButton>
+          <STooltip title={tooltipTitle}>
+            <StyledAdvanceButton onClick={activateExpertMode}>
+              <Image
+                src={isExpertMode ? adjustmentsActivated : adjustmentsIcon}
+                alt='Advance mode'
+                className={isExpertMode ? 'advance-activated' : ''}
+              />
+            </StyledAdvanceButton>
+          </STooltip>
         </>
       )}
 

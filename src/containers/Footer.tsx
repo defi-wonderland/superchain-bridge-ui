@@ -30,7 +30,7 @@ const FooterContainer = styled('footer')`
   width: 100%;
 `;
 
-const RightSide = styled(Box)(({ theme }) => {
+const RightSide = styled(Box)(() => {
   const { currentTheme } = useCustomTheme();
   return {
     display: 'flex',
@@ -39,7 +39,7 @@ const RightSide = styled(Box)(({ theme }) => {
     justifyContent: 'center',
     a: {
       color: currentTheme.steel[500],
-      fontSize: theme.typography.body1.fontSize,
+      fontSize: '1.2rem',
       '&:hover': {
         transition: currentTheme.transition,
         color: currentTheme.steel[100],

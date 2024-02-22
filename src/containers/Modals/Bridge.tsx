@@ -15,7 +15,7 @@ export const BridgeModal = () => {
   const [searchValue, setSearchValue] = useState('');
 
   return (
-    <BaseModal type={ModalType.SELECT_BRIDGE} title='Select bridge'>
+    <BaseModal type={ModalType.SELECT_BRIDGE} title='Select bridge' fixedHeight>
       <SearchInput value={searchValue} setValue={setSearchValue} placeholder='Search name' />
 
       <ListContainer>

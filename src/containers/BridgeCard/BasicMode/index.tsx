@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 
 import { ChainSection } from '../ChainSection';
 import { TokenSection } from '../TokenSection';
@@ -10,11 +10,12 @@ export const BasicMode = () => {
     <ContentSection>
       <ChainSection />
 
-      <TokenSection />
-
-      <TargetButtons />
+      <SBox>
+        <TokenSection />
+      </SBox>
 
       <BridgeSection />
+      <TargetButtons />
     </ContentSection>
   );
 };
@@ -27,5 +28,12 @@ const ContentSection = styled('section')(() => {
     alignItems: 'start',
     gap: '0.8rem',
     width: '100%',
+  };
+});
+
+const SBox = styled(Box)(() => {
+  return {
+    width: '100%',
+    padding: '1.6rem 0',
   };
 });

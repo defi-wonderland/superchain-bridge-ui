@@ -37,7 +37,7 @@ export const TokensModal = () => {
   };
 
   return (
-    <BaseModal type={ModalType.SELECT_TOKEN} title='Select a token'>
+    <BaseModal type={ModalType.SELECT_TOKEN} title='Select a token' fixedHeight>
       {/* Search bar */}
       <SearchInput value={searchValue} setValue={setSearchValue} placeholder='Search name or paste address' />
 

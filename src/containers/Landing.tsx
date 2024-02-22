@@ -13,8 +13,8 @@ const Container = styled(Box)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   height: 100%;
   width: 100%;
-  margin-top: 4rem;
+  margin-top: 8rem;
 `;

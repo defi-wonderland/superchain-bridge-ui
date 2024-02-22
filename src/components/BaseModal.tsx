@@ -12,13 +12,14 @@ interface BaseModalProps {
   children: React.ReactNode;
   type: ModalType;
   title?: string;
+  fixedHeight?: boolean;
 }
 
-const BaseModal = ({ children, type, title }: BaseModalProps) => {
+const BaseModal = ({ children, type, title, fixedHeight }: BaseModalProps) => {
   const { modalOpen, closeModal } = useModal();
   return (
     <StyledModal open={type === modalOpen} onClose={closeModal} slots={{ backdrop: StyledBackdrop }}>
-      <SModal>
+      <SModal className={fixedHeight ? 'big-modal' : ''}>
         <ModalHeader>
           {title && <Typography variant='h2'>{title}</Typography>}
           <IconButton onClick={closeModal} className='close-button'>
@@ -68,7 +69,6 @@ export const SModal = styled(Box)(() => {
   const { currentTheme } = useCustomTheme();
   return {
     minWidth: '44.8rem',
-    minHeight: '38.6rem',
     borderRadius: currentTheme.borderRadius,
     backgroundColor: currentTheme.steel[900],
     border: `1px solid ${currentTheme.steel[700]}`,
@@ -77,6 +77,10 @@ export const SModal = styled(Box)(() => {
     flexDirection: 'column',
     alignItems: 'flex-start',
     gap: '2rem',
+
+    '&.big-modal': {
+      minHeight: '38.6rem',
+    },
 
     '@media (max-width: 600px)': {
       minWidth: '100%',

@@ -13,3 +13,4 @@ export * from './SearchField';
 export * from './ChainSelect';
 export * from './TokenButton';
 export * from './TokenSelect';
+export * from './Tooltip';
