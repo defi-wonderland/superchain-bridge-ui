@@ -1,6 +1,6 @@
 import { Box, Typography, styled } from '@mui/material';
 
-import { BackButton } from '../history/BackButton';
+import { BackButton } from '~/containers';
 import { MainCardContainer } from '~/containers';
 import { CustomHead } from '~/components';
 import { useCustomTheme } from '~/hooks';

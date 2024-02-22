@@ -2,12 +2,10 @@ import { Box, Typography, styled } from '@mui/material';
 import { useAccount } from 'wagmi';
 
 // import { finalizeWithdrawal, proveWithdrawal } from '~/utils';
-import { MainCardContainer } from '~/containers';
+import { MainCardContainer, ActivityTable, BackButton } from '~/containers';
 import { truncateAddress } from '~/utils';
 import { CustomHead } from '~/components';
-import { BackButton } from './BackButton';
 import { useCustomTheme } from '~/hooks';
-import { ActivityTable } from './Table';
 
 const History = () => {
   const { address: currentAddress } = useAccount();
