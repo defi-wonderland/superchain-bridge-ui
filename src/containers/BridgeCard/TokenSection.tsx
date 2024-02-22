@@ -38,9 +38,10 @@ export const TokenSection = () => {
 
   // Remove scroll on input
   useEffect(() => {
-    document.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+    const input = document.querySelector('#token-amount-input');
+    input?.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
     return () => {
-      document.removeEventListener('wheel', (e) => e.preventDefault());
+      input?.removeEventListener('wheel', (e) => e.preventDefault());
     };
   }, []);
 
@@ -50,6 +51,7 @@ export const TokenSection = () => {
 
       <InputSection>
         <StyledInput
+          id='token-amount-input'
           variant='standard'
           type='number'
           placeholder='0'

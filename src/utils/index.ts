@@ -1,4 +1,5 @@
 export * from './client';
+export * from './getAbi';
 export * from './getTheme';
 export * from './misc';
 export * from './parsedAbis';

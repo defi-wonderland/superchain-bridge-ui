@@ -3,12 +3,13 @@ import { Box, styled } from '@mui/material';
 import { useAccount } from 'wagmi';
 import { isAddress, isHex } from 'viem';
 
-import { useTransactionData } from '~/hooks';
+import { useAbi, useTransactionData } from '~/hooks';
 import { ChainSection } from './ChainSection';
 import { TokenSection } from './TokenSection';
 import { InputField, RadioButtons } from '~/components';
 
 export const CustomTransaction = () => {
+  const { getAbi } = useAbi();
   const { address } = useAccount();
   const { setTo, to, customTransactionType, data, setData } = useTransactionData();
   const isError = to && !isAddress(to);
@@ -17,8 +18,15 @@ export const CustomTransaction = () => {
   const [isCustomData, setIsCustomData] = useState<'custom-data' | 'function'>('custom-data');
 
   useEffect(() => {
-    if (address && isAddress(address)) setTo(address);
-  }, [address, setTo]);
+    if (address && isAddress(address) && customTransactionType !== 'custom-tx') setTo(address);
+  }, [address, customTransactionType, setTo]);
+
+  useEffect(() => {
+    if (!abi && isAddress(to))
+      getAbi(to).then((fetchedAbi) => {
+        if (fetchedAbi) setAbi(fetchedAbi);
+      });
+  }, [abi, to, getAbi]);
 
   return (
     <SBox>

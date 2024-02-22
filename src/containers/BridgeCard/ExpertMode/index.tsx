@@ -6,13 +6,20 @@ import customTransferIcon from '~/assets/icons/custom-transfer.svg';
 import chevronRightIcon from '~/assets/icons/chevron-right.svg';
 import customTxIcon from '~/assets/icons/custom-tx.svg';
 
-import { useCustomTheme } from '~/hooks';
+import { useCustomTheme, useTransactionData } from '~/hooks';
 import { CustomTransactionType } from '~/types';
 
 interface ExpertModeProps {
   setCustomTransaction: (customTransaction: CustomTransactionType) => void;
 }
 export const ExpertMode = ({ setCustomTransaction }: ExpertModeProps) => {
+  const { setTo } = useTransactionData();
+
+  const handleSetCustomTx = () => {
+    setCustomTransaction('custom-tx');
+    setTo('');
+  };
+
   return (
     <ContentSection>
       <Typography variant='body1'>Select a transaction type</Typography>
@@ -21,7 +28,7 @@ export const ExpertMode = ({ setCustomTransaction }: ExpertModeProps) => {
         variant='contained'
         fullWidth
         endIcon={<Image src={chevronRightIcon} alt='arrow-right' className='end-icon' />}
-        onClick={() => setCustomTransaction('custom-tx')}
+        onClick={handleSetCustomTx}
       >
         <SBox>
           <Image src={customTxIcon} alt='custom-tx' />

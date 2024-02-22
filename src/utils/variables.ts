@@ -18,7 +18,7 @@ export const chainData: { [k: number]: { logo: string; apiUrl: string } } = {
   },
   [optimismSepolia.id]: {
     logo: opSepoliaLogo.src,
-    apiUrl: 'https://api-optimism-sepolia.etherscan.io/api',
+    apiUrl: 'https://api-sepolia-optimistic.etherscan.io/api',
   },
   [baseSepolia.id]: {
     logo: baseSepoliaLogo.src,

@@ -49,6 +49,7 @@ const SFormControl = styled(FormControl)(() => {
     '&:has(.MuiInputBase-inputMultiline)': {
       '& .MuiInputBase-input.MuiInputBase-inputMultiline': {
         minHeight: '12.4rem',
+        maxHeight: '12.4rem',
       },
     },
   };
