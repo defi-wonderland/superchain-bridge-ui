@@ -1,5 +1,8 @@
-// temporary values
 export enum QueryParamKey {
+  tx = 'tx',
+  chain = 'chain',
+
+  // temporary values
   address = 'address',
   originChainId = 'originChainId',
   destinationChainId = 'destinationChainId',
@@ -7,5 +10,4 @@ export enum QueryParamKey {
   destinationAssetId = 'destinationAssetId',
   amount = 'amount',
   recipient = 'recipient',
-  txHash = 'txHash',
 }

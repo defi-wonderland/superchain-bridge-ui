@@ -77,8 +77,8 @@ export const ActivityTable = () => {
               <TableCell className='details-link'>
                 <Link
                   href={{
-                    pathname: '/[chain]/[txHash]',
-                    query: { chain: chainPath, txHash: row.txHash },
+                    pathname: '/[chain]/[tx]',
+                    query: { chain: chainPath, tx: row.txHash },
                   }}
                 >
                   <Image src={detailsIcon} alt='Open transaction details page' />

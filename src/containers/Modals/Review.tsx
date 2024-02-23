@@ -21,59 +21,60 @@ export const ReviewModal = () => {
   return (
     <BaseModal type={ModalType.REVIEW} title='Review transaction'>
       {/* Transaction type */}
-      <SBox>
+      <DataRow>
         <Typography variant='body1'>Transaction type</Typography>
         <span>{transactionType}</span>
-      </SBox>
+      </DataRow>
 
       {/* Selected Bridge */}
-      <SBox>
+      <DataRow>
         <Typography variant='body1'>Bridge</Typography>
         <span>Optimism Gateway</span>
-      </SBox>
+      </DataRow>
 
       {/* Fees */}
-      <SBox>
+      <DataRow>
         <Typography variant='body1'>Fees</Typography>
         <span>$21.33</span>
-      </SBox>
+      </DataRow>
 
       {/* Transaction time */}
-      <SBox>
+      <DataRow>
         <Typography variant='body1'>Transaction time</Typography>
         <span>2m</span>
-      </SBox>
+      </DataRow>
 
       <SDivider />
 
       {/* Origin address */}
-      <SBox>
+      <DataRow>
         <Typography variant='body1'>From address</Typography>
         <span>{truncateAddress(userAddress || '')}</span>
-      </SBox>
+      </DataRow>
+
       {/* Destination address */}
-      <SBox>
+      <DataRow>
         <Typography variant='body1'>To address</Typography>
         <span>{truncateAddress(to)}</span>
-      </SBox>
+      </DataRow>
 
       <SDivider />
 
       {/* Token sent */}
-      <SBox>
+      <DataRow>
         <Typography variant='body1'>Send</Typography>
         <span>
           {totalAmount} {selectedToken?.symbol}
         </span>
-      </SBox>
+      </DataRow>
 
       {/* Token received */}
-      <SBox>
+      <DataRow>
         <Typography variant='body1'>Receive</Typography>
         <span>
           {totalAmount} {selectedToken?.symbol}
         </span>
-      </SBox>
+      </DataRow>
 
       <ButtonsContainer>
         <SecondaryButton variant='contained' color='primary' fullWidth onClick={closeModal}>
@@ -95,7 +96,7 @@ const SDivider = styled(Divider)(() => {
   };
 });
 
-const SBox = styled(Box)(() => {
+export const DataRow = styled(Box)(() => {
   const { currentTheme } = useCustomTheme();
   return {
     width: '100%',

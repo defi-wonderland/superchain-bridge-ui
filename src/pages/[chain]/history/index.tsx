@@ -1,6 +1,8 @@
 import { Box, Typography, styled } from '@mui/material';
 import { useAccount } from 'wagmi';
+import Image from 'next/image';
 
+import copyIcon from '~/assets/icons/copy.svg';
 // import { finalizeWithdrawal, proveWithdrawal } from '~/utils';
 import { MainCardContainer, ActivityTable, BackButton } from '~/containers';
 import { truncateAddress } from '~/utils';
@@ -41,13 +43,15 @@ const History = () => {
     <Container>
       <CustomHead title='Account History' />
 
-      <BackButton />
+      <BackButton href='/' />
 
       <SMainCardContainer>
         <HeaderContainer>
           <Typography variant='h1'>Account History</Typography>
+
           <Box>
             {currentAddress && <Typography variant='body1'>{truncateAddress(currentAddress || '0x')}</Typography>}
+            <Image src={copyIcon} alt='Copy to clipboard' />
           </Box>
         </HeaderContainer>
 
@@ -111,7 +115,7 @@ const Container = styled(Box)(() => {
   };
 });
 
-export const HeaderContainer = styled(Box)(() => {
+const HeaderContainer = styled(Box)(() => {
   const { currentTheme } = useCustomTheme();
 
   return {
@@ -125,6 +129,13 @@ export const HeaderContainer = styled(Box)(() => {
       fontSize: '3rem',
       fontWeight: 500,
       lineHeight: 1.2,
+    },
+    div: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: '0.8rem',
+      cursor: 'pointer',
     },
     p: {
       color: currentTheme.steel[300],

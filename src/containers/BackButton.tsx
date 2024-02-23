@@ -4,20 +4,15 @@ import Image from 'next/image';
 
 import arrowBackIcon from '~/assets/icons/arrow-back.svg';
 
-import { useChain, useCustomTheme } from '~/hooks';
-import { replaceSpacesWithHyphens } from '~/utils';
+import { useCustomTheme } from '~/hooks';
 
-export const BackButton = () => {
-  const { fromChain } = useChain();
-  const chainPath = replaceSpacesWithHyphens(fromChain?.name || '');
+interface BackButtonProps {
+  href: string;
+}
 
+export const BackButton = ({ href }: BackButtonProps) => {
   return (
-    <SBackButton
-      href={{
-        pathname: '/[chain]/history',
-        query: { chain: chainPath },
-      }}
-    >
+    <SBackButton href={href}>
       <Image src={arrowBackIcon} alt='Back' />
       Back
     </SBackButton>

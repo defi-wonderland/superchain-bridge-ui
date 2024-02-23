@@ -65,6 +65,7 @@ const HeaderContainer = styled('header')(() => {
   return {
     display: 'flex',
     height: '8rem',
+    minHeight: '8rem',
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
