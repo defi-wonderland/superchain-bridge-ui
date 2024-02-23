@@ -22,8 +22,7 @@ export const useForceTx = () => {
           amount: parseTokenUnits(value),
           to: to as Address,
         });
-      }
-      if (selectedToken?.symbol !== 'ETH') {
+      } else {
         console.log('calling forceErc20Withdrawal');
 
         await forceErc20Withdrawal({
@@ -45,8 +44,7 @@ export const useForceTx = () => {
           amount: parseTokenUnits(value),
           to: to as Address,
         });
-      }
-      if (selectedToken?.symbol !== 'ETH') {
+      } else {
         console.log('calling forceErc20Transfer');
 
         await forceErc20Transfer({
