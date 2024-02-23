@@ -60,6 +60,12 @@ export const contracts: { [key: string]: OpContracts } = {
     crossDomainMessenger: '0x4200000000000000000000000000000000000007',
     l2ToL1MessagePasser: '0x4200000000000000000000000000000000000016',
   },
+  // baseSepolia-opSepolia
+  '84532-11155420': {
+    standardBridge: '0x0000000000000000000000000000000000000000',
+    crossDomainMessenger: '0x0000000000000000000000000000000000000000',
+    l2ToL1MessagePasser: '0x0000000000000000000000000000000000000000',
+  },
 
   // -------- Temporary disabled --------
   // ethereum - optimism

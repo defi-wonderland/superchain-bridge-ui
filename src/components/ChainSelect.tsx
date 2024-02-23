@@ -84,7 +84,11 @@ const MenuButton = styled(BasicButton)(() => {
     padding: '1.2rem 1.6rem',
     fontSize: '1.6rem',
     height: '5.6rem',
-    justifyContent: 'space-between',
+    justifyContent: 'start',
+    gap: '0.8rem',
+    '.MuiButton-endIcon': {
+      marginLeft: 'auto',
+    },
   };
 });
 
