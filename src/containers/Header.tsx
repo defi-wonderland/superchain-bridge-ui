@@ -33,18 +33,18 @@ export const Header = () => {
 
       {/* Right section */}
       <RightSection>
-        <IconButton>
-          <Badge badgeContent={4} variant='dot' color='primary' overlap='circular'>
-            <Link
-              href={{
-                pathname: '/[chain]/history',
-                query: { chain: chainPath, account: address },
-              }}
-            >
+        <Link
+          href={{
+            pathname: '/[chain]/history',
+            query: { chain: chainPath, account: address },
+          }}
+        >
+          <IconButton>
+            <Badge badgeContent={4} variant='dot' color='primary' overlap='circular'>
               <SHistoryIcon src={historyIcon} alt='Transaction History' />
-            </Link>
-          </Badge>
-        </IconButton>
+            </Badge>
+          </IconButton>
+        </Link>
 
         <IconButton onClick={openSettings}>
           <StyledSettingsIcon src={settingsIcon} alt='Settings' />
