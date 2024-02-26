@@ -107,11 +107,11 @@ const TextContainer = styled(Box)(() => {
       marginTop: '0.1rem',
     },
 
-    '&:has(.error)': {
+    '.error': {
       color: currentTheme.errorPrimary,
     },
 
-    '&:has(.warning)': {
+    '.warning': {
       color: currentTheme.warningPrimary,
     },
   };
