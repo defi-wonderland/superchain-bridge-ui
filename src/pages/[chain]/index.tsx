@@ -30,14 +30,14 @@ export const getStaticProps = async (context: { params: { chain: string } }) => 
 };
 
 const Chain = ({ title }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { fromChain } = useChain();
+  const { toChain } = useChain();
   const router = useRouter();
 
   // Update the URL to reflect the 'From' chain
   useEffect(() => {
-    if (fromChain) router.replace({ pathname: `/[chain]`, query: { chain: replaceSpacesWithHyphens(fromChain.name) } });
+    if (toChain) router.replace({ pathname: `/[chain]`, query: { chain: replaceSpacesWithHyphens(toChain.name) } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fromChain]);
+  }, [toChain]);
 
   return (
     <>

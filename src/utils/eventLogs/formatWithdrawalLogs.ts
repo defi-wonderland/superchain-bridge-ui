@@ -98,6 +98,8 @@ export const formatCustomWithdrawalLogs = (
     status: statusMap[log.transactionHash].status,
     from: log.args.sender!,
     to: log.args.target!,
+    remoteToken: '0x0000000000000000000000000000000000000000',
+    localToken: '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000',
     amount: log.args.value!,
     data: log.args.data!,
   }));

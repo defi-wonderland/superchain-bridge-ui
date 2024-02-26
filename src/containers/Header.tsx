@@ -14,9 +14,9 @@ import settingsIcon from '~/assets/icons/settings.svg';
 
 export const Header = () => {
   const { address } = useAccount();
-  const { fromChain } = useChain();
+  const { toChain } = useChain();
   const { setModalOpen } = useModal();
-  const chainPath = replaceSpacesWithHyphens(fromChain?.name || '');
+  const chainPath = replaceSpacesWithHyphens(toChain?.name || '');
 
   const openSettings = () => {
     setModalOpen(ModalType.SETTINGS);
@@ -35,7 +35,7 @@ export const Header = () => {
       <RightSection>
         <Link
           href={{
-            pathname: '/[chain]/history',
+            pathname: '/[chain]/account/[account]',
             query: { chain: chainPath, account: address },
           }}
         >

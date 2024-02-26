@@ -98,7 +98,7 @@ export const ActivityTable = () => {
                 <Link
                   onClick={() => handleOpenTransaction(row.log)}
                   href={{
-                    pathname: '/[chain]/[tx]',
+                    pathname: '/[chain]/tx/[tx]',
                     query: { chain: chainPath, tx: row.txHash },
                   }}
                 >
