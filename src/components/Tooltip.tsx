@@ -8,6 +8,7 @@ export const STooltip = styled(({ className, ...props }: TooltipProps) => (
       fontSize: '1.4rem',
       borderRadius: '0.8rem',
       padding: '0.8rem 1.2rem',
+      maxWidth: 'max-content',
     },
   };
 });

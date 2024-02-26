@@ -1,14 +1,15 @@
 import { Address } from 'viem';
 import { CustomClients, DepositLogs } from '~/types';
 
+import { getMsgHashes } from '../transactions/helpers';
+import { getFailedTransactionLogs } from '../transactions/getFailedTxs';
+import { getAllDepositLogs } from './getDepositLogs';
 import {
-  erc20BridgeInitiatedABI,
-  ethBridgeInitiatedABI,
-  sentMessageExtensionABI,
-  transactionDepositedABI,
-} from '../parsedEvents';
-import { getMsgHashes } from './helpers';
-import { getFailedTransactionLogs } from './getFailedTxs';
+  formatDepositETHLogs,
+  formatERC20DepositLogs,
+  formatForceDepositLogs,
+  formatMessageDepositLogs,
+} from './formatDepositLogs';
 
 interface GetDepositLogsParameters {
   customClient: CustomClients;
@@ -17,54 +18,13 @@ interface GetDepositLogsParameters {
 export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLogsParameters): Promise<DepositLogs> => {
   if (!userAddress) throw new Error('No user address provided');
 
-  const logsFromEthDepositedPromise = customClient.from.public.getLogs({
-    address: customClient.from.contracts.standardBridge, // L1 standard bridge
-    event: ethBridgeInitiatedABI,
-    args: {
-      from: userAddress,
-    },
-    fromBlock: 'earliest',
-    toBlock: 'latest',
-  });
+  const { logsFromEthDeposited, logsFromErc20Deposited, logsFromMessagesDeposited, logsFromForcedTransactions } =
+    await getAllDepositLogs({ customClient, userAddress });
 
-  const logsFromErc20DepositedPromise = customClient.from.public.getLogs({
-    address: customClient.from.contracts.standardBridge, // L1 standard bridge
-    event: erc20BridgeInitiatedABI,
-    args: {
-      from: userAddress,
-    },
-    fromBlock: 'earliest',
-    toBlock: 'latest',
-  });
-
-  const logsFromMessagesDepositedPromise = customClient.from.public.getLogs({
-    address: customClient.from.contracts.crossDomainMessenger, // L1 cross domain messenger
-    event: sentMessageExtensionABI,
-    args: {
-      sender: userAddress,
-    },
-    fromBlock: 'earliest',
-    toBlock: 'latest',
-  });
-
-  const logsFromForcedTransactionsPromise = customClient.from.public.getLogs({
-    address: customClient.from.contracts.portal, // L1 portal
-    event: transactionDepositedABI,
-    args: {
-      from: userAddress,
-    },
-    fromBlock: 'earliest',
-    toBlock: 'latest',
-    strict: false,
-  });
-
-  const [logsFromEthDeposited, logsFromErc20Deposited, logsFromMessagesDeposited, logsFromForcedTransactions] =
-    await Promise.all([
-      logsFromEthDepositedPromise,
-      logsFromErc20DepositedPromise,
-      logsFromMessagesDepositedPromise,
-      logsFromForcedTransactionsPromise,
-    ]);
+  const formattedLogsFromEthDeposited = formatDepositETHLogs(customClient, logsFromEthDeposited);
+  const formattedLogsFromErc20Deposited = formatERC20DepositLogs(customClient, logsFromErc20Deposited);
+  const formattedLogsFromMessagesDeposited = formatMessageDepositLogs(customClient, logsFromMessagesDeposited);
+  const formattedLogsFromForcedTransactions = formatForceDepositLogs(customClient, logsFromForcedTransactions);
 
   const messageReceipts = await Promise.all(
     logsFromMessagesDeposited.map(({ transactionHash }) => {
@@ -120,7 +80,15 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
     args,
   });
 
+  const accountLogs = [
+    ...formattedLogsFromEthDeposited,
+    ...formattedLogsFromErc20Deposited,
+    ...formattedLogsFromMessagesDeposited,
+    ...formattedLogsFromForcedTransactions,
+  ];
+
   return {
+    accountLogs,
     logs,
     receipts,
     msgHashes,

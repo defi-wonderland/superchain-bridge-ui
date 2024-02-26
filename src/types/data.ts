@@ -59,7 +59,27 @@ export enum TransactionType {
 
 export type CustomTransactionType = 'custom-tx' | 'force-withdrawal' | 'force-transfer';
 
+export interface AccountLogs {
+  blockNumber: bigint;
+  date: string | number;
+  transactionHash: string;
+  type: string;
+  originChain?: string;
+  destinationChain?: string;
+  bridge: string;
+  fees: string;
+  transactionTime: string;
+  status: string;
+  localToken?: Address;
+  remoteToken?: Address;
+  from: Address;
+  to: Address;
+  amount: bigint;
+  data?: Hex;
+}
+
 export type DepositLogs = {
+  accountLogs: AccountLogs[];
   logs: GetLogsReturnType<
     | typeof transactionDepositedABI
     | typeof ethBridgeInitiatedABI
@@ -73,6 +93,7 @@ export type DepositLogs = {
 };
 
 export type WithdrawLogs = {
+  accountLogs: AccountLogs[];
   logs: GetLogsReturnType<
     | typeof messagePassedAbi
     | typeof erc20BridgeInitiatedABI

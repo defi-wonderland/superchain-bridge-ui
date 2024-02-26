@@ -1,3 +1,4 @@
+export * from './eventLogs';
 export * from './client';
 export * from './getAbi';
 export * from './getTheme';

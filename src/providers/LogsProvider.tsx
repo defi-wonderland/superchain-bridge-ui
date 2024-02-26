@@ -4,11 +4,13 @@ import { useAccount } from 'wagmi';
 
 import { useCustomClient } from '~/hooks';
 import { getDepositLogs, getWithdrawLogs } from '~/utils';
-import { DepositLogs, WithdrawLogs } from '~/types';
+import { AccountLogs, DepositLogs, WithdrawLogs } from '~/types';
 
 type ContextType = {
   depositLogs?: DepositLogs;
   withdrawLogs?: WithdrawLogs;
+  selectedLog?: AccountLogs;
+  setSelectedLog: (log: AccountLogs) => void;
 };
 
 interface StateProps {
@@ -22,6 +24,7 @@ export const LogsProvider = ({ children }: StateProps) => {
   const { customClient } = useCustomClient();
   const [depositLogs, setDepositLogs] = useState<DepositLogs>();
   const [withdrawLogs, setWithdrawLogs] = useState<WithdrawLogs>();
+  const [selectedLog, setSelectedLog] = useState<AccountLogs>();
 
   const queries = useQueries({
     queries: [
@@ -55,6 +58,8 @@ export const LogsProvider = ({ children }: StateProps) => {
       value={{
         depositLogs,
         withdrawLogs,
+        selectedLog,
+        setSelectedLog,
       }}
     >
       {children}

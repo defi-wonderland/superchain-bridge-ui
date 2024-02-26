@@ -4,11 +4,13 @@ import Image from 'next/image';
 import copyIcon from '~/assets/icons/copy.svg';
 
 import { BackButton, DataRow, MainCardContainer } from '~/containers';
-import { useCustomTheme, useQueryParams } from '~/hooks';
-import { CustomHead } from '~/components';
+import { useCustomTheme, useLogs, useQueryParams } from '~/hooks';
+import { CustomHead, STooltip } from '~/components';
 import { QueryParamKey } from '~/types';
+import { truncateAddress } from '~/utils';
 
 const Transaction = () => {
+  const { selectedLog } = useLogs();
   const { getParam } = useQueryParams();
   const hash = getParam(QueryParamKey.tx);
   const chain = getParam(QueryParamKey.chain);
@@ -22,7 +24,7 @@ const Transaction = () => {
 
         <SMainCardContainer>
           <HeaderContainer>
-            <Typography variant='h1'>Deposit</Typography>
+            <Typography variant='h1'>{selectedLog?.type}</Typography>
 
             <Box>
               {hash && <Typography variant='body1'>{hash}</Typography>}
@@ -35,51 +37,55 @@ const Transaction = () => {
               <DataContainer>
                 <DataRow>
                   <Typography variant='body1'>Date</Typography>
-                  <span>2024-02-14 21:06</span>
+                  <span>{selectedLog?.date}</span>
                 </DataRow>
 
                 <DataRow>
                   <Typography variant='body1'>Transaction type</Typography>
-                  <span>Deposit</span>
+                  <span>{selectedLog?.type}</span>
                 </DataRow>
 
                 <DataRow>
                   <Typography variant='body1'>Origin chain</Typography>
-                  <span>Sepolia</span>
+                  <span>{selectedLog?.originChain}</span>
                 </DataRow>
 
                 <DataRow>
                   <Typography variant='body1'>Destination chain</Typography>
-                  <span>OP Sepolia</span>
+                  <span>{selectedLog?.destinationChain}</span>
                 </DataRow>
               </DataContainer>
 
               <DataContainer>
                 <DataRow>
                   <Typography variant='body1'>Bridge</Typography>
-                  <span>Optimism Gateway</span>
+                  <span>{selectedLog?.bridge}</span>
                 </DataRow>
 
                 <DataRow>
                   <Typography variant='body1'>Fees</Typography>
-                  <span>$21.33</span>
+                  <span>{selectedLog?.fees}</span>
                 </DataRow>
 
                 <DataRow>
                   <Typography variant='body1'>Transaction time</Typography>
-                  <span>2m</span>
+                  <span>{selectedLog?.transactionTime}</span>
                 </DataRow>
               </DataContainer>
 
               <DataContainer>
                 <DataRow>
                   <Typography variant='body1'>From</Typography>
-                  <span>0x1111...cdef</span>
+                  <STooltip title={selectedLog?.from} className='address'>
+                    <span>{truncateAddress(selectedLog?.from || '0x')}</span>
+                  </STooltip>
                 </DataRow>
 
                 <DataRow>
                   <Typography variant='body1'>To</Typography>
-                  <span>0x1111...cdef</span>
+                  <STooltip title={selectedLog?.from} className='address'>
+                    <span>{truncateAddress(selectedLog?.to || '0x')}</span>
+                  </STooltip>
                 </DataRow>
 
                 <DataRow>
@@ -97,24 +103,24 @@ const Transaction = () => {
             <RightSection>
               <DataContainer>
                 <DataRow>
-                  <Typography variant='body1'>From</Typography>
+                  <Typography variant='body1'>Initiate Withdrawal</Typography>
                   <span>0x1111...cdef</span>
                 </DataRow>
 
                 <DataRow>
-                  <Typography variant='body1'>To</Typography>
+                  <Typography variant='body1'>Prove Withdrawal</Typography>
                   <span>0x1111...cdef</span>
                 </DataRow>
 
                 <DataRow>
-                  <Typography variant='body1'>Sent</Typography>
+                  <Typography variant='body1'>Finalize Withdrawal</Typography>
                   <span>2030 USDC</span>
                 </DataRow>
 
-                <DataRow>
+                {/* <DataRow>
                   <Typography variant='body1'>Received</Typography>
                   <span>2030 USDC.e</span>
-                </DataRow>
+                </DataRow> */}
               </DataContainer>
             </RightSection>
           </Content>
