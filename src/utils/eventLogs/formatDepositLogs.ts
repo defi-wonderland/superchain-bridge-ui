@@ -1,4 +1,4 @@
-import { GetLogsReturnType } from 'viem';
+import { GetLogsReturnType, TransactionReceipt } from 'viem';
 import { AccountLogs, CustomClients } from '~/types';
 import {
   erc20BridgeInitiatedABI,
@@ -10,8 +10,11 @@ import {
 export const formatDepositETHLogs = (
   customClient: CustomClients,
   logs: GetLogsReturnType<typeof ethBridgeInitiatedABI>,
-): AccountLogs[] => {
-  return logs.map((log) => ({
+  receiptsMap: { [hash: string]: { receipt: TransactionReceipt } },
+): { accountLogs: AccountLogs[]; receipts: TransactionReceipt[] } => {
+  const receipts = logs.map(({ transactionHash }) => receiptsMap[transactionHash].receipt);
+
+  const accountLogs: AccountLogs[] = logs.map((log) => ({
     type: 'Deposit', // Deposit ETH
     blockNumber: log.blockNumber,
     date: 0, // log.date,
@@ -28,14 +31,20 @@ export const formatDepositETHLogs = (
     remoteToken: '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000',
     amount: log.args.amount!,
     data: log.args.extraData,
+    receipt: receiptsMap[log.transactionHash].receipt,
   }));
+
+  return { accountLogs, receipts };
 };
 
 export const formatERC20DepositLogs = (
   customClient: CustomClients,
   logs: GetLogsReturnType<typeof erc20BridgeInitiatedABI>,
-): AccountLogs[] => {
-  return logs.map((log) => ({
+  receiptsMap: { [hash: string]: { receipt: TransactionReceipt } },
+): { accountLogs: AccountLogs[]; receipts: TransactionReceipt[] } => {
+  const receipts = logs.map(({ transactionHash }) => receiptsMap[transactionHash].receipt);
+
+  const accountLogs = logs.map((log) => ({
     type: 'Deposit', // Deposit ERC20
     blockNumber: log.blockNumber,
     date: 0, // log.date,
@@ -52,17 +61,23 @@ export const formatERC20DepositLogs = (
     localToken: log.args.localToken!,
     remoteToken: log.args.remoteToken!,
     data: log.args.extraData,
+    receipt: receiptsMap[log.transactionHash].receipt,
   }));
+
+  return { accountLogs, receipts };
 };
 
 export const formatMessageDepositLogs = (
   customClient: CustomClients,
   logs: GetLogsReturnType<typeof sentMessageExtensionABI>,
-): AccountLogs[] => {
-  return logs.map((log) => ({
+  receiptsMap: { [hash: string]: { receipt: TransactionReceipt } },
+): { accountLogs: AccountLogs[]; receipts: TransactionReceipt[] } => {
+  const receipts = logs.map(({ transactionHash }) => receiptsMap[transactionHash].receipt);
+
+  const accountLogs: AccountLogs[] = logs.map((log) => ({
     type: 'Deposit', // Deposit Message
     blockNumber: log.blockNumber,
-    date: 0, // log.date,
+    date: 0,
     transactionHash: log.transactionHash,
     originChain: customClient.from.public.chain!.name,
     destinationChain: customClient.to.public.chain!.name,
@@ -72,16 +87,22 @@ export const formatMessageDepositLogs = (
     status: 'finalized',
     from: log.args.sender!,
     to: '0x',
-    amount: log.args.value!,
+    // amount: log.args.value!,
     data: '0x',
+    receipt: receiptsMap[log.transactionHash].receipt,
   }));
+
+  return { accountLogs, receipts };
 };
 
 export const formatForceDepositLogs = (
   customClient: CustomClients,
   logs: GetLogsReturnType<typeof transactionDepositedABI>,
-): AccountLogs[] => {
-  return logs.map((log) => ({
+  receiptsMap: { [hash: string]: { receipt: TransactionReceipt } },
+): { accountLogs: AccountLogs[]; receipts: TransactionReceipt[] } => {
+  const receipts = logs.map(({ transactionHash }) => receiptsMap[transactionHash].receipt);
+
+  const accountLogs: AccountLogs[] = logs.map((log) => ({
     type: 'Force Tx', // Force transaction
     blockNumber: log.blockNumber,
     date: 0, // log.date,
@@ -96,5 +117,8 @@ export const formatForceDepositLogs = (
     to: log.args.to!,
     amount: 0n,
     data: log.args.opaqueData,
+    receipt: receiptsMap[log.transactionHash].receipt,
   }));
+
+  return { accountLogs, receipts };
 };

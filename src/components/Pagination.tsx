@@ -74,10 +74,10 @@ const SBox = styled(Box)({
     flexDirection: 'row',
     width: '100%',
   },
-  'li:first-child': {
+  'li:first-of-type': {
     marginRight: 'auto',
   },
-  'li:last-child': {
+  'li:last-of-type': {
     marginLeft: 'auto',
   },
 });

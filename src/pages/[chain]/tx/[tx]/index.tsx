@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
 import { Box, Typography, styled } from '@mui/material';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
+import { useAccount } from 'wagmi';
 
 import copyIcon from '~/assets/icons/copy.svg';
 
@@ -10,17 +13,26 @@ import { QueryParamKey } from '~/types';
 import { truncateAddress } from '~/utils';
 
 const Transaction = () => {
+  const { address } = useAccount();
   const { selectedLog } = useLogs();
   const { getParam } = useQueryParams();
   const hash = getParam(QueryParamKey.tx);
   const chain = getParam(QueryParamKey.chain);
+  const router = useRouter();
+
+  // temporary redirect
+  useEffect(() => {
+    if (selectedLog?.transactionHash !== hash) {
+      router.push('/');
+    }
+  }, [hash, router, selectedLog?.transactionHash]);
 
   return (
     <>
       <CustomHead title='Transaction Details' />
 
       <Container>
-        <BackButton href={`/${chain}/history`} />
+        <BackButton href={address ? `/${chain}/account/${address}` : '/'} />
 
         <SMainCardContainer>
           <HeaderContainer>

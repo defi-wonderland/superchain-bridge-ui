@@ -42,7 +42,7 @@ export const ActivityTable = () => {
 
     return createData(
       eventLog.type,
-      `${formatDataNumber(Number(eventLog.amount), token?.decimals, 2)} ${token?.symbol}`, // amount
+      eventLog?.amount ? `${formatDataNumber(Number(eventLog.amount), token?.decimals, 2)} ${token?.symbol}` : '-', // amount
       eventLog.transactionHash,
       eventLog.blockNumber.toString(), // timestamp
       eventLog.status,
@@ -53,8 +53,6 @@ export const ActivityTable = () => {
   const handleOpenTransaction = (log: AccountLogs) => {
     setSelectedLog(log);
   };
-
-  console.log({ fromTokens, toTokens });
 
   return (
     <TableContainer>

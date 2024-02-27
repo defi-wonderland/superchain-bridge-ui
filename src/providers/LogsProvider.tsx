@@ -39,7 +39,6 @@ export const LogsProvider = ({ children }: StateProps) => {
         queryFn: () => getWithdrawLogs({ userAddress, customClient }),
         enabled: !!userAddress,
         refetchOnWindowFocus: false, // temporary disable refetch on window focus
-        retry: 1,
       },
     ],
   });

@@ -48,7 +48,7 @@ export const getWithdrawLogs = async ({
 
   const statusMap = Object.fromEntries(
     status.map((status, i) => {
-      return [logs[i].transactionHash, { status: status }];
+      return [logs[i].transactionHash, { status: status, receipt: receipts[i] }];
     }),
   );
 
@@ -56,30 +56,21 @@ export const getWithdrawLogs = async ({
   const formattedErc20Logs = formatERC20WithdrawalLogs(customClient, erc20Logs, statusMap);
   const formattedMessageLogs = formatMessageWithdrawalLogs(customClient, messageLogs, statusMap);
   const formattedCustomLogs = formatCustomWithdrawalLogs(customClient, customLogs, statusMap);
-  const accountLogs = [...formattedCustomLogs, ...formattedMessageLogs, ...formattedEthLogs, ...formattedErc20Logs];
+
+  const accountLogs = [
+    ...formattedCustomLogs.accountLogs,
+    ...formattedMessageLogs.accountLogs,
+    ...formattedEthLogs.accountLogs,
+    ...formattedErc20Logs.accountLogs,
+  ];
 
   // Get the message hashes and args
-
-  const messageReceipts = await Promise.all(
-    messageLogs.map(({ transactionHash }) => {
-      return customClient.to.public.getTransactionReceipt({ hash: transactionHash });
-    }),
+  const { msgHashes: msgHashesFromMessages, args: argsFromMessages } = getMsgHashes(
+    formattedMessageLogs.receipts,
+    'message',
   );
-
-  const erc20Receipts = await Promise.all(
-    erc20Logs.map(({ transactionHash }) => {
-      return customClient.to.public.getTransactionReceipt({ hash: transactionHash });
-    }),
-  );
-  const ethReceipts = await Promise.all(
-    ethLogs.map(({ transactionHash }) => {
-      return customClient.to.public.getTransactionReceipt({ hash: transactionHash });
-    }),
-  );
-
-  const { msgHashes: msgHashesFromMessages, args: argsFromMessages } = getMsgHashes(messageReceipts, 'message');
-  const { msgHashes: msgHashesFromErc20, args: argsFromErc20 } = getMsgHashes(erc20Receipts, 'erc20');
-  const { msgHashes: msgHashesFromEth, args: argsFromEth } = getMsgHashes(ethReceipts, 'eth');
+  const { msgHashes: msgHashesFromErc20, args: argsFromErc20 } = getMsgHashes(formattedErc20Logs.receipts, 'erc20');
+  const { msgHashes: msgHashesFromEth, args: argsFromEth } = getMsgHashes(formattedEthLogs.receipts, 'eth');
 
   const msgHashes = [...msgHashesFromMessages, ...msgHashesFromErc20, ...msgHashesFromEth];
   const args = [...argsFromMessages, ...argsFromErc20, ...argsFromEth];
@@ -94,12 +85,7 @@ export const getWithdrawLogs = async ({
 
   // temporary logs
   console.log({
-    customLogs,
-    messageLogs,
-    ethLogs,
-    erc20Logs,
-    receipts,
-    status,
+    accountLogs,
     msgHashes,
     failedTxs,
     args,
@@ -107,9 +93,6 @@ export const getWithdrawLogs = async ({
 
   return {
     accountLogs,
-    logs,
-    receipts,
-    status,
     msgHashes,
     failedTxs,
     args,
