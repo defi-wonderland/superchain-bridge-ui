@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { Button, styled } from '@mui/material';
 
-import { useCustomTheme, useModal, useTransactionData } from '~/hooks';
+import { useChain, useCustomTheme, useModal, useTransactionData } from '~/hooks';
 
-import { ModalType } from '~/types';
+import { ModalType, TransactionType } from '~/types';
 import { BasicMode } from './BasicMode';
 import { ExpertMode } from './ExpertMode';
 import { CardHeader } from './CardHeader';
@@ -15,10 +15,30 @@ export const BridgeCard = () => {
     isReady,
     customTransactionType: customTransaction,
     setCustomTransactionType: setCustomTransaction,
+    setTransactionType,
   } = useTransactionData();
   const [isExpertMode, setIsExpertMode] = useState(false);
+  const { fromChain, toChain } = useChain();
 
   const handleReview = () => {
+    // If the selected chain has a sourceId, its because it's a L2 chain
+    const isFromAnL2 = !!fromChain?.sourceId;
+    const isToAnL2 = !!toChain?.sourceId;
+
+    // If both chains are L2, it's a bridge transaction
+    if (isFromAnL2 && isToAnL2) {
+      setTransactionType(TransactionType.BRIDGE);
+      // If the source chain is L2 and the destination chain is L1, it's a withdraw transaction
+    } else if (isFromAnL2 && !isToAnL2) {
+      setTransactionType(TransactionType.WITHDRAW);
+      // If the source chain is L1 and the destination chain is L2, it's a deposit transaction
+    } else if (!isFromAnL2 && isToAnL2) {
+      setTransactionType(TransactionType.DEPOSIT);
+      // If both chains are L1, it's a swap transaction
+    } else {
+      setTransactionType(TransactionType.SWAP);
+    }
+
     setModalOpen(ModalType.REVIEW);
   };
 

@@ -14,7 +14,7 @@ export const useTransactions = () => {
   const { setModalOpen } = useModal();
 
   const deposit = useDeposit();
-  const withdraw = useWithdraw();
+  const { withdraw, prove, finalize } = useWithdraw();
 
   const executeTransaction = async () => {
     setModalOpen(ModalType.LOADING);
@@ -31,6 +31,18 @@ export const useTransactions = () => {
 
         case TransactionType.WITHDRAW:
           await withdraw();
+          break;
+
+        case TransactionType.PROVE:
+          await prove();
+          break;
+
+        case TransactionType.FINALIZE:
+          await finalize();
+          break;
+
+        case TransactionType.REPLAY:
+          // TODO: Implement replay
           break;
 
         case TransactionType.BRIDGE:

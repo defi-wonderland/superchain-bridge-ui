@@ -1,9 +1,16 @@
 import { Address, Hex } from 'viem';
 
-import { useTransactionData, useToken, useCustomClient } from '~/hooks';
-import { initiateERC20Withdraw, initiateETHWithdraw, initiateMessageWithdraw } from '~/utils';
+import { useTransactionData, useToken, useCustomClient, useLogs } from '~/hooks';
+import {
+  finalizeWithdrawal,
+  initiateERC20Withdraw,
+  initiateETHWithdraw,
+  initiateMessageWithdraw,
+  proveWithdrawal,
+} from '~/utils';
 
 export const useWithdraw = () => {
+  const { selectedLog } = useLogs();
   const { mint, userAddress, data } = useTransactionData();
   const { selectedToken, amount, toToken, parseTokenUnits } = useToken();
   const { customClient } = useCustomClient();
@@ -42,5 +49,29 @@ export const useWithdraw = () => {
     }
   };
 
-  return withdraw;
+  const prove = async () => {
+    if (!selectedLog || !userAddress) return;
+
+    try {
+      // temporary log
+      console.log('calling proveWithdrawal');
+      await proveWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress });
+    } catch (error) {
+      console.error('Error', error);
+    }
+  };
+
+  const finalize = async () => {
+    if (!selectedLog || !userAddress) return;
+
+    try {
+      // temporary log
+      console.log('calling finalizeWithdrawal');
+      await finalizeWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress });
+    } catch (error) {
+      console.error('Error', error);
+    }
+  };
+
+  return { withdraw, prove, finalize };
 };

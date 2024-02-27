@@ -1,40 +1,43 @@
-import { useCallback, useEffect } from 'react';
-import { Box, Typography, styled } from '@mui/material';
+import { useEffect } from 'react';
+import { Box, IconButton, Typography, styled } from '@mui/material';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useAccount } from 'wagmi';
 
 import copyIcon from '~/assets/icons/copy.svg';
+import arrowLeft from '~/assets/icons/arrow-left.svg';
 
-import { BackButton, DataRow, MainCardContainer } from '~/containers';
-import { useCustomClient, useCustomTheme, useLogs, useQueryParams } from '~/hooks';
+import { DataRow, MainCardContainer } from '~/containers';
+import { useCustomTheme, useLogs, useModal, useQueryParams, useTransactionData } from '~/hooks';
 import { CustomHead, PrimaryButton, STooltip, StatusChip } from '~/components';
-import { finalizeWithdrawal, getTxDetailsButtonText, proveWithdrawal, truncateAddress } from '~/utils';
-import { QueryParamKey } from '~/types';
+import { getTxDetailsButtonText, truncateAddress } from '~/utils';
+import { ModalType, QueryParamKey, TransactionType } from '~/types';
 
 const Transaction = () => {
-  const { customClient } = useCustomClient();
+  const { setTransactionType } = useTransactionData();
+  const { setModalOpen } = useModal();
   const { address } = useAccount();
   const { selectedLog } = useLogs();
   const { getParam } = useQueryParams();
   const hash = getParam(QueryParamKey.tx);
-  const chain = getParam(QueryParamKey.chain);
   const router = useRouter();
 
   const isActionRequired = selectedLog?.status === 'ready-to-prove' || selectedLog?.status === 'ready-to-finalize';
 
-  const initateTransaction = useCallback(async () => {
-    if (!selectedLog || !address) return;
-    try {
-      if (selectedLog.status === 'ready-to-prove') {
-        await proveWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress: address });
-      } else if (selectedLog.status === 'ready-to-finalize') {
-        await finalizeWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress: address });
-      }
-    } catch (error) {
-      console.error('Error', error);
-    }
-  }, [address, customClient, selectedLog]);
+  const handleBack = () => {
+    router.back();
+  };
+
+  const handleReview = () => {
+    const statusToTransactionTypeMap: { [k: string]: TransactionType } = {
+      'ready-to-prove': TransactionType.PROVE,
+      'ready-to-finalize': TransactionType.FINALIZE,
+      failed: TransactionType.REPLAY,
+    };
+
+    setTransactionType(statusToTransactionTypeMap[selectedLog?.status || '']);
+    setModalOpen(ModalType.REVIEW);
+  };
 
   // temporary redirect
   useEffect(() => {
@@ -48,11 +51,12 @@ const Transaction = () => {
       <CustomHead title='Transaction Details' />
 
       <Container>
-        <BackButton href={address ? `/${chain}/account/${address}` : '/'} />
-
         <SMainCardContainer>
           <HeaderContainer>
             <Box>
+              <IconButton onClick={handleBack}>
+                <Image src={arrowLeft} alt='back' />
+              </IconButton>
               <Typography variant='h1'>{selectedLog?.type}</Typography>
               <StatusChip status={selectedLog?.status || ''} title />
             </Box>
@@ -134,7 +138,7 @@ const Transaction = () => {
             <RightSection>
               <DataContainer>
                 {isActionRequired && (
-                  <PrimaryButton onClick={initateTransaction} disabled={!address}>
+                  <PrimaryButton onClick={handleReview} disabled={!address}>
                     {getTxDetailsButtonText(selectedLog?.status || '')}
                   </PrimaryButton>
                 )}

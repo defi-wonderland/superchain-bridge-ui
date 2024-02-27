@@ -1,25 +1,36 @@
-import { Box, Typography, styled } from '@mui/material';
-import { useAccount } from 'wagmi';
+import { Box, IconButton, Typography, styled } from '@mui/material';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
+import { useAccount } from 'wagmi';
 
+import arrowLeft from '~/assets/icons/arrow-left.svg';
 import copyIcon from '~/assets/icons/copy.svg';
-import { MainCardContainer, ActivityTable, BackButton } from '~/containers';
+
+import { MainCardContainer, ActivityTable } from '~/containers';
 import { truncateAddress } from '~/utils';
 import { CustomHead } from '~/components';
 import { useCustomTheme } from '~/hooks';
 
 const History = () => {
+  const router = useRouter();
   const { address: currentAddress } = useAccount();
+
+  const handleBack = () => {
+    router.push('/');
+  };
 
   return (
     <Container>
       <CustomHead title='Account History' />
 
-      <BackButton href='/' />
-
       <SMainCardContainer>
         <HeaderContainer>
-          <Typography variant='h1'>Account History</Typography>
+          <Box>
+            <IconButton onClick={handleBack}>
+              <Image src={arrowLeft} alt='back' />
+            </IconButton>
+            <Typography variant='h1'>Account History</Typography>
+          </Box>
 
           <Box>
             {currentAddress && <Typography variant='body1'>{truncateAddress(currentAddress || '0x')}</Typography>}

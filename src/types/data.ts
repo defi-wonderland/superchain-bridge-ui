@@ -38,10 +38,14 @@ export interface TokenData {
 }
 
 export enum TransactionType {
-  DEPOSIT = 'deposit',
-  WITHDRAW = 'withdraw',
-  BRIDGE = 'bridge',
-  SWAP = 'swap',
+  NONE = '',
+  DEPOSIT = 'Deposit',
+  WITHDRAW = 'Withdraw',
+  PROVE = 'Prove withdrawal',
+  FINALIZE = 'Finalize withdrawal',
+  REPLAY = 'Replay transaction',
+  BRIDGE = 'Bridge',
+  SWAP = 'Swap',
 }
 
 export type CustomTransactionType = 'custom-tx' | 'force-withdrawal' | 'force-transfer';
