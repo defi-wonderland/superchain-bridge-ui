@@ -8,7 +8,7 @@ import openLinkIcon from '~/assets/icons/open-link.svg';
 
 import { formatDataNumber, formatTimestamp, replaceSpacesWithHyphens, truncateAddress } from '~/utils';
 import { useChain, useCustomTheme, useLogs, useTokenList } from '~/hooks';
-import { SPagination } from '~/components';
+import { SPagination, StatusChip } from '~/components';
 import { AccountLogs } from '~/types';
 
 const createData = (
@@ -89,7 +89,9 @@ export const ActivityTable = () => {
               <DateTimeCell>{row.dateTime}</DateTimeCell>
 
               {/* Status */}
-              <StatusCell>{row.status}</StatusCell>
+              <StatusCell>
+                <StatusChip status={row.status} />
+              </StatusCell>
 
               {/* Go to transaction detials */}
               <TableCell className='details-link'>
@@ -133,8 +135,13 @@ const STableBody = styled(TableBody)(() => {
     color: currentTheme.steel[100],
     fontWeight: 500,
     td: {
-      padding: '2.2rem 2.4rem',
+      padding: '2.2rem 1.8rem',
+      minWidth: '13rem',
       borderBottom: `1px solid ${currentTheme.steel[700]}`,
+    },
+    'td:last-child': {
+      minWidth: '6rem',
+      width: '6rem',
     },
   };
 });
@@ -142,10 +149,6 @@ const STableBody = styled(TableBody)(() => {
 const STableRow = styled(TableRow)(() => {
   const { currentTheme } = useCustomTheme();
   return {
-    '& .type': {
-      width: '15rem',
-      minWidth: '15rem',
-    },
     '& .details-link': {
       padding: 0,
     },

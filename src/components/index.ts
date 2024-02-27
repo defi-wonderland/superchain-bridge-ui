@@ -11,6 +11,7 @@ export * from './MadeByWonderland';
 export * from './Pagination';
 export * from './RadioButtons';
 export * from './SearchField';
+export * from './StatusChip';
 export * from './ChainSelect';
 export * from './TokenButton';
 export * from './TokenSelect';

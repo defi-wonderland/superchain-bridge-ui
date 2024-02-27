@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Box, Typography, styled } from '@mui/material';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -7,18 +7,34 @@ import { useAccount } from 'wagmi';
 import copyIcon from '~/assets/icons/copy.svg';
 
 import { BackButton, DataRow, MainCardContainer } from '~/containers';
-import { useCustomTheme, useLogs, useQueryParams } from '~/hooks';
-import { CustomHead, STooltip } from '~/components';
+import { useCustomClient, useCustomTheme, useLogs, useQueryParams } from '~/hooks';
+import { CustomHead, PrimaryButton, STooltip, StatusChip } from '~/components';
+import { finalizeWithdrawal, getTxDetailsButtonText, proveWithdrawal, truncateAddress } from '~/utils';
 import { QueryParamKey } from '~/types';
-import { truncateAddress } from '~/utils';
 
 const Transaction = () => {
+  const { customClient } = useCustomClient();
   const { address } = useAccount();
   const { selectedLog } = useLogs();
   const { getParam } = useQueryParams();
   const hash = getParam(QueryParamKey.tx);
   const chain = getParam(QueryParamKey.chain);
   const router = useRouter();
+
+  const isActionRequired = selectedLog?.status === 'ready-to-prove' || selectedLog?.status === 'ready-to-finalize';
+
+  const initateTransaction = useCallback(async () => {
+    if (!selectedLog || !address) return;
+    try {
+      if (selectedLog.status === 'ready-to-prove') {
+        await proveWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress: address });
+      } else if (selectedLog.status === 'ready-to-finalize') {
+        await finalizeWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress: address });
+      }
+    } catch (error) {
+      console.error('Error', error);
+    }
+  }, [address, customClient, selectedLog]);
 
   // temporary redirect
   useEffect(() => {
@@ -36,7 +52,10 @@ const Transaction = () => {
 
         <SMainCardContainer>
           <HeaderContainer>
-            <Typography variant='h1'>{selectedLog?.type}</Typography>
+            <Box>
+              <Typography variant='h1'>{selectedLog?.type}</Typography>
+              <StatusChip status={selectedLog?.status || ''} title />
+            </Box>
 
             <Box>
               {hash && <Typography variant='body1'>{hash}</Typography>}
@@ -114,25 +133,11 @@ const Transaction = () => {
 
             <RightSection>
               <DataContainer>
-                <DataRow>
-                  <Typography variant='body1'>Initiate Withdrawal</Typography>
-                  <span>0x1111...cdef</span>
-                </DataRow>
-
-                <DataRow>
-                  <Typography variant='body1'>Prove Withdrawal</Typography>
-                  <span>0x1111...cdef</span>
-                </DataRow>
-
-                <DataRow>
-                  <Typography variant='body1'>Finalize Withdrawal</Typography>
-                  <span>2030 USDC</span>
-                </DataRow>
-
-                {/* <DataRow>
-                  <Typography variant='body1'>Received</Typography>
-                  <span>2030 USDC.e</span>
-                </DataRow> */}
+                {isActionRequired && (
+                  <PrimaryButton onClick={initateTransaction} disabled={!address}>
+                    {getTxDetailsButtonText(selectedLog?.status || '')}
+                  </PrimaryButton>
+                )}
               </DataContainer>
             </RightSection>
           </Content>
@@ -188,6 +193,12 @@ const HeaderContainer = styled(Box)(() => {
       gap: '0.8rem',
       cursor: 'pointer',
     },
+
+    'div:first-of-type': {
+      cursor: 'default',
+      gap: '1.2rem',
+    },
+
     p: {
       color: currentTheme.steel[400],
       fontSize: '1.6rem',

@@ -73,3 +73,31 @@ export const getTimestamp = async (publicClient: PublicClient, blockNumber: bigi
   const blockData = await publicClient.getBlock({ blockNumber });
   return blockData.timestamp.toString();
 };
+
+export const getStatusText = (status: string) => {
+  switch (status) {
+    case 'finalized':
+      return 'Completed';
+    case 'ready-to-finalize':
+      return 'Ready to finalize';
+    case 'ready-to-prove':
+      return 'Ready to prove';
+    case 'waiting-to-finalize':
+      return 'Waiting to finalize';
+    case 'waiting-to-prove':
+      return 'Waiting to prove';
+    default:
+      return 'Failed';
+  }
+};
+
+export const getTxDetailsButtonText = (status: string) => {
+  switch (status) {
+    case 'ready-to-prove':
+      return 'Prove Withdrawal';
+    case 'ready-to-finalize':
+      return 'Finalize Withdrawal';
+    default:
+      return 'Replay Transaction';
+  }
+};
