@@ -95,6 +95,7 @@ const TokensContainer = styled(Box)(() => {
     backgroundColor: currentTheme.steel[800],
     borderRadius: '1.2rem',
     padding: '1.2rem 1.6rem',
+    transition: currentTheme.transition,
 
     '&:hover': {
       borderColor: currentTheme.steel[600],

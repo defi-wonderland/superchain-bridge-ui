@@ -159,7 +159,9 @@ const STableRow = styled(TableRow)(() => {
       alignItems: 'center',
       justifyContent: 'center',
     },
+
     '& .details-link a:hover': {
+      transition: currentTheme.transition,
       backgroundColor: currentTheme.steel[800],
     },
   };

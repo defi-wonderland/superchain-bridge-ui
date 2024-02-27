@@ -66,7 +66,7 @@ export const CardHeader = ({
       {customTransaction && (
         <SBox>
           <IconButton onClick={handleBack}>
-            <Image src={arrowLeft} alt='back' className={isExpertMode ? 'advance-activated' : ''} />
+            <Image src={arrowLeft} alt='back' />
           </IconButton>
           <Typography variant='h1'>{cardTitle}</Typography>
         </SBox>

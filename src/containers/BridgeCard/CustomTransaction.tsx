@@ -43,7 +43,7 @@ export const CustomTransaction = () => {
           <ChainSection />
 
           <InputField
-            label='Contract address'
+            label='Target address'
             value={to}
             setValue={setTo}
             error={!!isError}

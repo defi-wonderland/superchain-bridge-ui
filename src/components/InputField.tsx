@@ -65,6 +65,7 @@ const BootstrapInput = styled(InputBase)(() => {
 
     '&:hover .MuiInputBase-input': {
       borderColor: currentTheme.steel[500],
+      transition: currentTheme.transition,
     },
 
     '& .MuiInputBase-input': {

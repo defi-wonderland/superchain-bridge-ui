@@ -22,6 +22,7 @@ export const TokenButton = ({ onClick, selectedToken }: TokenButtonProps) => {
 const StyledButton = styled(Button)(() => {
   const { currentTheme } = useCustomTheme();
   return {
+    transition: currentTheme.transition,
     fontSize: '1.8rem',
     color: currentTheme.steel[100],
     borderRadius: '5.8rem',
@@ -43,6 +44,11 @@ const StyledButton = styled(Button)(() => {
       width: '3.2rem',
       height: '3.2rem',
       marginRight: '0.6rem',
+    },
+
+    '&:hover': {
+      borderColor: currentTheme.steel[600],
+      backgroundColor: currentTheme.steel[900],
     },
   };
 });
