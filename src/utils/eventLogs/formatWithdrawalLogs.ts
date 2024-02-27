@@ -18,7 +18,7 @@ export const formatETHWithdrawalLogs = (
   const accountLogs: AccountLogs[] = logs.map((log) => ({
     type: 'Withdrawal', // Withdrawal ETH
     blockNumber: log.blockNumber,
-    date: 0, // log.date,
+    timestamp: 0, // log.date,
     transactionHash: log.transactionHash,
     originChain: customClient.to.public.chain!.name,
     destinationChain: customClient.from.public.chain!.name,
@@ -48,7 +48,7 @@ export const formatERC20WithdrawalLogs = (
   const accountLogs: AccountLogs[] = logs.map((log) => ({
     type: 'Withdrawal', // Withdrawal ERC20
     blockNumber: log.blockNumber,
-    date: 0,
+    timestamp: 0,
     transactionHash: log.transactionHash,
     originChain: customClient.to.public.chain!.name,
     destinationChain: customClient.from.public.chain!.name,
@@ -78,7 +78,7 @@ export const formatMessageWithdrawalLogs = (
   const accountLogs: AccountLogs[] = logs.map((log) => ({
     type: 'Withdrawal', // Withdrawal Message
     blockNumber: log.blockNumber,
-    date: 0,
+    timestamp: 0,
     transactionHash: log.transactionHash,
     originChain: customClient.to.public.chain!.name,
     destinationChain: customClient.from.public.chain!.name,
@@ -106,7 +106,7 @@ export const formatCustomWithdrawalLogs = (
   const accountLogs: AccountLogs[] = logs.map((log) => ({
     type: 'Withdrawal', // Custom Withdrawal
     blockNumber: log.blockNumber,
-    date: 0, // log.date,
+    timestamp: 0, // log.date,
     transactionHash: log.transactionHash,
     originChain: customClient.to.public.chain!.name,
     destinationChain: customClient.from.public.chain!.name,

@@ -52,7 +52,7 @@ export type CustomTransactionType = 'custom-tx' | 'force-withdrawal' | 'force-tr
 
 export interface AccountLogs {
   blockNumber: bigint;
-  date: string | number;
+  timestamp: bigint | number;
   transactionHash: string;
   type: string;
   originChain: string;

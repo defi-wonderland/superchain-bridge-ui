@@ -1,6 +1,6 @@
 import { Chain, PublicClient, formatUnits, parseUnits } from 'viem';
 import { contracts } from './variables';
-import { OpContracts } from '~/types';
+import { AccountLogs, CustomClients, OpContracts } from '~/types';
 
 export const replaceSpacesWithHyphens = (str: string) => str.replace(/\s+/g, '-').toLowerCase();
 
@@ -56,7 +56,7 @@ export const truncateAddress = (address: string) => {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 };
 
-export const formatTimestamp = (timestamp: string): string => {
+export const formatTimestamp = (timestamp?: string): string => {
   if (!timestamp) return '-';
   const date = new Date(Number(timestamp) * 1000);
 
@@ -100,4 +100,23 @@ export const getTxDetailsButtonText = (status: string) => {
     default:
       return 'Replay Transaction';
   }
+};
+
+export const getTimestamps = (logs: AccountLogs[], customClient: CustomClients) => {
+  const blocks = logs.map((log) => {
+    return customClient[log.type === 'deposit' ? 'from' : 'to'].public.getBlock({ blockNumber: log.blockNumber });
+  });
+
+  return Promise.all(blocks);
+};
+
+export const createData = (
+  type: string,
+  amount: string,
+  txHash: string,
+  timestamp: string,
+  status: string,
+  log: AccountLogs,
+) => {
+  return { type, amount, txHash, dateTime: formatTimestamp(timestamp), status, log };
 };

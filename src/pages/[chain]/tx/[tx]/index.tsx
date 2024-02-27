@@ -10,7 +10,7 @@ import arrowLeft from '~/assets/icons/arrow-left.svg';
 import { DataRow, MainCardContainer } from '~/containers';
 import { useCustomTheme, useLogs, useModal, useQueryParams, useTransactionData } from '~/hooks';
 import { CustomHead, PrimaryButton, STooltip, StatusChip } from '~/components';
-import { getTxDetailsButtonText, truncateAddress } from '~/utils';
+import { formatTimestamp, getTxDetailsButtonText, truncateAddress } from '~/utils';
 import { ModalType, QueryParamKey, TransactionType } from '~/types';
 
 const Transaction = () => {
@@ -72,7 +72,7 @@ const Transaction = () => {
               <DataContainer>
                 <DataRow>
                   <Typography variant='body1'>Date</Typography>
-                  <span>{selectedLog?.date}</span>
+                  <span>{formatTimestamp(selectedLog?.timestamp.toString())}</span>
                 </DataRow>
 
                 <DataRow>

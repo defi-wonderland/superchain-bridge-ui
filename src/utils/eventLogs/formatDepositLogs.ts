@@ -17,7 +17,7 @@ export const formatDepositETHLogs = (
   const accountLogs: AccountLogs[] = logs.map((log) => ({
     type: 'Deposit', // Deposit ETH
     blockNumber: log.blockNumber,
-    date: 0, // log.date,
+    timestamp: 0, // log.date,
     transactionHash: log.transactionHash,
     originChain: customClient.from.public.chain!.name,
     destinationChain: customClient.to.public.chain!.name,
@@ -47,7 +47,7 @@ export const formatERC20DepositLogs = (
   const accountLogs = logs.map((log) => ({
     type: 'Deposit', // Deposit ERC20
     blockNumber: log.blockNumber,
-    date: 0, // log.date,
+    timestamp: 0, // log.date,
     transactionHash: log.transactionHash,
     originChain: customClient.from.public.chain!.name,
     destinationChain: customClient.to.public.chain!.name,
@@ -77,7 +77,7 @@ export const formatMessageDepositLogs = (
   const accountLogs: AccountLogs[] = logs.map((log) => ({
     type: 'Deposit', // Deposit Message
     blockNumber: log.blockNumber,
-    date: 0,
+    timestamp: 0,
     transactionHash: log.transactionHash,
     originChain: customClient.from.public.chain!.name,
     destinationChain: customClient.to.public.chain!.name,
@@ -105,7 +105,7 @@ export const formatForceDepositLogs = (
   const accountLogs: AccountLogs[] = logs.map((log) => ({
     type: 'Force Tx', // Force transaction
     blockNumber: log.blockNumber,
-    date: 0, // log.date,
+    timestamp: 0, // log.date,
     transactionHash: log.transactionHash,
     originChain: customClient.from.public.chain!.name,
     destinationChain: customClient.to.public.chain!.name,
