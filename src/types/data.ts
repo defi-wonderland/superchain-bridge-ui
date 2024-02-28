@@ -54,6 +54,7 @@ export interface AccountLogs {
   blockNumber: bigint;
   timestamp: bigint | number;
   transactionHash: string;
+  l2TransactionHash?: string;
   type: string;
   originChain: string;
   destinationChain: string;

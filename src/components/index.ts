@@ -12,6 +12,7 @@ export * from './Pagination';
 export * from './RadioButtons';
 export * from './SearchField';
 export * from './StatusChip';
+export * from './Step';
 export * from './ChainSelect';
 export * from './TokenButton';
 export * from './TokenSelect';

@@ -1,60 +1,34 @@
-import { useEffect } from 'react';
 import { Box, IconButton, Typography, styled } from '@mui/material';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
 import { useAccount } from 'wagmi';
+import Image from 'next/image';
 
 import copyIcon from '~/assets/icons/copy.svg';
 import arrowLeft from '~/assets/icons/arrow-left.svg';
 
-import { DataRow, MainCardContainer } from '~/containers';
-import { useCustomTheme, useLogs, useModal, useQueryParams, useTokenList, useTransactionData } from '~/hooks';
-import { CustomHead, PrimaryButton, STooltip, StatusChip } from '~/components';
-import { formatDataNumber, formatTimestamp, getTxDetailsButtonText, truncateAddress } from '~/utils';
-import { ModalType, QueryParamKey, TransactionType } from '~/types';
+import { MainCardContainer, Stepper, TxDetails } from '~/containers';
+import { useCustomTheme, useLogs, useQueryParams } from '~/hooks';
+import { CustomHead, StatusChip } from '~/components';
+import { QueryParamKey } from '~/types';
 
 const Transaction = () => {
-  const { setTransactionType } = useTransactionData();
-  const { setModalOpen } = useModal();
-  const { fromTokens, toTokens } = useTokenList();
-  const { address } = useAccount();
   const { selectedLog } = useLogs();
+  const { address } = useAccount();
   const { getParam } = useQueryParams();
   const hash = getParam(QueryParamKey.tx);
+  const chain = getParam(QueryParamKey.chain);
   const router = useRouter();
-  const selectedToken =
-    fromTokens.find((token) => token.address === selectedLog?.localToken) ||
-    toTokens.find((token) => token.address === selectedLog?.localToken);
-
-  const formattedAmount = `${formatDataNumber(
-    selectedLog?.amount?.toString() || '0',
-    selectedToken?.decimals,
-    2,
-  )} ${selectedToken?.symbol}`;
-
-  const isActionRequired = selectedLog?.status === 'ready-to-prove' || selectedLog?.status === 'ready-to-finalize';
 
   const handleBack = () => {
-    router.back();
-  };
-
-  const handleReview = () => {
-    const statusToTransactionTypeMap: { [k: string]: TransactionType } = {
-      'ready-to-prove': TransactionType.PROVE,
-      'ready-to-finalize': TransactionType.FINALIZE,
-      failed: TransactionType.REPLAY,
-    };
-
-    setTransactionType(statusToTransactionTypeMap[selectedLog?.status || '']);
-    setModalOpen(ModalType.REVIEW);
+    router.push(address ? `/${chain}/account/${address}` : '/');
   };
 
   // temporary redirect
-  useEffect(() => {
-    if (selectedLog?.transactionHash !== hash) {
-      router.push('/');
-    }
-  }, [hash, router, selectedLog?.transactionHash]);
+  // useEffect(() => {
+  //   if (selectedLog?.transactionHash !== hash) {
+  //     router.push('/');
+  //   }
+  // }, [hash, router, selectedLog?.transactionHash]);
 
   return (
     <>
@@ -78,82 +52,11 @@ const Transaction = () => {
           </HeaderContainer>
 
           <Content>
-            <LeftSection>
-              <DataContainer>
-                <DataRow>
-                  <Typography variant='body1'>Date</Typography>
-                  <span>{formatTimestamp(selectedLog?.timestamp.toString())}</span>
-                </DataRow>
+            {/* Left section */}
+            <TxDetails />
 
-                <DataRow>
-                  <Typography variant='body1'>Transaction type</Typography>
-                  <span>{selectedLog?.type}</span>
-                </DataRow>
-
-                <DataRow>
-                  <Typography variant='body1'>Origin chain</Typography>
-                  <span>{selectedLog?.originChain}</span>
-                </DataRow>
-
-                <DataRow>
-                  <Typography variant='body1'>Destination chain</Typography>
-                  <span>{selectedLog?.destinationChain}</span>
-                </DataRow>
-              </DataContainer>
-
-              <DataContainer>
-                <DataRow>
-                  <Typography variant='body1'>Bridge</Typography>
-                  <span>{selectedLog?.bridge}</span>
-                </DataRow>
-
-                <DataRow>
-                  <Typography variant='body1'>Fees</Typography>
-                  <span>{selectedLog?.fees}</span>
-                </DataRow>
-
-                <DataRow>
-                  <Typography variant='body1'>Transaction time</Typography>
-                  <span>{selectedLog?.transactionTime}</span>
-                </DataRow>
-              </DataContainer>
-
-              <DataContainer>
-                <DataRow>
-                  <Typography variant='body1'>From</Typography>
-                  <STooltip title={selectedLog?.from} className='address'>
-                    <span>{truncateAddress(selectedLog?.from || '0x')}</span>
-                  </STooltip>
-                </DataRow>
-
-                <DataRow>
-                  <Typography variant='body1'>To</Typography>
-                  <STooltip title={selectedLog?.from} className='address'>
-                    <span>{truncateAddress(selectedLog?.to || '0x')}</span>
-                  </STooltip>
-                </DataRow>
-
-                <DataRow>
-                  <Typography variant='body1'>Sent</Typography>
-                  <span>{formattedAmount}</span>
-                </DataRow>
-
-                <DataRow>
-                  <Typography variant='body1'>Received</Typography>
-                  <span>{formattedAmount}</span>
-                </DataRow>
-              </DataContainer>
-            </LeftSection>
-
-            <RightSection>
-              <DataContainer>
-                {isActionRequired && (
-                  <PrimaryButton onClick={handleReview} disabled={!address}>
-                    {getTxDetailsButtonText(selectedLog?.status || '')}
-                  </PrimaryButton>
-                )}
-              </DataContainer>
-            </RightSection>
+            {/* Right section */}
+            <Stepper />
           </Content>
         </SMainCardContainer>
       </Container>
@@ -230,28 +133,5 @@ const Content = styled(Box)(() => {
     justifyContent: 'start',
     width: '100%',
     gap: '3.2rem',
-  };
-});
-
-const LeftSection = styled(Box)(() => {
-  return {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1.6rem',
-    width: '50%',
-  };
-});
-
-const RightSection = styled(LeftSection)({});
-
-const DataContainer = styled(Box)(() => {
-  const { currentTheme } = useCustomTheme();
-  return {
-    backgroundColor: currentTheme.steel[800],
-    display: 'flex',
-    flexDirection: 'column',
-    borderRadius: '1.2rem',
-    gap: '1.2rem',
-    padding: '1.6rem',
   };
 });

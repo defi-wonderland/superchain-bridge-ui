@@ -32,7 +32,7 @@ const SBackButton = styled(Link)(() => {
     color: currentTheme.ghost[400],
     fontSize: '1.6rem',
     fontWeight: 500,
-    lineHeight: '2.4rem' /* 150% */,
+    lineHeight: '2.4rem',
     textTransform: 'none',
     gap: '0.8rem',
 

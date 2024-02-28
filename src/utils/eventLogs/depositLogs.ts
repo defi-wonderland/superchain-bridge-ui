@@ -1,6 +1,7 @@
 import { Address } from 'viem';
-import { CustomClients, DepositLogs } from '~/types';
+import { extractTransactionDepositedLogs, getL2TransactionHash } from 'viem/op-stack';
 
+import { CustomClients, DepositLogs } from '~/types';
 import { getMsgHashes } from '../transactions/helpers';
 import { getFailedTransactionLogs } from '../transactions/getFailedTxs';
 import { getAllDepositLogs } from './getDepositLogs';
@@ -36,7 +37,15 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
 
   const receiptsMap = Object.fromEntries(
     receipts.map((receipt, i) => {
-      return [logs[i].transactionHash, { receipt }];
+      return [
+        logs[i].transactionHash,
+        {
+          receipt,
+          l2Hash: getL2TransactionHash({
+            log: extractTransactionDepositedLogs(receipt)[0],
+          }),
+        },
+      ];
     }),
   );
 

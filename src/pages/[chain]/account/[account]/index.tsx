@@ -20,6 +20,7 @@ const History = () => {
   const { depositLogs, withdrawLogs, orderedLogs, setOrderedLogs } = useLogs();
 
   const getOrderedLogs = useCallback(async () => {
+    if (!depositLogs || !withdrawLogs) return;
     const accountLogs = [...(depositLogs?.accountLogs || []), ...(withdrawLogs?.accountLogs || [])];
     const blocks = await getTimestamps(accountLogs, customClient);
 
@@ -28,11 +29,12 @@ const History = () => {
     });
     const orderedLogs = logsWithTimestamp.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
 
-    setOrderedLogs(orderedLogs);
-  }, [customClient, depositLogs?.accountLogs, setOrderedLogs, withdrawLogs?.accountLogs]);
+    const reversedLogs = orderedLogs.reverse(); // latest logs first
+    setOrderedLogs(reversedLogs);
+  }, [customClient, depositLogs, setOrderedLogs, withdrawLogs]);
 
   const rows = useMemo(() => {
-    const data = orderedLogs.reverse().map((eventLog) => {
+    const data = orderedLogs.map((eventLog) => {
       const token =
         fromTokens.find((token) => token.address === eventLog.localToken) ||
         toTokens.find((token) => token.address === eventLog.localToken);

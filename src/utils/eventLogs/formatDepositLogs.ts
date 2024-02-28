@@ -1,4 +1,4 @@
-import { GetLogsReturnType, TransactionReceipt } from 'viem';
+import { GetLogsReturnType, Hex, TransactionReceipt } from 'viem';
 import { AccountLogs, CustomClients } from '~/types';
 import {
   erc20BridgeInitiatedABI,
@@ -10,15 +10,16 @@ import {
 export const formatDepositETHLogs = (
   customClient: CustomClients,
   logs: GetLogsReturnType<typeof ethBridgeInitiatedABI>,
-  receiptsMap: { [hash: string]: { receipt: TransactionReceipt } },
+  receiptsMap: { [hash: string]: { receipt: TransactionReceipt; l2Hash: Hex } },
 ): { accountLogs: AccountLogs[]; receipts: TransactionReceipt[] } => {
   const receipts = logs.map(({ transactionHash }) => receiptsMap[transactionHash].receipt);
 
   const accountLogs: AccountLogs[] = logs.map((log) => ({
     type: 'Deposit', // Deposit ETH
     blockNumber: log.blockNumber,
-    timestamp: 0, // log.date,
+    timestamp: 0,
     transactionHash: log.transactionHash,
+    l2TransactionHash: receiptsMap[log.transactionHash].l2Hash,
     originChain: customClient.from.public.chain!.name,
     destinationChain: customClient.to.public.chain!.name,
     bridge: 'OP Gateway',
@@ -40,15 +41,16 @@ export const formatDepositETHLogs = (
 export const formatERC20DepositLogs = (
   customClient: CustomClients,
   logs: GetLogsReturnType<typeof erc20BridgeInitiatedABI>,
-  receiptsMap: { [hash: string]: { receipt: TransactionReceipt } },
+  receiptsMap: { [hash: string]: { receipt: TransactionReceipt; l2Hash: Hex } },
 ): { accountLogs: AccountLogs[]; receipts: TransactionReceipt[] } => {
   const receipts = logs.map(({ transactionHash }) => receiptsMap[transactionHash].receipt);
 
   const accountLogs = logs.map((log) => ({
     type: 'Deposit', // Deposit ERC20
     blockNumber: log.blockNumber,
-    timestamp: 0, // log.date,
+    timestamp: 0,
     transactionHash: log.transactionHash,
+    l2TransactionHash: receiptsMap[log.transactionHash].l2Hash,
     originChain: customClient.from.public.chain!.name,
     destinationChain: customClient.to.public.chain!.name,
     bridge: 'OP Gateway',
@@ -70,7 +72,7 @@ export const formatERC20DepositLogs = (
 export const formatMessageDepositLogs = (
   customClient: CustomClients,
   logs: GetLogsReturnType<typeof sentMessageExtensionABI>,
-  receiptsMap: { [hash: string]: { receipt: TransactionReceipt } },
+  receiptsMap: { [hash: string]: { receipt: TransactionReceipt; l2Hash: Hex } },
 ): { accountLogs: AccountLogs[]; receipts: TransactionReceipt[] } => {
   const receipts = logs.map(({ transactionHash }) => receiptsMap[transactionHash].receipt);
 
@@ -79,6 +81,7 @@ export const formatMessageDepositLogs = (
     blockNumber: log.blockNumber,
     timestamp: 0,
     transactionHash: log.transactionHash,
+    l2TransactionHash: receiptsMap[log.transactionHash].l2Hash,
     originChain: customClient.from.public.chain!.name,
     destinationChain: customClient.to.public.chain!.name,
     bridge: 'OP Gateway',
@@ -98,15 +101,16 @@ export const formatMessageDepositLogs = (
 export const formatForceDepositLogs = (
   customClient: CustomClients,
   logs: GetLogsReturnType<typeof transactionDepositedABI>,
-  receiptsMap: { [hash: string]: { receipt: TransactionReceipt } },
+  receiptsMap: { [hash: string]: { receipt: TransactionReceipt; l2Hash: Hex } },
 ): { accountLogs: AccountLogs[]; receipts: TransactionReceipt[] } => {
   const receipts = logs.map(({ transactionHash }) => receiptsMap[transactionHash].receipt);
 
   const accountLogs: AccountLogs[] = logs.map((log) => ({
     type: 'Force Tx', // Force transaction
     blockNumber: log.blockNumber,
-    timestamp: 0, // log.date,
+    timestamp: 0,
     transactionHash: log.transactionHash,
+    l2TransactionHash: receiptsMap[log.transactionHash].l2Hash,
     originChain: customClient.from.public.chain!.name,
     destinationChain: customClient.to.public.chain!.name,
     bridge: 'OP Gateway',
