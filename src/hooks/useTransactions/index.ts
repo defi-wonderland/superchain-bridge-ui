@@ -41,12 +41,16 @@ export const useTransactions = () => {
           await finalize();
           break;
 
+        case TransactionType.SWAP:
+          // TODO: Implement swap <- use Lifi
+          break;
+
         case TransactionType.REPLAY:
           // TODO: Implement replay
           break;
 
         case TransactionType.BRIDGE:
-          // TODO: Implement bridge
+          // TODO: Implement bridge <- use Lifi
           break;
       }
 

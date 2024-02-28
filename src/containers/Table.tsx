@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -6,62 +6,24 @@ import Link from 'next/link';
 import detailsIcon from '~/assets/icons/details-arrow.svg';
 import openLinkIcon from '~/assets/icons/open-link.svg';
 
-import { createData, formatDataNumber, getTimestamps, replaceSpacesWithHyphens, truncateAddress } from '~/utils';
-import { useChain, useCustomClient, useCustomTheme, useLogs, useTokenList } from '~/hooks';
+import { createData, replaceSpacesWithHyphens, truncateAddress } from '~/utils';
+import { useChain, useCustomTheme, useLogs } from '~/hooks';
 import { SPagination, StatusChip } from '~/components';
 import { AccountLogs } from '~/types';
 
-export const ActivityTable = () => {
+interface ActivityTableProps {
+  rows: ReturnType<typeof createData>[];
+}
+export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
   const itemsPerPage = 6;
-  const { customClient } = useCustomClient();
   const { fromChain } = useChain();
-  const { fromTokens, toTokens } = useTokenList();
+  const { setSelectedLog } = useLogs();
   const chainPath = replaceSpacesWithHyphens(fromChain?.name || '');
-  const { depositLogs, withdrawLogs, setSelectedLog } = useLogs();
-  const [orderedLogs, setOrderedLogs] = useState<AccountLogs[]>([]);
-
   const [paging, setPaging] = useState({ from: 0, to: itemsPerPage });
-
-  const getOrderedLogs = useCallback(async () => {
-    const accountLogs = [...(depositLogs?.accountLogs || []), ...(withdrawLogs?.accountLogs || [])];
-    const blocks = await getTimestamps(accountLogs, customClient);
-
-    const temp = accountLogs.map((log, index) => {
-      return { ...log, timestamp: blocks[index].timestamp };
-    });
-    const orderedLogs = temp.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
-
-    return orderedLogs;
-  }, [depositLogs?.accountLogs, withdrawLogs?.accountLogs, customClient]);
-
-  const rows = useMemo(() => {
-    const data = orderedLogs.reverse().map((eventLog) => {
-      const token =
-        fromTokens.find((token) => token.address === eventLog.localToken) ||
-        toTokens.find((token) => token.address === eventLog.localToken);
-
-      return createData(
-        eventLog.type,
-        eventLog?.amount ? `${formatDataNumber(Number(eventLog.amount), token?.decimals, 2)} ${token?.symbol}` : '-', // amount
-        eventLog.transactionHash,
-        eventLog.timestamp.toString(),
-        eventLog.status,
-        eventLog,
-      );
-    });
-
-    return data;
-  }, [fromTokens, orderedLogs, toTokens]);
 
   const handleOpenTransaction = (log: AccountLogs) => {
     setSelectedLog(log);
   };
-
-  useEffect(() => {
-    getOrderedLogs().then((logs) => {
-      setOrderedLogs(logs);
-    });
-  }, [getOrderedLogs]);
 
   return (
     <TableContainer>

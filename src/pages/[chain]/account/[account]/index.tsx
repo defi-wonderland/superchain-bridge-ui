@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useMemo } from 'react';
 import { Box, IconButton, Typography, styled } from '@mui/material';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -7,17 +8,57 @@ import arrowLeft from '~/assets/icons/arrow-left.svg';
 import copyIcon from '~/assets/icons/copy.svg';
 
 import { MainCardContainer, ActivityTable } from '~/containers';
-import { truncateAddress } from '~/utils';
+import { createData, formatDataNumber, getTimestamps, truncateAddress } from '~/utils';
 import { CustomHead } from '~/components';
-import { useCustomTheme } from '~/hooks';
+import { useCustomClient, useCustomTheme, useLogs, useTokenList } from '~/hooks';
 
 const History = () => {
   const router = useRouter();
   const { address: currentAddress } = useAccount();
+  const { customClient } = useCustomClient();
+  const { fromTokens, toTokens } = useTokenList();
+  const { depositLogs, withdrawLogs, orderedLogs, setOrderedLogs } = useLogs();
+
+  const getOrderedLogs = useCallback(async () => {
+    const accountLogs = [...(depositLogs?.accountLogs || []), ...(withdrawLogs?.accountLogs || [])];
+    const blocks = await getTimestamps(accountLogs, customClient);
+
+    const logsWithTimestamp = accountLogs.map((log, index) => {
+      return { ...log, timestamp: blocks[index].timestamp };
+    });
+    const orderedLogs = logsWithTimestamp.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+
+    setOrderedLogs(orderedLogs);
+  }, [customClient, depositLogs?.accountLogs, setOrderedLogs, withdrawLogs?.accountLogs]);
+
+  const rows = useMemo(() => {
+    const data = orderedLogs.reverse().map((eventLog) => {
+      const token =
+        fromTokens.find((token) => token.address === eventLog.localToken) ||
+        toTokens.find((token) => token.address === eventLog.localToken);
+
+      return createData(
+        eventLog.type,
+        eventLog?.amount ? `${formatDataNumber(Number(eventLog.amount), token?.decimals, 2)} ${token?.symbol}` : '-', // amount
+        eventLog.transactionHash,
+        eventLog.timestamp.toString(),
+        eventLog.status,
+        eventLog,
+      );
+    });
+
+    return data;
+  }, [fromTokens, orderedLogs, toTokens]);
 
   const handleBack = () => {
     router.push('/');
   };
+
+  useEffect(() => {
+    if (orderedLogs.length === 0) {
+      getOrderedLogs();
+    }
+  }, [getOrderedLogs, orderedLogs.length]);
 
   return (
     <Container>
@@ -38,7 +79,7 @@ const History = () => {
           </Box>
         </HeaderContainer>
 
-        <ActivityTable />
+        <ActivityTable rows={rows} />
       </SMainCardContainer>
     </Container>
   );

@@ -8,19 +8,29 @@ import copyIcon from '~/assets/icons/copy.svg';
 import arrowLeft from '~/assets/icons/arrow-left.svg';
 
 import { DataRow, MainCardContainer } from '~/containers';
-import { useCustomTheme, useLogs, useModal, useQueryParams, useTransactionData } from '~/hooks';
+import { useCustomTheme, useLogs, useModal, useQueryParams, useTokenList, useTransactionData } from '~/hooks';
 import { CustomHead, PrimaryButton, STooltip, StatusChip } from '~/components';
-import { formatTimestamp, getTxDetailsButtonText, truncateAddress } from '~/utils';
+import { formatDataNumber, formatTimestamp, getTxDetailsButtonText, truncateAddress } from '~/utils';
 import { ModalType, QueryParamKey, TransactionType } from '~/types';
 
 const Transaction = () => {
   const { setTransactionType } = useTransactionData();
   const { setModalOpen } = useModal();
+  const { fromTokens, toTokens } = useTokenList();
   const { address } = useAccount();
   const { selectedLog } = useLogs();
   const { getParam } = useQueryParams();
   const hash = getParam(QueryParamKey.tx);
   const router = useRouter();
+  const selectedToken =
+    fromTokens.find((token) => token.address === selectedLog?.localToken) ||
+    toTokens.find((token) => token.address === selectedLog?.localToken);
+
+  const formattedAmount = `${formatDataNumber(
+    selectedLog?.amount?.toString() || '0',
+    selectedToken?.decimals,
+    2,
+  )} ${selectedToken?.symbol}`;
 
   const isActionRequired = selectedLog?.status === 'ready-to-prove' || selectedLog?.status === 'ready-to-finalize';
 
@@ -125,12 +135,12 @@ const Transaction = () => {
 
                 <DataRow>
                   <Typography variant='body1'>Sent</Typography>
-                  <span>2030 USDC</span>
+                  <span>{formattedAmount}</span>
                 </DataRow>
 
                 <DataRow>
                   <Typography variant='body1'>Received</Typography>
-                  <span>2030 USDC.e</span>
+                  <span>{formattedAmount}</span>
                 </DataRow>
               </DataContainer>
             </LeftSection>
