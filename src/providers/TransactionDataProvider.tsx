@@ -3,7 +3,7 @@ import { Address } from 'viem';
 import { useAccount } from 'wagmi';
 
 import { useModal, useToken } from '~/hooks';
-import { CustomTransactionType, ModalType, TransactionType } from '~/types';
+import { CustomTransactionType, ModalType, TransactionStep, TransactionType } from '~/types';
 
 type ContextType = {
   userAddress?: Address;
@@ -29,6 +29,9 @@ type ContextType = {
 
   transactionType: TransactionType;
   setTransactionType: (val: TransactionType) => void;
+
+  txStep: TransactionStep;
+  setTxStep: (val: TransactionStep) => void;
 };
 
 interface StateProps {
@@ -48,6 +51,7 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
   const { amount } = useToken();
   const [customTransactionType, setCustomTransactionType] = useState<CustomTransactionType>();
   const [transactionType, setTransactionType] = useState<TransactionType>(TransactionType.NONE);
+  const [txStep, setTxStep] = useState<TransactionStep>(TransactionStep.NONE);
 
   const isReady = useMemo(() => {
     return !!(mint || value || amount || data);
@@ -90,6 +94,8 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
         setCustomTransactionType,
         isReady,
         resetValues,
+        txStep,
+        setTxStep,
       }}
     >
       {children}

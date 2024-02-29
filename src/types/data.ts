@@ -95,3 +95,11 @@ export interface RelayMessageArgs {
   gasLimit: bigint;
   message: Address;
 }
+
+export enum TransactionStep {
+  NONE = 'None',
+  INITIATE = 'Initiate Transaction',
+  PROCESSING = 'Processing Transaction',
+  REPLAYING = 'Replaying Transaction',
+  FINALIZED = 'Finalized Transaction',
+}

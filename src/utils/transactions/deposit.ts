@@ -1,8 +1,8 @@
-import { DepositERC20Props, DepositETHProps, DepositMessageProps } from '~/types';
+import { DepositERC20Props, DepositETHProps, DepositMessageProps, TransactionStep } from '~/types';
 import { bridgeERC20ToABI, bridgeETHToABI, sendMessageABI } from '../parsedAbis';
 import { waitForL2TransactionReceipt } from './helpers';
 
-export const depositETH = async ({ customClient, userAddress, mint, to }: DepositETHProps) => {
+export const depositETH = async ({ customClient, userAddress, mint, to, setTxStep }: DepositETHProps) => {
   // temporary fixed values
   const extraData = '0x';
   const minGasLimit = 132303;
@@ -18,7 +18,16 @@ export const depositETH = async ({ customClient, userAddress, mint, to }: Deposi
 
   const hash = await customClient.from.wallet?.writeContract(request);
 
-  const l2Receipt = await waitForL2TransactionReceipt(customClient.from.public, customClient.to.public, hash);
+  setTxStep(TransactionStep.PROCESSING);
+
+  const l2Receipt = await waitForL2TransactionReceipt(
+    customClient.from.public,
+    customClient.to.public,
+    setTxStep,
+    hash,
+  );
+
+  setTxStep(TransactionStep.PROCESSING);
 
   // temporary log
   console.log(l2Receipt);
@@ -32,6 +41,7 @@ export const depositERC20 = async ({
   l1TokenAddress,
   l2TokenAddress,
   approve,
+  setTxStep,
 }: DepositERC20Props) => {
   if (BigInt(allowance) < amount) {
     await approve();
@@ -52,13 +62,18 @@ export const depositERC20 = async ({
 
   const hash = await customClient.from.wallet?.writeContract(request);
 
-  const l2Receipt = await waitForL2TransactionReceipt(customClient.from.public, customClient.to.public, hash);
+  const l2Receipt = await waitForL2TransactionReceipt(
+    customClient.from.public,
+    customClient.to.public,
+    setTxStep,
+    hash,
+  );
 
   // temporary log
   console.log(l2Receipt);
 };
 
-export const depositMessage = async ({ customClient, userAddress, target, data }: DepositMessageProps) => {
+export const depositMessage = async ({ customClient, userAddress, target, data, setTxStep }: DepositMessageProps) => {
   // temporary fixed values
   const minGasLimit = 200_000;
 
@@ -73,7 +88,12 @@ export const depositMessage = async ({ customClient, userAddress, target, data }
 
   const hash = await customClient.from.wallet?.writeContract(request);
 
-  const l2Receipt = await waitForL2TransactionReceipt(customClient.from.public, customClient.to.public, hash);
+  const l2Receipt = await waitForL2TransactionReceipt(
+    customClient.from.public,
+    customClient.to.public,
+    setTxStep,
+    hash,
+  );
 
   // temporary log
   console.log(l2Receipt);

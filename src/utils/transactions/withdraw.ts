@@ -1,7 +1,19 @@
-import { InitiateERC20WithdrawProps, InitiateMessageWithdrawProps, InitiateWithdrawProps } from '~/types';
+import {
+  InitiateERC20WithdrawProps,
+  InitiateMessageWithdrawProps,
+  InitiateWithdrawProps,
+  TransactionStep,
+} from '~/types';
 import { bridgeERC20ToABI, bridgeETHToABI, sendMessageABI } from '../parsedAbis';
+import { WaitToProveParameters } from 'viem/op-stack';
 
-export const initiateETHWithdraw = async ({ customClient, userAddress, mint, to }: InitiateWithdrawProps) => {
+export const initiateETHWithdraw = async ({
+  customClient,
+  userAddress,
+  mint,
+  to,
+  setTxStep,
+}: InitiateWithdrawProps) => {
   // temporary fixed values
   const extraData = '0x';
   const minGasLimit = 218_874;
@@ -16,11 +28,19 @@ export const initiateETHWithdraw = async ({ customClient, userAddress, mint, to 
   });
 
   const hash = await customClient.from.wallet?.writeContract(request);
+  setTxStep(TransactionStep.PROCESSING);
 
   if (!hash) throw new Error('No hash returned');
 
   // Wait for the initiate withdrawal transaction receipt.
   const receipt = await customClient.from.public.waitForTransactionReceipt({ hash: hash });
+  setTxStep(TransactionStep.REPLAYING);
+
+  await customClient.to.public.waitToProve({
+    receipt,
+    targetChain: customClient.from.public.chain,
+  } as WaitToProveParameters);
+  setTxStep(TransactionStep.FINALIZED);
 
   // temporary log
   console.log(receipt);
@@ -32,6 +52,7 @@ export const initiateERC20Withdraw = async ({
   amount,
   l1TokenAddress,
   l2TokenAddress,
+  setTxStep,
 }: InitiateERC20WithdrawProps) => {
   // temporary fixed values
   const extraData = '0x';
@@ -47,17 +68,30 @@ export const initiateERC20Withdraw = async ({
   });
 
   const hash = await customClient.from.wallet?.writeContract(request);
+  setTxStep(TransactionStep.PROCESSING);
 
   if (!hash) throw new Error('No hash returned');
 
   // Wait for the initiate withdrawal transaction receipt.
   const receipt = await customClient.from.public.waitForTransactionReceipt({ hash: hash });
+  setTxStep(TransactionStep.REPLAYING);
+
+  await customClient.to.public.waitToProve({
+    receipt,
+    targetChain: customClient.from.public.chain,
+  } as WaitToProveParameters);
+  setTxStep(TransactionStep.FINALIZED);
 
   // temporary log
   console.log(receipt);
 };
 
-export const initiateMessageWithdraw = async ({ customClient, userAddress, message }: InitiateMessageWithdrawProps) => {
+export const initiateMessageWithdraw = async ({
+  customClient,
+  userAddress,
+  message,
+  setTxStep,
+}: InitiateMessageWithdrawProps) => {
   // temporary fixed values
   const minGasLimit = 200_000; // TODO - get this from the contract
 
@@ -71,11 +105,19 @@ export const initiateMessageWithdraw = async ({ customClient, userAddress, messa
   });
 
   const hash = await customClient.from.wallet?.writeContract(request);
+  setTxStep(TransactionStep.PROCESSING);
 
   if (!hash) throw new Error('No hash returned');
 
   // Wait for the initiate withdrawal transaction receipt.
   const receipt = await customClient.from.public.waitForTransactionReceipt({ hash: hash });
+  setTxStep(TransactionStep.REPLAYING);
+
+  await customClient.to.public.waitToProve({
+    receipt,
+    targetChain: customClient.from.public.chain,
+  } as WaitToProveParameters);
+  setTxStep(TransactionStep.FINALIZED);
 
   // temporary log
   console.log(receipt);

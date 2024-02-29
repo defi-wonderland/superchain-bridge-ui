@@ -32,6 +32,9 @@ export const ChainSelect = ({ label, list, value, setValue, disabled }: ChainSel
     setValue(chain);
   };
 
+  const endIcon =
+    disabled || list.length < 2 ? null : <Image src={chevrownDown} alt='arrow-down' width={16} height={16} />;
+
   return (
     <SBox>
       <SInputLabel>{label}</SInputLabel>
@@ -42,7 +45,7 @@ export const ChainSelect = ({ label, list, value, setValue, disabled }: ChainSel
         variant='contained'
         disableElevation
         onClick={handleClick}
-        endIcon={<Image src={chevrownDown} alt='arrow-down' width={16} height={16} />}
+        endIcon={endIcon}
         fullWidth
         disabled={disabled || list.length < 2}
       >
@@ -80,6 +83,7 @@ const SBox = styled(Box)(() => {
 });
 
 const MenuButton = styled(BasicButton)(() => {
+  const { currentTheme } = useCustomTheme();
   return {
     padding: '1.2rem 1.6rem',
     fontSize: '1.6rem',
@@ -88,6 +92,13 @@ const MenuButton = styled(BasicButton)(() => {
     gap: '0.8rem',
     '.MuiButton-endIcon': {
       marginLeft: 'auto',
+    },
+
+    '&:disabled': {
+      backgroundColor: currentTheme.steel[800],
+      color: currentTheme.steel[300],
+      border: 'none',
+      opacity: 1,
     },
   };
 });

@@ -90,7 +90,7 @@ const StepContainer = styled(Box)(() => {
       backgroundColor: '#2A5139',
     },
 
-    'canvas.final, canvas.idle': {
+    'canvas.final': {
       backgroundColor: 'transparent',
     },
   };

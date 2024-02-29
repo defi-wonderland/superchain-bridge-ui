@@ -5,14 +5,15 @@ import {
   ProveWithdrawalParameters,
   getWithdrawals,
 } from 'viem/op-stack';
-import { CustomClients } from '~/types';
+import { CustomClients, TransactionStep } from '~/types';
 
 interface ProveWithdrawalProps {
   customClient: CustomClients;
   receipt: TransactionReceipt;
   userAddress: Address;
+  setTxStep: (val: TransactionStep) => void;
 }
-export const proveWithdrawal = async ({ customClient, receipt, userAddress }: ProveWithdrawalProps) => {
+export const proveWithdrawal = async ({ customClient, receipt, userAddress, setTxStep }: ProveWithdrawalProps) => {
   const [withdrawal] = getWithdrawals(receipt);
 
   const output = await customClient.from.public.getL2Output({
@@ -28,6 +29,12 @@ export const proveWithdrawal = async ({ customClient, receipt, userAddress }: Pr
   });
 
   const hash = await customClient.from.wallet?.proveWithdrawal(args as ProveWithdrawalParameters);
+  setTxStep(TransactionStep.PROCESSING);
+
+  if (!hash) throw new Error('No hash returned');
+
+  await customClient.from.public.waitForTransactionReceipt({ hash });
+  setTxStep(TransactionStep.FINALIZED);
 
   // temporary log
   console.log({ hash });
@@ -37,8 +44,14 @@ interface FinalizeWithdrawalProps {
   customClient: CustomClients;
   receipt: TransactionReceipt;
   userAddress: Address;
+  setTxStep: (val: TransactionStep) => void;
 }
-export const finalizeWithdrawal = async ({ customClient, receipt, userAddress }: FinalizeWithdrawalProps) => {
+export const finalizeWithdrawal = async ({
+  customClient,
+  receipt,
+  userAddress,
+  setTxStep,
+}: FinalizeWithdrawalProps) => {
   const [withdrawal] = getWithdrawals(receipt);
 
   const hash = await customClient.from.wallet?.finalizeWithdrawal({
@@ -46,6 +59,12 @@ export const finalizeWithdrawal = async ({ customClient, receipt, userAddress }:
     targetChain: customClient.to.public.chain, // L2 chain
     withdrawal,
   } as FinalizeWithdrawalParameters<typeof customClient.to.public.chain>);
+  setTxStep(TransactionStep.PROCESSING);
+
+  if (!hash) throw new Error('No hash returned');
+
+  await customClient.from.public.waitForTransactionReceipt({ hash });
+  setTxStep(TransactionStep.FINALIZED);
 
   // temporary log
   console.log({ hash });

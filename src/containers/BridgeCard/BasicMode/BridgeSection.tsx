@@ -57,10 +57,8 @@ const MenuButton = styled(BasicButton)(() => {
       },
     },
 
-    '&:last-child': {
-      '.chevron-down': {
-        marginLeft: '1.7rem',
-      },
+    '.chevron-down': {
+      marginLeft: '1.7rem',
     },
   };
 });

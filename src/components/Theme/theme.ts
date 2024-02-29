@@ -44,7 +44,7 @@ export const darkTheme: Theme = {
   border: '0.1rem solid #9ca3af',
   borderColor: 'rgba(232,232,232,0.2)',
 
-  transition: 'all 0.3s ease-in-out',
+  transition: 'all 180ms ease-in-out',
   steel,
   ghost,
   mainCardBorder: '1px solid #3c3e4e', //'1px solid #2C2E40',

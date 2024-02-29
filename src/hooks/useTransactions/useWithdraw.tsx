@@ -11,7 +11,7 @@ import {
 
 export const useWithdraw = () => {
   const { selectedLog } = useLogs();
-  const { mint, userAddress, data } = useTransactionData();
+  const { mint, userAddress, data, setTxStep } = useTransactionData();
   const { selectedToken, amount, toToken, parseTokenUnits } = useToken();
   const { customClient } = useCustomClient();
 
@@ -23,6 +23,7 @@ export const useWithdraw = () => {
       console.log('calling initiateMessageWithdraw');
 
       await initiateMessageWithdraw({
+        setTxStep,
         customClient,
         userAddress: userAddress,
         message: data as Hex,
@@ -31,6 +32,7 @@ export const useWithdraw = () => {
       console.log('calling initiateETHWithdraw');
 
       await initiateETHWithdraw({
+        setTxStep,
         customClient,
         userAddress,
         mint: parseTokenUnits(mint),
@@ -40,6 +42,7 @@ export const useWithdraw = () => {
       console.log('calling initiateERC20Withdraw');
 
       await initiateERC20Withdraw({
+        setTxStep,
         customClient,
         amount: parseTokenUnits(amount),
         userAddress,
@@ -55,7 +58,7 @@ export const useWithdraw = () => {
     try {
       // temporary log
       console.log('calling proveWithdrawal');
-      await proveWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress });
+      await proveWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress, setTxStep });
     } catch (error) {
       console.error('Error', error);
     }
@@ -67,7 +70,7 @@ export const useWithdraw = () => {
     try {
       // temporary log
       console.log('calling finalizeWithdrawal');
-      await finalizeWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress });
+      await finalizeWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress, setTxStep });
     } catch (error) {
       console.error('Error', error);
     }

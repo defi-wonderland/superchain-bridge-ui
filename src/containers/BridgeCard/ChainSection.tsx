@@ -62,10 +62,10 @@ const SwitchIcon = styled(IconButton)(() => {
     },
 
     '&:disabled': {
-      fontWeight: 500,
-      backgroundColor: currentTheme.steel[700],
-      borderColor: currentTheme.steel[700],
       color: currentTheme.steel[500],
+      backgroundColor: currentTheme.steel[800],
+      border: 'none',
+      opacity: 1,
     },
   };
 });

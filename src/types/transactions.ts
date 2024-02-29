@@ -1,7 +1,8 @@
 import { Address, Hex } from 'viem';
-import { CustomClients } from './data';
+import { CustomClients, TransactionStep } from './data';
 
 export interface ExecuteL1DepositProps {
+  setTxStep: (val: TransactionStep) => void;
   customClient: CustomClients;
   userAddress: Address;
   to: Address;
@@ -15,6 +16,7 @@ export interface ExecuteL1DepositProps {
 }
 
 export interface DepositETHProps {
+  setTxStep: (val: TransactionStep) => void;
   customClient: CustomClients;
   userAddress: Address;
   mint: bigint;
@@ -22,6 +24,7 @@ export interface DepositETHProps {
 }
 
 export interface DepositERC20Props {
+  setTxStep: (val: TransactionStep) => void;
   customClient: CustomClients;
   userAddress: Address;
   amount: bigint;
@@ -32,6 +35,7 @@ export interface DepositERC20Props {
 }
 
 export interface DepositMessageProps {
+  setTxStep: (val: TransactionStep) => void;
   customClient: CustomClients;
   userAddress: Address;
   target: Address;
@@ -41,6 +45,7 @@ export interface DepositMessageProps {
 // ------------------ Withdraw transactions ------------------
 
 export interface InitiateWithdrawProps {
+  setTxStep: (val: TransactionStep) => void;
   customClient: CustomClients;
   userAddress: Address;
   mint: bigint;
@@ -48,6 +53,7 @@ export interface InitiateWithdrawProps {
 }
 
 export interface InitiateERC20WithdrawProps {
+  setTxStep: (val: TransactionStep) => void;
   customClient: CustomClients;
   userAddress: Address;
   amount: bigint;
@@ -56,6 +62,7 @@ export interface InitiateERC20WithdrawProps {
 }
 
 export interface InitiateMessageWithdrawProps {
+  setTxStep: (val: TransactionStep) => void;
   customClient: CustomClients;
   userAddress: Address;
   message: Hex;
@@ -64,6 +71,7 @@ export interface InitiateMessageWithdrawProps {
 // ------------------ Force transactions ------------------
 
 export interface ForceEthTransferProps {
+  setTxStep: (val: TransactionStep) => void;
   customClient: CustomClients;
   amount: bigint;
   to: Address;
@@ -71,6 +79,7 @@ export interface ForceEthTransferProps {
 }
 
 export interface ForceErc20TransferProps {
+  setTxStep: (val: TransactionStep) => void;
   customClient: CustomClients;
   amount: bigint;
   to: Address;
@@ -79,6 +88,7 @@ export interface ForceErc20TransferProps {
 }
 
 export interface ForceEthWithdrawalProps {
+  setTxStep: (val: TransactionStep) => void;
   customClient: CustomClients;
   userAddress: Address;
   to: Address;
@@ -86,6 +96,7 @@ export interface ForceEthWithdrawalProps {
 }
 
 export interface ForceErc20WithdrawalProps {
+  setTxStep: (val: TransactionStep) => void;
   customClient: CustomClients;
   userAddress: Address;
   to: Address;

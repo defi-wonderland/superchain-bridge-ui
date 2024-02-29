@@ -9,7 +9,7 @@ import {
 } from '~/types';
 import { excecuteL1Deposit } from './helpers';
 
-export const forceEthTransfer = async ({ customClient, amount, to, userAddress }: ForceEthTransferProps) => {
+export const forceEthTransfer = async ({ customClient, amount, to, userAddress, setTxStep }: ForceEthTransferProps) => {
   // temporary fixed values
   const gas = 100_000n;
   const isCreation = false;
@@ -27,6 +27,7 @@ export const forceEthTransfer = async ({ customClient, amount, to, userAddress }
   //   });
 
   const result = await excecuteL1Deposit({
+    setTxStep,
     customClient,
     userAddress,
     to: customClient.from.contracts.portal!, //portal,
@@ -49,6 +50,7 @@ export const forceErc20Transfer = async ({
   to,
   userAddress,
   tokenAddress,
+  setTxStep,
 }: ForceErc20TransferProps) => {
   // temporary fixed values
   const gas = 100_000n;
@@ -67,6 +69,7 @@ export const forceErc20Transfer = async ({
   // });
 
   const result = await excecuteL1Deposit({
+    setTxStep,
     customClient,
     userAddress,
     to: customClient.from.contracts.portal!, //portal,
@@ -83,7 +86,13 @@ export const forceErc20Transfer = async ({
   console.log(result);
 };
 
-export const forceEthWithdrawal = async ({ customClient, userAddress, to, amount }: ForceEthWithdrawalProps) => {
+export const forceEthWithdrawal = async ({
+  customClient,
+  userAddress,
+  to,
+  amount,
+  setTxStep,
+}: ForceEthWithdrawalProps) => {
   // temporary fixed values
   const extraData = '0x';
   const ethAddressOnBridge = '0xdeaddeaddeaddeaddeaddeaddeaddeaddead0000'; // optimism sepolia
@@ -116,6 +125,7 @@ export const forceEthWithdrawal = async ({ customClient, userAddress, to, amount
   });
 
   const result = await excecuteL1Deposit({
+    setTxStep,
     customClient,
     userAddress,
     to: customClient.from.contracts.portal!, // portal
@@ -139,6 +149,7 @@ export const forceErc20Withdrawal = async ({
   amount,
   l1TokenAddress,
   l2TokenAddress,
+  setTxStep,
 }: ForceErc20WithdrawalProps) => {
   // temporary fixed values
   const extraData = '0x';
@@ -168,6 +179,7 @@ export const forceErc20Withdrawal = async ({
   });
 
   const result = await excecuteL1Deposit({
+    setTxStep,
     customClient,
     userAddress,
     to: customClient.from.contracts.portal!, //portal,
