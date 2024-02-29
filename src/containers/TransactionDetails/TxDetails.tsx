@@ -1,6 +1,7 @@
 import { Box, Typography, styled } from '@mui/material';
+import Image from 'next/image';
 
-import { formatDataNumber, formatTimestamp, truncateAddress } from '~/utils';
+import { chainData, formatDataNumber, formatTimestamp, supportedChains, truncateAddress } from '~/utils';
 import { useCustomTheme, useLogs, useTokenList } from '~/hooks';
 import { STooltip } from '~/components';
 import { DataRow } from '~/containers';
@@ -18,6 +19,11 @@ export const TxDetails = () => {
     2,
   )} ${selectedToken?.symbol}`;
 
+  const originChainLogo = chainData[selectedLog?.originChain || 0]?.logo;
+  const destinationChainLogo = chainData[selectedLog?.destinationChain || 0]?.logo;
+  const originChainName = supportedChains.find((chain) => chain.id === selectedLog?.originChain)?.name;
+  const destinationChainName = supportedChains.find((chain) => chain.id === selectedLog?.destinationChain)?.name;
+
   return (
     <LeftSection>
       <DataContainer>
@@ -33,19 +39,28 @@ export const TxDetails = () => {
 
         <DataRow>
           <Typography variant='body1'>Origin chain</Typography>
-          <span>{selectedLog?.originChain}</span>
+          <span>
+            <Image src={originChainLogo} alt='' width={20} height={20} />
+            {originChainName}
+          </span>
         </DataRow>
 
         <DataRow>
           <Typography variant='body1'>Destination chain</Typography>
-          <span>{selectedLog?.destinationChain}</span>
+          <span>
+            <Image src={destinationChainLogo} alt='' width={20} height={20} />
+            {destinationChainName}
+          </span>
         </DataRow>
       </DataContainer>
 
       <DataContainer>
         <DataRow>
           <Typography variant='body1'>Bridge</Typography>
-          <span>{selectedLog?.bridge}</span>
+          <span>
+            <Image src={chainData[selectedLog?.originChain || 0]?.logo} alt='' width={20} height={20} />
+            {selectedLog?.bridge}
+          </span>
         </DataRow>
 
         <DataRow>
@@ -76,12 +91,18 @@ export const TxDetails = () => {
 
         <DataRow>
           <Typography variant='body1'>Sent</Typography>
-          <span>{formattedAmount}</span>
+          <span>
+            <Image src={selectedToken?.logoURI || ''} alt={selectedToken?.symbol || ''} width={20} height={20} />
+            {formattedAmount}
+          </span>
         </DataRow>
 
         <DataRow>
           <Typography variant='body1'>Received</Typography>
-          <span>{formattedAmount}</span>
+          <span>
+            <Image src={selectedToken?.logoURI || ''} alt={selectedToken?.symbol || ''} width={20} height={20} />
+            {formattedAmount}
+          </span>
         </DataRow>
       </DataContainer>
     </LeftSection>

@@ -113,6 +113,10 @@ export const DataRow = styled(Box)(() => {
       letterSpacing: '-0.352px',
     },
     span: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.8rem',
+
       fontSize: '1.6rem',
       color: currentTheme.steel[100],
       lineHeight: '150%' /* 24px */,

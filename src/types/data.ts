@@ -56,8 +56,8 @@ export interface AccountLogs {
   transactionHash: string;
   l2TransactionHash?: string;
   type: string;
-  originChain: string;
-  destinationChain: string;
+  originChain: number;
+  destinationChain: number;
   bridge: string;
   fees: string;
   transactionTime: string;
