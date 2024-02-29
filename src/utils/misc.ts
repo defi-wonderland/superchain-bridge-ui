@@ -104,7 +104,7 @@ export const getTxDetailsButtonText = (status: string) => {
 
 export const getTimestamps = (logs: AccountLogs[], customClient: CustomClients) => {
   const blocks = logs.map((log) => {
-    return customClient[log.type === 'deposit' ? 'from' : 'to'].public.getBlock({ blockNumber: log.blockNumber });
+    return customClient[log.type === 'Withdrawal' ? 'to' : 'from'].public.getBlock({ blockNumber: log.blockNumber });
   });
 
   return Promise.all(blocks);
