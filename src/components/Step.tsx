@@ -11,7 +11,7 @@ import { useCustomTheme } from '~/hooks';
 
 interface StepProps {
   text: string;
-  status: 'success' | 'pending' | 'idle' | 'failed' | 'final';
+  status: 'success' | 'pending' | 'loading' | 'idle' | 'failed' | 'final';
   hash?: string;
   connector?: boolean;
 }
@@ -20,8 +20,8 @@ export const Step = ({ hash, text, status, connector = true }: StepProps) => {
     <StepContainer>
       <Box>
         {(status === 'success' || status === 'final') && <Image src={contentIcon} alt='success' />}
-        {status === 'pending' && <CircularProgress size='2.4rem' variant='indeterminate' thickness={4} />}
-        {status === 'idle' && <IdleIcon />}
+        {(status === 'idle' || status === 'pending') && <IdleIcon />}
+        {status === 'loading' && <CircularProgress size='2.4rem' variant='indeterminate' thickness={4} />}
 
         {connector && <Connector className={status} />}
       </Box>

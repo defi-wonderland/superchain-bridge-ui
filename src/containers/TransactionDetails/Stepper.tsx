@@ -40,13 +40,23 @@ export const Stepper = () => {
               <>
                 <Step text='Initiate Transaction' hash={selectedLog?.transactionHash || ''} status='success' />
                 <Step text='Prove Withdrawal' status='pending' />
-                <Step text='Finalize Withdrawal' status='idle' />
+                <Step text='Wait 7 days' status='idle' />
+                <Step text='Finalize Withdrawal' status='idle' connector={false} />
+              </>
+            )}
+            {selectedLog?.status === 'waiting-to-finalize' && (
+              <>
+                <Step text='Initiate Transaction' hash={selectedLog?.transactionHash || ''} status='success' />
+                <Step text='Prove Withdrawal' status='success' />
+                <Step text='Wait 7 days' status='loading' />
+                <Step text='Finalize Withdrawal' status='final' />
               </>
             )}
             {selectedLog?.status === 'ready-to-finalize' && (
               <>
                 <Step text='Initiate Transaction' hash={selectedLog?.transactionHash || ''} status='success' />
                 <Step text='Prove Withdrawal' status='success' />
+                <Step text='Wait 7 days' status='success' />
                 <Step text='Finalize Withdrawal' status='pending' connector={false} />
               </>
             )}
@@ -54,6 +64,7 @@ export const Stepper = () => {
               <>
                 <Step text='Initiate Transaction' hash={selectedLog?.transactionHash || ''} status='success' />
                 <Step text='Prove Withdrawal' status='success' />
+                <Step text='Wait 7 days' status='success' />
                 <Step text='Finalize Withdrawal' status='final' />
               </>
             )}
