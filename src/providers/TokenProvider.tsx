@@ -44,6 +44,7 @@ export const TokenProvider = ({ children }: StateProps) => {
   const { toChain, fromChain } = useChain();
   const { data } = useBalance({
     address,
+    chainId: fromChain.id,
   });
 
   const {
@@ -111,7 +112,7 @@ export const TokenProvider = ({ children }: StateProps) => {
 
   useEffect(() => {
     if (!address || !from.contracts.standardBridge) return;
-    const tokenAddress = selectedToken?.address as Address;
+    const tokenAddress = fromToken?.address as Address;
 
     from.public
       .multicall({
@@ -134,7 +135,7 @@ export const TokenProvider = ({ children }: StateProps) => {
         setBalance(balance.result?.toString() || '');
         setAllowance(allowance.result?.toString() || '');
       });
-  }, [address, from.contracts.standardBridge, from.public, selectedToken?.address]);
+  }, [address, from.contracts.standardBridge, from.public, fromToken?.address]);
 
   useEffect(() => {
     if (selectedToken?.symbol === 'ETH') {
