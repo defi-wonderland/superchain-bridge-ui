@@ -9,7 +9,7 @@ interface MetadataProps {
 
 export const CustomHead = ({ title }: MetadataProps) => {
   const descriptionText =
-    'The Superchain Bridge Interface allows users to bridge to or from any OP Chain in the Superchain from L1 Ethereum using the standard bridge';
+    'Easily bridge between Ethereum Mainnet and any OP Chain in the Superchain ecosystem using the Superchain Bridge by Wonderland.';
 
   const bannerImage = 'https://superchain-bridge-dev.vercel.app/superchain_banner.jpg';
 
