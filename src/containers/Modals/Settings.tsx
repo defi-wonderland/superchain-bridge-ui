@@ -12,13 +12,13 @@ import { ModalType } from '~/types';
 export const SettingsModal = () => {
   // temproary fixed values
   const [explorer, setExplorer] = useState('Etherscan');
-  const explorers = ['Etherscan', 'Blockscout', 'Etherchain'];
+  const explorers = ['Etherscan']; //['Etherscan', 'Blockscout', 'Etherchain'];
 
   const [language, setLanguage] = useState('English');
-  const languages = ['English', 'Spanish', 'Chinese'];
+  const languages = ['English']; //['English', 'Spanish', 'Chinese'];
 
   const [publicRPC, setPublicRPC] = useState('Alchemy');
-  const publicRPCs = ['Alchemy', 'Infura'];
+  const publicRPCs = ['Alchemy']; //['Alchemy', 'Infura'];
 
   return (
     <BaseModal type={ModalType.SETTINGS} title='Settings'>
