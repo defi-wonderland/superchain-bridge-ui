@@ -72,7 +72,9 @@ export const SecondaryButton = styled(Button)(() => {
     boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
 
     '&:hover': {
-      backgroundColor: currentTheme.steel[800],
+      backgroundColor: currentTheme.ghost[900],
+      borderColor: currentTheme.ghost[300],
+      color: currentTheme.ghost[300],
     },
 
     '&:disabled': {
