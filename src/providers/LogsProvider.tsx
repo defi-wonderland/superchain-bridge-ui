@@ -15,6 +15,9 @@ type ContextType = {
   setOrderedLogs: (logs: AccountLogs[]) => void;
   transactionPending: boolean;
   isSuccess: boolean;
+
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
 };
 
 interface StateProps {
@@ -30,6 +33,7 @@ export const LogsProvider = ({ children }: StateProps) => {
   const [withdrawLogs, setWithdrawLogs] = useState<WithdrawLogs>();
   const [selectedLog, setSelectedLog] = useState<AccountLogs>();
   const [orderedLogs, setOrderedLogs] = useState<AccountLogs[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const queries = useQueries({
     queries: [
@@ -82,6 +86,8 @@ export const LogsProvider = ({ children }: StateProps) => {
         setOrderedLogs,
         transactionPending,
         isSuccess,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}

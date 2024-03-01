@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Box, IconButton, Typography, styled } from '@mui/material';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -17,8 +17,7 @@ const History = () => {
   const { address: currentAddress } = useAccount();
   const { customClient } = useCustomClient();
   const { fromTokens, toTokens } = useTokenList();
-  const [isLoading, setIsLoading] = useState(true);
-  const { depositLogs, withdrawLogs, orderedLogs, isSuccess, setOrderedLogs } = useLogs();
+  const { depositLogs, withdrawLogs, orderedLogs, isSuccess, setOrderedLogs, isLoading, setIsLoading } = useLogs();
 
   const getOrderedLogs = useCallback(async () => {
     if (!depositLogs || !withdrawLogs) return;
@@ -33,7 +32,7 @@ const History = () => {
     const reversedLogs = orderedLogs.reverse(); // latest logs first
     setOrderedLogs(reversedLogs);
     setIsLoading(false);
-  }, [customClient, depositLogs, setOrderedLogs, withdrawLogs]);
+  }, [customClient, depositLogs, setIsLoading, setOrderedLogs, withdrawLogs]);
 
   const rows = useMemo(() => {
     const data = orderedLogs.map((eventLog) => {
