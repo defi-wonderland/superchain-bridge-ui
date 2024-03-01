@@ -15,6 +15,7 @@ type ContextType = {
   setOrderedLogs: (logs: AccountLogs[]) => void;
   transactionPending: boolean;
   isSuccess: boolean;
+  refetchLogs: () => void;
 
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
@@ -52,6 +53,11 @@ export const LogsProvider = ({ children }: StateProps) => {
     ],
   });
 
+  const refetchLogs = () => {
+    queries.forEach((query) => query.refetch());
+    setOrderedLogs([]);
+  };
+
   const transactionPending = useMemo(() => {
     let isTransactionPending = false;
     if (depositLogs && withdrawLogs && userAddress) {
@@ -88,6 +94,7 @@ export const LogsProvider = ({ children }: StateProps) => {
         isSuccess,
         isLoading,
         setIsLoading,
+        refetchLogs,
       }}
     >
       {children}

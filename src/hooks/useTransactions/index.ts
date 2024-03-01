@@ -1,6 +1,6 @@
 import { useChainId, useSwitchChain } from 'wagmi';
 
-import { useChain, useModal, useTransactionData } from '~/hooks';
+import { useChain, useLogs, useModal, useTransactionData } from '~/hooks';
 import { ModalType, TransactionStep, TransactionType } from '~/types';
 import { useWithdraw } from './useWithdraw';
 import { useDeposit } from './useDeposit';
@@ -9,6 +9,7 @@ export const useTransactions = () => {
   const { transactionType, setTxStep } = useTransactionData();
   const { switchChainAsync } = useSwitchChain();
   const { fromChain } = useChain();
+  const { refetchLogs } = useLogs();
   const chainId = useChainId();
 
   const { setModalOpen } = useModal();
@@ -56,6 +57,7 @@ export const useTransactions = () => {
       }
 
       setTxStep(TransactionStep.FINALIZED);
+      refetchLogs();
 
       setTimeout(() => {
         setModalOpen(ModalType.SUCCESS);
