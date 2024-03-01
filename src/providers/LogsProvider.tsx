@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useMemo, useState } from 'react';
 import { useQueries } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
 
@@ -13,6 +13,7 @@ type ContextType = {
   setSelectedLog: (log: AccountLogs) => void;
   orderedLogs: AccountLogs[];
   setOrderedLogs: (logs: AccountLogs[]) => void;
+  transactionPending: boolean;
 };
 
 interface StateProps {
@@ -46,6 +47,16 @@ export const LogsProvider = ({ children }: StateProps) => {
     ],
   });
 
+  const transactionPending = useMemo(() => {
+    let isTransactionPending = false;
+    if (depositLogs && withdrawLogs && userAddress) {
+      const logs = [...depositLogs.accountLogs, ...withdrawLogs.accountLogs];
+      isTransactionPending = logs.some((log) => log.status.includes('waiting-') || log.status.includes('ready-to'));
+    }
+
+    return isTransactionPending;
+  }, [depositLogs, userAddress, withdrawLogs]);
+
   useEffect(() => {
     if (queries[0]) {
       setDepositLogs(queries[0].data);
@@ -64,6 +75,7 @@ export const LogsProvider = ({ children }: StateProps) => {
         setSelectedLog,
         orderedLogs,
         setOrderedLogs,
+        transactionPending,
       }}
     >
       {children}

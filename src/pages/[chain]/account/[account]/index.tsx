@@ -21,7 +21,7 @@ const History = () => {
 
   const getOrderedLogs = useCallback(async () => {
     if (!depositLogs || !withdrawLogs) return;
-    const accountLogs = [...(depositLogs?.accountLogs || []), ...(withdrawLogs?.accountLogs || [])];
+    const accountLogs = [...depositLogs.accountLogs, ...withdrawLogs.accountLogs];
     const blocks = await getTimestamps(accountLogs, customClient);
 
     const logsWithTimestamp = accountLogs.map((log, index) => {

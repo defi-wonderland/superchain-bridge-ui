@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { Connect } from '~/components';
-import { useChain, useCustomTheme, useModal } from '~/hooks';
+import { useChain, useCustomTheme, useLogs, useModal } from '~/hooks';
 import { replaceSpacesWithHyphens } from '~/utils';
 import { ModalType } from '~/types';
 import logo from '~/assets/logo.svg';
@@ -14,6 +14,7 @@ import settingsIcon from '~/assets/icons/settings.svg';
 
 export const Header = () => {
   const { address } = useAccount();
+  const { transactionPending } = useLogs();
   const { toChain } = useChain();
   const { setModalOpen } = useModal();
   const chainPath = replaceSpacesWithHyphens(toChain?.name || '');
@@ -33,18 +34,20 @@ export const Header = () => {
 
       {/* Right section */}
       <RightSection>
-        <Link
-          href={{
-            pathname: '/[chain]/account/[account]',
-            query: { chain: chainPath, account: address },
-          }}
-        >
-          <IconButton>
-            <Badge badgeContent={4} variant='dot' color='primary' overlap='circular'>
-              <SHistoryIcon src={historyIcon} alt='Transaction History' />
-            </Badge>
-          </IconButton>
-        </Link>
+        {address && (
+          <Link
+            href={{
+              pathname: '/[chain]/account/[account]',
+              query: { chain: chainPath, account: address },
+            }}
+          >
+            <IconButton>
+              <Badge invisible={!transactionPending} variant='dot' color='primary' overlap='circular'>
+                <SHistoryIcon src={historyIcon} alt='Transaction History' />
+              </Badge>
+            </IconButton>
+          </Link>
+        )}
 
         <IconButton onClick={openSettings}>
           <StyledSettingsIcon src={settingsIcon} alt='Settings' />

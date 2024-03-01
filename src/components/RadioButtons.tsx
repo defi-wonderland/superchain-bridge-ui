@@ -46,7 +46,7 @@ const SRadioGroup = styled(RadioGroup)(() => {
       },
     },
 
-    '& .Mui-checked': {
+    '& .MuiButtonBase-root': {
       color: currentTheme.ghost[400],
     },
   };
