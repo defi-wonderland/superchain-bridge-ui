@@ -29,7 +29,7 @@ export const LoadingModal = () => {
       <SBox>
         {txStep === TransactionStep.INITIATE && (
           <>
-            <Step text='Initiate Transaction' status='pending' />
+            <Step text='Initiate Transaction' status='loading' />
             <Step text='Processing Transaction' status='idle' />
             <Step text='Relaying Transaction' status='idle' connector={false} />
           </>
@@ -37,7 +37,7 @@ export const LoadingModal = () => {
         {txStep === TransactionStep.PROCESSING && (
           <>
             <Step text='Initiate Transaction' status='success' />
-            <Step text='Processing Transaction' status='pending' />
+            <Step text='Processing Transaction' status='loading' />
             <Step text='Relaying Transaction' status='idle' connector={false} />
           </>
         )}
@@ -45,7 +45,7 @@ export const LoadingModal = () => {
           <>
             <Step text='Initiate Transaction' status='success' />
             <Step text='Processing Transaction' status='success' />
-            <Step text='Relaying Transaction' status='pending' connector={false} />
+            <Step text='Relaying Transaction' status='loading' connector={false} />
           </>
         )}
         {txStep === TransactionStep.FINALIZED && (
