@@ -14,6 +14,7 @@ export * from './RadioButtons';
 export * from './SearchField';
 export * from './StatusChip';
 export * from './Step';
+export * from './TableSkeleton';
 export * from './ChainSelect';
 export * from './TokenButton';
 export * from './TokenSelect';

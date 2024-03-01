@@ -14,6 +14,7 @@ type ContextType = {
   orderedLogs: AccountLogs[];
   setOrderedLogs: (logs: AccountLogs[]) => void;
   transactionPending: boolean;
+  isSuccess: boolean;
 };
 
 interface StateProps {
@@ -57,6 +58,10 @@ export const LogsProvider = ({ children }: StateProps) => {
     return isTransactionPending;
   }, [depositLogs, userAddress, withdrawLogs]);
 
+  const isSuccess = useMemo(() => {
+    return queries[0].isSuccess && queries[1].isSuccess;
+  }, [queries]);
+
   useEffect(() => {
     if (queries[0]) {
       setDepositLogs(queries[0].data);
@@ -76,6 +81,7 @@ export const LogsProvider = ({ children }: StateProps) => {
         orderedLogs,
         setOrderedLogs,
         transactionPending,
+        isSuccess,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, IconButton, Typography, styled } from '@mui/material';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -10,14 +10,15 @@ import copyIcon from '~/assets/icons/copy.svg';
 import { MainCardContainer, ActivityTable } from '~/containers';
 import { createData, formatDataNumber, getTimestamps } from '~/utils';
 import { useCustomClient, useCustomTheme, useLogs, useTokenList } from '~/hooks';
-import { CustomHead } from '~/components';
+import { CustomHead, TableSkeleton } from '~/components';
 
 const History = () => {
   const router = useRouter();
   const { address: currentAddress } = useAccount();
   const { customClient } = useCustomClient();
   const { fromTokens, toTokens } = useTokenList();
-  const { depositLogs, withdrawLogs, orderedLogs, setOrderedLogs } = useLogs();
+  const [isLoading, setIsLoading] = useState(true);
+  const { depositLogs, withdrawLogs, orderedLogs, isSuccess, setOrderedLogs } = useLogs();
 
   const getOrderedLogs = useCallback(async () => {
     if (!depositLogs || !withdrawLogs) return;
@@ -31,6 +32,7 @@ const History = () => {
 
     const reversedLogs = orderedLogs.reverse(); // latest logs first
     setOrderedLogs(reversedLogs);
+    setIsLoading(false);
   }, [customClient, depositLogs, setOrderedLogs, withdrawLogs]);
 
   const rows = useMemo(() => {
@@ -57,10 +59,10 @@ const History = () => {
   };
 
   useEffect(() => {
-    if (orderedLogs.length === 0) {
+    if (orderedLogs.length === 0 && isSuccess) {
       getOrderedLogs();
     }
-  }, [getOrderedLogs, orderedLogs.length]);
+  }, [getOrderedLogs, orderedLogs.length, isSuccess]);
 
   return (
     <Container>
@@ -81,7 +83,8 @@ const History = () => {
           </Box>
         </HeaderContainer>
 
-        <ActivityTable rows={rows} />
+        {!isLoading && <ActivityTable rows={rows} />}
+        {isLoading && <TableSkeleton />}
       </SMainCardContainer>
     </Container>
   );
