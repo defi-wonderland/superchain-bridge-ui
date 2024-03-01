@@ -8,9 +8,9 @@ import arrowLeft from '~/assets/icons/arrow-left.svg';
 import copyIcon from '~/assets/icons/copy.svg';
 
 import { MainCardContainer, ActivityTable } from '~/containers';
-import { createData, formatDataNumber, getTimestamps, truncateAddress } from '~/utils';
-import { CustomHead } from '~/components';
+import { createData, formatDataNumber, getTimestamps } from '~/utils';
 import { useCustomClient, useCustomTheme, useLogs, useTokenList } from '~/hooks';
+import { CustomHead } from '~/components';
 
 const History = () => {
   const router = useRouter();
@@ -76,7 +76,7 @@ const History = () => {
           </Box>
 
           <Box>
-            {currentAddress && <Typography variant='body1'>{truncateAddress(currentAddress || '0x')}</Typography>}
+            {currentAddress && <Typography variant='body1'>{currentAddress}</Typography>}
             <Image src={copyIcon} alt='Copy to clipboard' />
           </Box>
         </HeaderContainer>

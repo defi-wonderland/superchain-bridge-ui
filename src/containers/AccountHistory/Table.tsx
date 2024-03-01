@@ -1,10 +1,21 @@
 import { useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled } from '@mui/material';
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  styled,
+} from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import detailsIcon from '~/assets/icons/details-arrow.svg';
 import openLinkIcon from '~/assets/icons/open-link.svg';
+import noActivityIcon from '~/assets/icons/no-activity.svg';
 
 import { createData, replaceSpacesWithHyphens, truncateAddress } from '~/utils';
 import { useChain, useCustomTheme, useLogs } from '~/hooks';
@@ -39,47 +50,57 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
           </TableRow>
         </STableHead>
 
-        <STableBody>
-          {rows.slice(paging.from, paging.to).map((row) => (
-            <STableRow key={row.txHash}>
-              {/* Transaction type */}
-              <TypeCell className='type'>{row.type}</TypeCell>
+        {rows.length !== 0 && (
+          <STableBody>
+            {rows.slice(paging.from, paging.to).map((row) => (
+              <STableRow key={row.txHash}>
+                {/* Transaction type */}
+                <TypeCell className='type'>{row.type}</TypeCell>
 
-              {/* Amount */}
-              <AmountCell>{row.amount}</AmountCell>
+                {/* Amount */}
+                <AmountCell>{row.amount}</AmountCell>
 
-              {/* Transaction Hash */}
-              <TxHashCell>
-                <Link href='#'>
-                  {truncateAddress(row.txHash)}
-                  <Image src={openLinkIcon} alt='Open transaction in block explorer' />
-                </Link>
-              </TxHashCell>
+                {/* Transaction Hash */}
+                <TxHashCell>
+                  <Link href='#'>
+                    {truncateAddress(row.txHash)}
+                    <Image src={openLinkIcon} alt='Open transaction in block explorer' />
+                  </Link>
+                </TxHashCell>
 
-              {/* Date & Time */}
-              <DateTimeCell>{row.dateTime}</DateTimeCell>
+                {/* Date & Time */}
+                <DateTimeCell>{row.dateTime}</DateTimeCell>
 
-              {/* Status */}
-              <StatusCell>
-                <StatusChip status={row.status} />
-              </StatusCell>
+                {/* Status */}
+                <StatusCell>
+                  <StatusChip status={row.status} />
+                </StatusCell>
 
-              {/* Go to transaction detials */}
-              <TableCell className='details-link'>
-                <Link
-                  onClick={() => handleOpenTransaction(row.log)}
-                  href={{
-                    pathname: '/[chain]/tx/[tx]',
-                    query: { chain: chainPath, tx: row.txHash },
-                  }}
-                >
-                  <Image src={detailsIcon} alt='Open transaction details page' />
-                </Link>
-              </TableCell>
-            </STableRow>
-          ))}
-        </STableBody>
+                {/* Go to transaction detials */}
+                <TableCell className='details-link'>
+                  <Link
+                    onClick={() => handleOpenTransaction(row.log)}
+                    href={{
+                      pathname: '/[chain]/tx/[tx]',
+                      query: { chain: chainPath, tx: row.txHash },
+                    }}
+                  >
+                    <Image src={detailsIcon} alt='Open transaction details page' />
+                  </Link>
+                </TableCell>
+              </STableRow>
+            ))}
+          </STableBody>
+        )}
       </Table>
+
+      {rows.length === 0 && (
+        <NoActivityContainer>
+          <Image src={noActivityIcon} alt='No activity' />
+          <Typography variant='body1'>This account has no recent activity...</Typography>
+        </NoActivityContainer>
+      )}
+
       <SPagination numberOfItems={rows.length} perPage={itemsPerPage} setPaging={setPaging} />
     </TableContainer>
   );
@@ -179,5 +200,32 @@ const DateTimeCell = styled(TableCell)(() => {
 const StatusCell = styled(TableCell)(() => {
   return {
     width: 'auto',
+  };
+});
+
+const NoActivityContainer = styled(Box)(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '2rem',
+    padding: '3rem 0',
+    img: {
+      background: currentTheme.steel[700],
+      border: `1.6rem solid ${currentTheme.steel[800]}`,
+      padding: '1rem',
+      borderRadius: '50%',
+      height: '11.2rem',
+      width: '11.2rem',
+    },
+    p: {
+      color: currentTheme.steel[500],
+      fontSize: '1.6rem',
+      fontWeight: 500,
+      lineHeight: '2.24rem',
+    },
   };
 });
