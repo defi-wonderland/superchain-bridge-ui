@@ -55,25 +55,17 @@ export const useWithdraw = () => {
   const prove = async () => {
     if (!selectedLog || !userAddress) return;
 
-    try {
-      // temporary log
-      console.log('calling proveWithdrawal');
-      await proveWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress, setTxStep });
-    } catch (error) {
-      console.error('Error', error);
-    }
+    // temporary log
+    console.log('calling proveWithdrawal');
+    await proveWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress, setTxStep });
   };
 
   const finalize = async () => {
     if (!selectedLog || !userAddress) return;
 
-    try {
-      // temporary log
-      console.log('calling finalizeWithdrawal');
-      await finalizeWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress, setTxStep });
-    } catch (error) {
-      console.error('Error', error);
-    }
+    // temporary log
+    console.log('calling finalizeWithdrawal');
+    await finalizeWithdrawal({ customClient, receipt: selectedLog.receipt, userAddress, setTxStep });
   };
 
   return { withdraw, prove, finalize };

@@ -4,10 +4,10 @@ import { Box, Typography, styled } from '@mui/material';
 import { Step } from '~/components';
 import BaseModal from '~/components/BaseModal';
 import { useCustomTheme, useTransactionData } from '~/hooks';
-import { ModalType, TransactionStep } from '~/types';
+import { ModalType, TransactionStep, TransactionType } from '~/types';
 
 export const LoadingModal = () => {
-  const { txStep } = useTransactionData();
+  const { txStep, transactionType } = useTransactionData();
   const [time, setTime] = useState(3);
 
   const dynamicRedirectText = useMemo(() => {
@@ -27,32 +27,60 @@ export const LoadingModal = () => {
   return (
     <BaseModal type={ModalType.LOADING} title='Transaction pending'>
       <SBox>
-        {txStep === TransactionStep.INITIATE && (
+        {(transactionType === TransactionType.DEPOSIT || transactionType === TransactionType.WITHDRAW) && (
           <>
-            <Step text='Initiate Transaction' status='loading' />
-            <Step text='Processing Transaction' status='idle' />
-            <Step text='Relaying Transaction' status='idle' connector={false} />
+            {txStep === TransactionStep.INITIATE && (
+              <>
+                <Step text='Initiate Transaction' status='loading' />
+                <Step text='Processing Transaction' status='idle' />
+                <Step text='Relaying Transaction' status='idle' connector={false} />
+              </>
+            )}
+            {txStep === TransactionStep.PROCESSING && (
+              <>
+                <Step text='Initiate Transaction' status='success' />
+                <Step text='Processing Transaction' status='loading' />
+                <Step text='Relaying Transaction' status='idle' connector={false} />
+              </>
+            )}
+            {txStep === TransactionStep.REPLAYING && (
+              <>
+                <Step text='Initiate Transaction' status='success' />
+                <Step text='Processing Transaction' status='success' />
+                <Step text='Relaying Transaction' status='loading' connector={false} />
+              </>
+            )}
+            {txStep === TransactionStep.FINALIZED && (
+              <>
+                <Step text='Initiate Transaction' status='success' />
+                <Step text='Processing Transaction' status='success' />
+                <Step text='Relaying Transaction' status='final' />
+              </>
+            )}
           </>
         )}
-        {txStep === TransactionStep.PROCESSING && (
+
+        {transactionType !== TransactionType.DEPOSIT && transactionType !== TransactionType.WITHDRAW && (
           <>
-            <Step text='Initiate Transaction' status='success' />
-            <Step text='Processing Transaction' status='loading' />
-            <Step text='Relaying Transaction' status='idle' connector={false} />
-          </>
-        )}
-        {txStep === TransactionStep.REPLAYING && (
-          <>
-            <Step text='Initiate Transaction' status='success' />
-            <Step text='Processing Transaction' status='success' />
-            <Step text='Relaying Transaction' status='loading' connector={false} />
-          </>
-        )}
-        {txStep === TransactionStep.FINALIZED && (
-          <>
-            <Step text='Initiate Transaction' status='success' />
-            <Step text='Processing Transaction' status='success' />
-            <Step text='Relaying Transaction' status='final' />
+            {txStep === TransactionStep.INITIATE && (
+              <>
+                <Step text='Initiate Transaction' status='loading' />
+                <Step text='Processing Transaction' status='idle' connector={false} />
+              </>
+            )}
+            {txStep === TransactionStep.PROCESSING && (
+              <>
+                <Step text='Initiate Transaction' status='success' />
+                <Step text='Processing Transaction' status='loading' connector={false} />
+              </>
+            )}
+
+            {txStep === TransactionStep.FINALIZED && (
+              <>
+                <Step text='Initiate Transaction' status='success' />
+                <Step text='Processing Transaction' status='final' />
+              </>
+            )}
           </>
         )}
 

@@ -49,7 +49,7 @@ export const Stepper = () => {
                 <Step text='Initiate Transaction' hash={selectedLog?.transactionHash || ''} status='success' />
                 <Step text='Prove Withdrawal' status='success' />
                 <Step text='Wait 7 days' status='loading' />
-                <Step text='Finalize Withdrawal' status='final' />
+                <Step text='Finalize Withdrawal' status='idle' connector={false} />
               </>
             )}
             {selectedLog?.status === 'ready-to-finalize' && (
