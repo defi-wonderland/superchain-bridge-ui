@@ -74,7 +74,7 @@ export const forceErc20Transfer = async ({
     userAddress,
     to: customClient.from.contracts.portal!, //portal,
     args: {
-      amount,
+      amount: 0n,
       to: tokenAddress,
       gas,
       isCreation,
