@@ -38,7 +38,7 @@ export const TokenSection = () => {
 
   // Remove scroll on input
   useEffect(() => {
-    const input = document.querySelector('#token-amount-input');
+    const input = document.getElementById('token-amount-input');
     input?.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
     return () => {
       input?.removeEventListener('wheel', (e) => e.preventDefault());
