@@ -1,19 +1,18 @@
 import Image from 'next/image';
 import { Box, Typography, styled } from '@mui/material';
+import Link from 'next/link';
 
-import { useCustomTheme } from '~/hooks';
 import WonderlandLogo from '~/assets/wonderland.svg';
+import { useCustomTheme } from '~/hooks';
 
 export const MadeByWonderland = () => {
-  const handleClick = () => {
-    window.open('https://defi.sucks/', '_blank');
-  };
-
   return (
-    <SBox onClick={handleClick}>
-      <Typography variant='body1'>Made with 🤍 by</Typography>
-      <Image src={WonderlandLogo} alt='Wonderland' />
-    </SBox>
+    <Link href='https://defi.sucks/' target='_blank'>
+      <SBox>
+        <Typography variant='body1'>Made with 🤍 by</Typography>
+        <Image src={WonderlandLogo} alt='Wonderland' />
+      </SBox>
+    </Link>
   );
 };
 

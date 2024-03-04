@@ -8,9 +8,15 @@ export const Footer = () => {
   return (
     <FooterContainer>
       <RightSide>
-        <Link href='/'>Legal</Link>
-        <Link href='/'>Docs</Link>
-        <Link href='/'>Github</Link>
+        {/* <Link href='/'>Legal</Link> */}
+
+        <Link href='https://docs.optimism.io/stack/explainer' target='_blank'>
+          Docs
+        </Link>
+
+        <Link href='https://github.com/defi-wonderland/superchain-bridge-ui' target='_blank'>
+          Github
+        </Link>
       </RightSide>
 
       <Box>
