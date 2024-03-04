@@ -58,7 +58,7 @@ export const TxDetails = () => {
         <DataRow>
           <Typography variant='body1'>Bridge</Typography>
           <span>
-            <Image src={chainData[selectedLog?.originChain || 0]?.logo} alt='' width={20} height={20} />
+            <Image src={chainData[selectedLog?.destinationChain || 0]?.logo} alt='' width={20} height={20} />
             {selectedLog?.bridge}
           </span>
         </DataRow>
