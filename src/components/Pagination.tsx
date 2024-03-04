@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { Box, Pagination, PaginationItem, styled } from '@mui/material';
+import Image from 'next/image';
+
+import nextIcon from '~/assets/icons/next.svg';
 
 interface Props {
   numberOfItems: number;
@@ -36,15 +39,15 @@ export function SPagination({ numberOfItems = 6, perPage, setPaging }: Props) {
 
 const Prev = () => (
   <BtnContainer>
-    {/* TODO: Icon here */}
+    <Image src={nextIcon} alt='arrow' className='back-arrow' />
     Previous
   </BtnContainer>
 );
 
 const Next = () => (
   <BtnContainer>
-    {/* TODO: Icon here */}
     Next
+    <Image src={nextIcon} alt='arrow' />
   </BtnContainer>
 );
 
@@ -56,6 +59,10 @@ const BtnContainer = styled(Box)({
   justifyContent: 'center',
   fontWeight: 500,
   fontSize: '1.4rem',
+
+  '.back-arrow': {
+    transform: 'rotate(180deg)',
+  },
 });
 
 const SBox = styled(Box)({
