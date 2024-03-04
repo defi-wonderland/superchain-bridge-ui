@@ -1,5 +1,5 @@
 import { createContext, useEffect, useMemo, useState } from 'react';
-import { Address } from 'viem';
+import { Address, isAddress, isHex } from 'viem';
 import { useAccount } from 'wagmi';
 
 import { useModal, useToken } from '~/hooks';
@@ -54,8 +54,8 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
   const [txStep, setTxStep] = useState<TransactionStep>(TransactionStep.NONE);
 
   const isReady = useMemo(() => {
-    return !!(mint || value || amount || data);
-  }, [mint, value, amount, data]);
+    return !!((mint || value || amount || isHex(data)) && isAddress(to));
+  }, [mint, value, amount, data, to]);
 
   const resetValues = () => {
     setMint('');

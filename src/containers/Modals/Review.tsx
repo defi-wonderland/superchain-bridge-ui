@@ -8,7 +8,7 @@ import { ModalType } from '~/types';
 
 export const ReviewModal = () => {
   const { closeModal } = useModal();
-  const { transactionType, value, mint, to, userAddress } = useTransactionData();
+  const { transactionType, value, mint, to, userAddress, data } = useTransactionData();
   const { selectedToken, amount } = useToken();
   const { executeTransaction } = useTransactions();
 
@@ -60,21 +60,33 @@ export const ReviewModal = () => {
 
       <SDivider />
 
-      {/* Token sent */}
-      <DataRow>
-        <Typography variant='body1'>Send</Typography>
-        <span>
-          {totalAmount} {selectedToken?.symbol}
-        </span>
-      </DataRow>
+      {data && (
+        // Custom data sent
+        <DataRow>
+          <Typography variant='body1'>Custom data</Typography>
+          <span>{data.length > 10 ? truncateAddress(data) : data}</span>
+        </DataRow>
+      )}
 
-      {/* Token received */}
-      <DataRow>
-        <Typography variant='body1'>Receive</Typography>
-        <span>
-          {totalAmount} {selectedToken?.symbol}
-        </span>
-      </DataRow>
+      {!data && (
+        <>
+          {/* Token sent */}
+          <DataRow>
+            <Typography variant='body1'>Send</Typography>
+            <span>
+              {totalAmount} {selectedToken?.symbol}
+            </span>
+          </DataRow>
+
+          {/* Token received */}
+          <DataRow>
+            <Typography variant='body1'>Receive</Typography>
+            <span>
+              {totalAmount} {selectedToken?.symbol}
+            </span>
+          </DataRow>
+        </>
+      )}
 
       <ButtonsContainer>
         <SecondaryButton variant='contained' color='primary' fullWidth onClick={closeModal}>

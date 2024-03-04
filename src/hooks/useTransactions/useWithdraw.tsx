@@ -11,14 +11,14 @@ import {
 
 export const useWithdraw = () => {
   const { selectedLog } = useLogs();
-  const { mint, userAddress, data, setTxStep } = useTransactionData();
+  const { mint, userAddress, data, customTransactionType, setTxStep } = useTransactionData();
   const { selectedToken, amount, toToken, parseTokenUnits } = useToken();
   const { customClient } = useCustomClient();
 
   const withdraw = async () => {
     if (!userAddress) return;
 
-    if (!selectedToken) {
+    if (customTransactionType === 'custom-tx') {
       // temporary logs
       console.log('calling initiateMessageWithdraw');
 
@@ -28,27 +28,29 @@ export const useWithdraw = () => {
         userAddress: userAddress,
         message: data as Hex,
       });
-    } else if (selectedToken?.symbol === 'ETH') {
-      console.log('calling initiateETHWithdraw');
-
-      await initiateETHWithdraw({
-        setTxStep,
-        customClient,
-        userAddress,
-        mint: parseTokenUnits(mint),
-        to: userAddress,
-      });
     } else {
-      console.log('calling initiateERC20Withdraw');
+      if (selectedToken?.symbol === 'ETH') {
+        console.log('calling initiateETHWithdraw');
 
-      await initiateERC20Withdraw({
-        setTxStep,
-        customClient,
-        amount: parseTokenUnits(amount),
-        userAddress,
-        l1TokenAddress: selectedToken.address as Address,
-        l2TokenAddress: toToken?.address as Address,
-      });
+        await initiateETHWithdraw({
+          setTxStep,
+          customClient,
+          userAddress,
+          mint: parseTokenUnits(mint),
+          to: userAddress,
+        });
+      } else {
+        console.log('calling initiateERC20Withdraw');
+
+        await initiateERC20Withdraw({
+          setTxStep,
+          customClient,
+          amount: parseTokenUnits(amount),
+          userAddress,
+          l1TokenAddress: selectedToken.address as Address,
+          l2TokenAddress: toToken?.address as Address,
+        });
+      }
     }
   };
 

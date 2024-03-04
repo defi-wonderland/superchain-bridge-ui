@@ -7,6 +7,7 @@ import {
   messagePassedAbi,
   sentMessageExtensionABI,
 } from '~/utils/parsedEvents';
+import { getMsgHashes } from '../transactions';
 
 export const formatETHWithdrawalLogs = (
   customClient: CustomClients,
@@ -24,14 +25,13 @@ export const formatETHWithdrawalLogs = (
     destinationChain: customClient.from.public.chain!.id,
     bridge: 'OP Gateway',
     fees: '0',
-    transactionTime: '1m',
+    transactionTime: '2m',
     remoteToken: '0x0000000000000000000000000000000000000000',
     localToken: '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000',
     status: statusMap[log.transactionHash].status,
     from: log.args.from!,
     to: log.args.to!,
     amount: log.args.amount!,
-    data: log.args.extraData,
     receipt: statusMap[log.transactionHash].receipt,
   }));
 
@@ -54,14 +54,13 @@ export const formatERC20WithdrawalLogs = (
     destinationChain: customClient.from.public.chain!.id,
     bridge: 'OP Gateway',
     fees: '0',
-    transactionTime: '1m',
+    transactionTime: '2m',
     status: statusMap[log.transactionHash].status,
     from: log.args.from!,
     to: log.args.to!,
     amount: log.args.amount!,
     localToken: log.args.localToken!,
     remoteToken: log.args.remoteToken!,
-    data: log.args.extraData,
     receipt: statusMap[log.transactionHash].receipt,
   }));
 
@@ -75,7 +74,9 @@ export const formatMessageWithdrawalLogs = (
 ): { accountLogs: AccountLogs[]; receipts: TransactionReceipt[] } => {
   const receipts = logs.map(({ transactionHash }) => statusMap[transactionHash].receipt);
 
-  const accountLogs: AccountLogs[] = logs.map((log) => ({
+  const { args } = getMsgHashes(receipts, 'message');
+
+  const accountLogs: AccountLogs[] = logs.map((log, index) => ({
     type: 'Withdrawal', // Withdrawal Message
     blockNumber: log.blockNumber,
     timestamp: 0,
@@ -84,12 +85,11 @@ export const formatMessageWithdrawalLogs = (
     destinationChain: customClient.from.public.chain!.id,
     bridge: 'OP Gateway',
     fees: '0',
-    transactionTime: '1m',
+    transactionTime: '2m',
     status: statusMap[log.transactionHash].status,
     from: log.args.sender!,
-    to: '0x',
-    // amount: log.args.value!,
-    data: '0x',
+    to: args[index].target,
+    data: args[index].message,
     receipt: statusMap[log.transactionHash].receipt,
   }));
 
@@ -112,13 +112,10 @@ export const formatCustomWithdrawalLogs = (
     destinationChain: customClient.from.public.chain!.id,
     bridge: 'OP Gateway',
     fees: '0',
-    transactionTime: '1m',
+    transactionTime: '2m',
     status: statusMap[log.transactionHash].status,
     from: log.args.sender!,
     to: log.args.target!,
-    remoteToken: '0x0000000000000000000000000000000000000000',
-    localToken: '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000',
-    amount: log.args.value!,
     data: log.args.data!,
     receipt: statusMap[log.transactionHash].receipt,
   }));

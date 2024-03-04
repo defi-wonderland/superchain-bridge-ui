@@ -5,7 +5,7 @@ import adjustmentsIcon from '~/assets/icons/adjustments.svg';
 import adjustmentsActivated from '~/assets/icons/adjustments-horizontal.svg';
 import arrowLeft from '~/assets/icons/arrow-left.svg';
 
-import { useChain, useCustomTheme, useTransactionData } from '~/hooks';
+import { useChain, useCustomTheme, useToken, useTransactionData } from '~/hooks';
 import { CustomTransactionType } from '~/types';
 import { STooltip } from '~/components';
 
@@ -24,6 +24,7 @@ export const CardHeader = ({
 }: CardHeaderProps) => {
   const { resetChains } = useChain();
   const { resetValues } = useTransactionData();
+  const { resetValues: resetTokenValues } = useToken();
 
   const tooltipTitle = isExpertMode ? 'Disable expert mode' : 'Enable expert mode';
 
@@ -37,12 +38,14 @@ export const CardHeader = ({
     setIsExpertMode(!isExpertMode);
     resetChains();
     resetValues();
+    resetTokenValues();
   };
 
   const handleBack = () => {
     setCustomTransaction(undefined);
     resetChains();
     resetValues();
+    resetTokenValues();
   };
 
   return (

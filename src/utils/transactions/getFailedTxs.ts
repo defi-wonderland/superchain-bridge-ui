@@ -13,6 +13,8 @@ export const getFailedTransactionLogs = async ({
   msgHashes,
   crossDomainMessenger,
 }: GetFailedTransactionLogsParameters): Promise<GetLogsReturnType<typeof failedRelayedMessageABI>> => {
+  if (!msgHashes.length) return []; // if there are no msgHashes, return an empty array
+
   const errorLogs = await publicClient.getLogs({
     address: crossDomainMessenger,
     event: failedRelayedMessageABI,
