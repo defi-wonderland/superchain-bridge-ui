@@ -14,11 +14,11 @@ import { ModalType } from '~/types';
 
 export const TargetAddress = () => {
   const { address } = useAccount();
-  const { closeModal } = useModal();
+  const { closeModal, modalOpen } = useModal();
   const { setTo, to } = useTransactionData();
   const [targetAddress, setTargetAddress] = useState('');
 
-  const isError = targetAddress && !isAddress(targetAddress);
+  const isError = !isAddress(targetAddress);
 
   const supportText = useMemo(() => {
     if (targetAddress === address) return 'This is your connected wallet address';
@@ -32,8 +32,10 @@ export const TargetAddress = () => {
   };
 
   useEffect(() => {
-    setTargetAddress(to);
-  }, [to]);
+    if (modalOpen === ModalType.SELECT_ACCOUNT) {
+      setTargetAddress(to);
+    }
+  }, [modalOpen, to]);
 
   return (
     <BaseModal type={ModalType.SELECT_ACCOUNT} title='Destination address'>

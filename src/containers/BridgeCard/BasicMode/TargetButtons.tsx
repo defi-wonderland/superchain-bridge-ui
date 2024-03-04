@@ -41,7 +41,7 @@ export const TargetButtons = () => {
       </BasicButton>
 
       <STooltip title={tooltipTitle}>
-        <BasicButton fullWidth onClick={openSelectAccountModal}>
+        <BasicButton fullWidth onClick={openSelectAccountModal} disabled={!userAddress}>
           <SInputLabel>To address</SInputLabel>
           <>{truncateAddress(to)}</>
         </BasicButton>

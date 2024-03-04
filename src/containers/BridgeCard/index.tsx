@@ -12,6 +12,7 @@ import { CustomTransaction } from './CustomTransaction';
 export const BridgeCard = () => {
   const { setModalOpen } = useModal();
   const {
+    userAddress,
     isReady,
     customTransactionType: customTransaction,
     setCustomTransactionType: setCustomTransaction,
@@ -42,7 +43,7 @@ export const BridgeCard = () => {
     setModalOpen(ModalType.REVIEW);
   };
 
-  const isButtonDisabled = !isReady;
+  const isButtonDisabled = !isReady || !userAddress;
 
   const buttonMessage = useMemo(() => {
     if (!isButtonDisabled) return 'Review transaction';
