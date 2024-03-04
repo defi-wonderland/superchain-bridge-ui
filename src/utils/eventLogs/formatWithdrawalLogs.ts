@@ -106,7 +106,7 @@ export const formatCustomWithdrawalLogs = (
   const accountLogs: AccountLogs[] = logs.map((log) => ({
     type: 'Withdrawal', // Custom Withdrawal
     blockNumber: log.blockNumber,
-    timestamp: 0, // log.date,
+    timestamp: 0,
     transactionHash: log.transactionHash,
     originChain: customClient.to.public.chain!.id,
     destinationChain: customClient.from.public.chain!.id,
