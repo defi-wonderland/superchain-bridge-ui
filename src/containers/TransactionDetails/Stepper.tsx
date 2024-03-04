@@ -29,8 +29,18 @@ export const Stepper = () => {
       <SDataContainer>
         {(transactionType === 'Deposit' || transactionType === 'Force Tx') && (
           <>
-            <Step text='Initiate Transaction' hash={selectedLog?.transactionHash || ''} status='success' />
-            <Step text='Finalized Transaction' hash={selectedLog?.l2TransactionHash} status='final' />
+            <Step
+              text='Initiate Transaction'
+              hash={selectedLog?.transactionHash || ''}
+              chainId={selectedLog?.originChain}
+              status='success'
+            />
+            <Step
+              text='Finalized Transaction'
+              hash={selectedLog?.l2TransactionHash}
+              chainId={selectedLog?.destinationChain}
+              status='final'
+            />
           </>
         )}
 
@@ -38,7 +48,12 @@ export const Stepper = () => {
           <>
             {selectedLog?.status === 'waiting-to-prove' && (
               <>
-                <Step text='Initiate Transaction' hash={selectedLog?.transactionHash || ''} status='success' />
+                <Step
+                  text='Initiate Transaction'
+                  hash={selectedLog?.transactionHash || ''}
+                  chainId={selectedLog.originChain}
+                  status='success'
+                />
                 <Step text='Wait to Prove' status='loading' />
                 <Step text='Prove Withdrawal' status='idle' />
                 <Step text='Wait 7 days' status='idle' />
@@ -47,7 +62,12 @@ export const Stepper = () => {
             )}
             {selectedLog?.status === 'ready-to-prove' && (
               <>
-                <Step text='Initiate Transaction' hash={selectedLog?.transactionHash || ''} status='success' />
+                <Step
+                  text='Initiate Transaction'
+                  hash={selectedLog?.transactionHash || ''}
+                  chainId={selectedLog.originChain}
+                  status='success'
+                />
                 <Step text='Wait to Prove' status='success' />
                 <Step text='Prove Withdrawal' status='pending' />
                 <Step text='Wait 7 days' status='idle' />
@@ -56,7 +76,12 @@ export const Stepper = () => {
             )}
             {selectedLog?.status === 'waiting-to-finalize' && (
               <>
-                <Step text='Initiate Transaction' hash={selectedLog?.transactionHash || ''} status='success' />
+                <Step
+                  text='Initiate Transaction'
+                  hash={selectedLog?.transactionHash || ''}
+                  chainId={selectedLog.originChain}
+                  status='success'
+                />
                 <Step text='Wait to Prove' status='success' />
                 <Step text='Prove Withdrawal' status='success' />
                 <Step text='Wait 7 days' status='loading' />
@@ -65,7 +90,12 @@ export const Stepper = () => {
             )}
             {selectedLog?.status === 'ready-to-finalize' && (
               <>
-                <Step text='Initiate Transaction' hash={selectedLog?.transactionHash || ''} status='success' />
+                <Step
+                  text='Initiate Transaction'
+                  hash={selectedLog?.transactionHash || ''}
+                  chainId={selectedLog.originChain}
+                  status='success'
+                />
                 <Step text='Wait to Prove' status='success' />
                 <Step text='Prove Withdrawal' status='success' />
                 <Step text='Wait 7 days' status='success' />
@@ -74,7 +104,12 @@ export const Stepper = () => {
             )}
             {selectedLog?.status === 'finalized' && (
               <>
-                <Step text='Initiate Transaction' hash={selectedLog?.transactionHash || ''} status='success' />
+                <Step
+                  text='Initiate Transaction'
+                  hash={selectedLog?.transactionHash || ''}
+                  chainId={selectedLog.originChain}
+                  status='success'
+                />
                 <Step text='Wait to Prove' status='success' />
                 <Step text='Prove Withdrawal' status='success' />
                 <Step text='Wait 7 days' status='success' />

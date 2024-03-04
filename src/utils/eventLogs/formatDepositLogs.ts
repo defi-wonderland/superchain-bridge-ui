@@ -1,4 +1,6 @@
 import { GetLogsReturnType, Hex, TransactionReceipt } from 'viem';
+import { opaqueDataToDepositData } from 'viem/op-stack';
+
 import { AccountLogs, CustomClients } from '~/types';
 import {
   erc20BridgeInitiatedABI,
@@ -104,24 +106,28 @@ export const formatForceDepositLogs = (
 ): { accountLogs: AccountLogs[]; receipts: TransactionReceipt[] } => {
   const receipts = logs.map(({ transactionHash }) => receiptsMap[transactionHash].receipt);
 
-  const accountLogs: AccountLogs[] = logs.map((log) => ({
-    type: 'Force Tx', // Force transaction
-    blockNumber: log.blockNumber,
-    timestamp: 0,
-    transactionHash: log.transactionHash,
-    l2TransactionHash: receiptsMap[log.transactionHash].l2Hash,
-    originChain: customClient.from.public.chain!.id,
-    destinationChain: customClient.to.public.chain!.id,
-    bridge: 'OP Gateway',
-    fees: '0',
-    transactionTime: '1m',
-    status: 'finalized',
-    from: log.args.from!,
-    to: log.args.to!,
-    amount: 0n,
-    data: log.args.opaqueData,
-    receipt: receiptsMap[log.transactionHash].receipt,
-  }));
+  const accountLogs: AccountLogs[] = logs.map((log) => {
+    const data = opaqueDataToDepositData(log.args.opaqueData!);
+
+    return {
+      type: 'Force Tx', // Force transaction
+      blockNumber: log.blockNumber,
+      timestamp: 0,
+      transactionHash: log.transactionHash,
+      l2TransactionHash: receiptsMap[log.transactionHash].l2Hash,
+      originChain: customClient.from.public.chain!.id,
+      destinationChain: customClient.to.public.chain!.id,
+      bridge: 'OP Gateway',
+      fees: '0',
+      transactionTime: '1m',
+      status: 'finalized',
+      from: log.args.from!,
+      to: log.args.to!,
+      amount: 0n,
+      data: data.data,
+      receipt: receiptsMap[log.transactionHash].receipt,
+    };
+  });
 
   return { accountLogs, receipts };
 };

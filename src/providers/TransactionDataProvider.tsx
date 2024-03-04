@@ -71,7 +71,7 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
   }, [address]);
 
   useEffect(() => {
-    if (modalOpen === ModalType.NONE) {
+    if (modalOpen === ModalType.SUCCESS) {
       setCustomTransactionType(undefined);
     }
   }, [modalOpen]);

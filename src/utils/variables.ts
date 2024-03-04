@@ -1,4 +1,4 @@
-import { OpContracts } from '~/types';
+import { ChainData, OpContracts } from '~/types';
 import { base, baseSepolia, optimismSepolia, sepolia } from 'viem/chains';
 import sepoliaLogo from '~/assets/chains/ethereum.svg';
 import opSepoliaLogo from '~/assets/chains/optimism.svg';
@@ -11,22 +11,26 @@ import baseSepoliaLogo from '~/assets/chains/base.svg';
 export const THEME_KEY = 'superbridge_theme_key';
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
-export const chainData: { [k: number]: { logo: string; apiUrl: string } } = {
+export const chainData: ChainData = {
   [sepolia.id]: {
     logo: sepoliaLogo.src,
     apiUrl: 'https://api-sepolia.etherscan.io/api',
+    explorer: 'https://sepolia.etherscan.io/',
   },
   [optimismSepolia.id]: {
     logo: opSepoliaLogo.src,
     apiUrl: 'https://api-sepolia-optimistic.etherscan.io/api',
+    explorer: 'https://sepolia-optimism.etherscan.io/',
   },
   [baseSepolia.id]: {
     logo: baseSepoliaLogo.src,
     apiUrl: 'https://api-sepolia.basescan.org/api',
+    explorer: 'https://sepolia.basescan.org/',
   },
   [base.id]: {
     logo: baseSepoliaLogo.src,
     apiUrl: 'https://api.basescan.org/api',
+    explorer: 'https://basescan.org//',
   },
 };
 

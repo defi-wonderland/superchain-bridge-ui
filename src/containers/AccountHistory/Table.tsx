@@ -17,7 +17,7 @@ import detailsIcon from '~/assets/icons/details-arrow.svg';
 import openLinkIcon from '~/assets/icons/open-link.svg';
 import noActivityIcon from '~/assets/icons/no-activity.svg';
 
-import { createData, replaceSpacesWithHyphens, truncateAddress } from '~/utils';
+import { chainData, createData, replaceSpacesWithHyphens, truncateAddress } from '~/utils';
 import { useChain, useCustomTheme, useLogs } from '~/hooks';
 import { SPagination, StatusChip } from '~/components';
 import { AccountLogs } from '~/types';
@@ -62,7 +62,7 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
 
                 {/* Transaction Hash */}
                 <TxHashCell>
-                  <Link href='#'>
+                  <Link href={`${chainData[fromChain.id].explorer}tx/${row.txHash}`} target='_blank'>
                     {truncateAddress(row.txHash)}
                     <Image src={openLinkIcon} alt='Open transaction in block explorer' />
                   </Link>

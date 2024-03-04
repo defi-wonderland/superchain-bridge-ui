@@ -6,7 +6,7 @@ import Link from 'next/link';
 import openLinkIcon from '~/assets/icons/open-link.svg';
 import contentIcon from '~/assets/icons/content.svg';
 
-import { truncateAddress } from '~/utils';
+import { chainData, truncateAddress } from '~/utils';
 import { useCustomTheme } from '~/hooks';
 
 interface StepProps {
@@ -14,8 +14,9 @@ interface StepProps {
   status: 'success' | 'pending' | 'loading' | 'idle' | 'failed' | 'final';
   hash?: string;
   connector?: boolean;
+  chainId?: number;
 }
-export const Step = ({ hash, text, status, connector = true }: StepProps) => {
+export const Step = ({ hash, text, status, chainId = 11_155_111, connector = true }: StepProps) => {
   return (
     <StepContainer>
       <Box>
@@ -32,7 +33,7 @@ export const Step = ({ hash, text, status, connector = true }: StepProps) => {
         </Typography>
 
         {hash && (
-          <Link href='#'>
+          <Link href={`${chainData[chainId].explorer}tx/${hash}`} target='_blank'>
             {truncateAddress(hash)}
             <Image src={openLinkIcon} alt='Open transaction in block explorer' />
           </Link>
