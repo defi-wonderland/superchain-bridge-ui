@@ -4,11 +4,12 @@ import { useAccount } from 'wagmi';
 import Image from 'next/image';
 
 import copyIcon from '~/assets/icons/copy.svg';
+import copyCheckIcon from '~/assets/icons/copy-check.svg';
 import arrowLeft from '~/assets/icons/arrow-left.svg';
 
 import { MainCardContainer, Stepper, TxDetails } from '~/containers';
-import { useCustomTheme, useLogs, useQueryParams } from '~/hooks';
-import { CustomHead, StatusChip } from '~/components';
+import { useCopyToClipboard, useCustomTheme, useLogs, useQueryParams } from '~/hooks';
+import { CustomHead, STooltip, StatusChip } from '~/components';
 import { QueryParamKey } from '~/types';
 
 const Transaction = () => {
@@ -18,6 +19,7 @@ const Transaction = () => {
   const hash = getParam(QueryParamKey.tx);
   const chain = getParam(QueryParamKey.chain);
   const router = useRouter();
+  const [copiedText, copy] = useCopyToClipboard();
 
   const handleBack = () => {
     router.push(address ? `/${chain}/account/${address}` : '/');
@@ -45,10 +47,12 @@ const Transaction = () => {
               <StatusChip status={selectedLog?.status || ''} title />
             </Box>
 
-            <Box>
-              {hash && <Typography variant='body1'>{hash}</Typography>}
-              <Image src={copyIcon} alt='Copy to clipboard' />
-            </Box>
+            <STooltip title={copiedText === hash ? 'Copied!' : 'Copy to clipboard'} arrow>
+              <Box onClick={() => copy(hash)}>
+                {hash && <Typography variant='body1'>{hash}</Typography>}
+                <Image src={copiedText === hash ? copyCheckIcon : copyIcon} alt='Copy to clipboard' />
+              </Box>
+            </STooltip>
           </HeaderContainer>
 
           <Content>
@@ -97,6 +101,11 @@ const HeaderContainer = styled(Box)(() => {
     justifyContent: 'start',
     alignItems: 'start',
     gap: '1.2rem',
+
+    img: {
+      width: '2rem',
+      height: '2rem',
+    },
     h1: {
       color: currentTheme.steel[50],
       fontSize: '3rem',

@@ -6,15 +6,17 @@ import { useAccount } from 'wagmi';
 
 import arrowLeft from '~/assets/icons/arrow-left.svg';
 import copyIcon from '~/assets/icons/copy.svg';
+import copyCheckIcon from '~/assets/icons/copy-check.svg';
 
 import { MainCardContainer, ActivityTable } from '~/containers';
 import { createData, formatDataNumber, getTimestamps } from '~/utils';
-import { useCustomClient, useCustomTheme, useLogs, useTokenList } from '~/hooks';
-import { CustomHead, TableSkeleton } from '~/components';
+import { useCopyToClipboard, useCustomClient, useCustomTheme, useLogs, useTokenList } from '~/hooks';
+import { CustomHead, STooltip, TableSkeleton } from '~/components';
 
 const History = () => {
   const router = useRouter();
   const { address: currentAddress } = useAccount();
+  const [copiedText, copy] = useCopyToClipboard();
   const { customClient } = useCustomClient();
   const { fromTokens, toTokens } = useTokenList();
   const { depositLogs, withdrawLogs, orderedLogs, isSuccess, setOrderedLogs, isLoading, setIsLoading } = useLogs();
@@ -76,10 +78,12 @@ const History = () => {
             <Typography variant='h1'>Account History</Typography>
           </Box>
 
-          <Box>
-            {currentAddress && <Typography variant='body1'>{currentAddress}</Typography>}
-            <Image src={copyIcon} alt='Copy to clipboard' />
-          </Box>
+          <STooltip title={copiedText === currentAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
+            <Box onClick={() => copy(currentAddress?.toString() || '')}>
+              {currentAddress && <Typography variant='body1'>{currentAddress}</Typography>}
+              <Image src={copiedText === currentAddress ? copyCheckIcon : copyIcon} alt='Copy to clipboard' />
+            </Box>
+          </STooltip>
         </HeaderContainer>
 
         {!isLoading && <ActivityTable rows={rows} />}
@@ -122,6 +126,10 @@ const HeaderContainer = styled(Box)(() => {
     justifyContent: 'start',
     alignItems: 'start',
     gap: '1.2rem',
+    img: {
+      width: '2rem',
+      height: '2rem',
+    },
     h1: {
       color: currentTheme.steel[50],
       fontSize: '3rem',
