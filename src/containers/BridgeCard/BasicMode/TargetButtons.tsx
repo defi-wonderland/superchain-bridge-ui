@@ -43,7 +43,7 @@ export const TargetButtons = () => {
       <STooltip title={tooltipTitle}>
         <BasicButton fullWidth onClick={openSelectAccountModal} disabled={!userAddress}>
           <SInputLabel>To address</SInputLabel>
-          <>{truncateAddress(to)}</>
+          <>{to ? truncateAddress(to) : '-'}</>
         </BasicButton>
       </STooltip>
     </Stack>
