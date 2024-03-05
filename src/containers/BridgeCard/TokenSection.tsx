@@ -9,7 +9,7 @@ import { ModalType } from '~/types';
 
 export const TokenSection = () => {
   const { setModalOpen } = useModal();
-  const { mint, setMint, customTransactionType, value, setValue } = useTransactionData();
+  const { mint, setMint, customTransactionType, value, setValue, userAddress } = useTransactionData();
   const { selectedToken, amount, balance: tokenBalance, ethBalance, price, setAmount } = useToken();
 
   const balance = selectedToken?.symbol === 'ETH' ? ethBalance : tokenBalance;
@@ -70,12 +70,14 @@ export const TokenSection = () => {
       <BalanceSection>
         <span>{usdValue}</span>
 
-        <span>
-          Balance: {formattedBalance}
-          <MaxButton variant='text' onClick={handleMax}>
-            Max
-          </MaxButton>
-        </span>
+        {userAddress && (
+          <span>
+            Balance: {formattedBalance}
+            <MaxButton variant='text' onClick={handleMax}>
+              Max
+            </MaxButton>
+          </span>
+        )}
       </BalanceSection>
     </TokensContainer>
   );
@@ -160,6 +162,11 @@ const BalanceSection = styled(InputSection)(() => {
     fontSize: '1.4rem',
     color: currentTheme.steel[400],
     fontWeight: 400,
+
+    span: {
+      display: 'flex',
+      alignItems: 'center',
+    },
   };
 });
 
