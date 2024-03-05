@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Button, styled } from '@mui/material';
 
 import { useChain, useCustomTheme, useModal, useTransactionData } from '~/hooks';
@@ -21,10 +21,12 @@ export const BridgeCard = () => {
   const [isExpertMode, setIsExpertMode] = useState(false);
   const { fromChain, toChain } = useChain();
 
-  const handleReview = () => {
+  const handleReview = useCallback(() => {
     // If the selected chain has a sourceId, its because it's a L2 chain
     const isFromAnL2 = !!fromChain?.sourceId;
     const isToAnL2 = !!toChain?.sourceId;
+
+    let openModal = ModalType.REVIEW;
 
     // If both chains are L2, it's a bridge transaction
     if (isFromAnL2 && isToAnL2) {
@@ -32,6 +34,7 @@ export const BridgeCard = () => {
       // If the source chain is L2 and the destination chain is L1, it's a withdraw transaction
     } else if (isFromAnL2 && !isToAnL2) {
       setTransactionType(TransactionType.WITHDRAW);
+      openModal = ModalType.WARNING;
       // If the source chain is L1 and the destination chain is L2, it's a deposit transaction
     } else if (!isFromAnL2 && isToAnL2) {
       setTransactionType(TransactionType.DEPOSIT);
@@ -40,8 +43,8 @@ export const BridgeCard = () => {
       setTransactionType(TransactionType.SWAP);
     }
 
-    setModalOpen(ModalType.REVIEW);
-  };
+    setModalOpen(openModal);
+  }, [fromChain, toChain, setModalOpen, setTransactionType]);
 
   const isButtonDisabled = !isReady || !userAddress;
 

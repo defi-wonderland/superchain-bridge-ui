@@ -4,5 +4,6 @@ export * from './Loading';
 export * from './Review';
 export * from './Settings';
 export * from './Success';
-export * from './Token';
 export * from './TargetAddress';
+export * from './Token';
+export * from './Warning';

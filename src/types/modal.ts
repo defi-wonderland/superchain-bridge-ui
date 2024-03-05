@@ -1,5 +1,6 @@
 export enum ModalType {
   NONE = 'NONE',
+  WARNING = 'WARNING',
   CONFIRM = 'CONFIRM',
   LOADING = 'LOADING',
   SUCCESS = 'SUCCESS',

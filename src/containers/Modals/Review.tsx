@@ -29,7 +29,7 @@ export const ReviewModal = () => {
       {/* Selected Bridge */}
       <DataRow>
         <Typography variant='body1'>Bridge</Typography>
-        <span>OP Gateway</span>
+        <span>OP Standard Bridge</span>
       </DataRow>
 
       {/* Fees */}

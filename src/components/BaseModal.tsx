@@ -13,15 +13,20 @@ interface BaseModalProps {
   type: ModalType;
   title?: string;
   fixedHeight?: boolean;
+  image?: string;
 }
 
-const BaseModal = ({ children, type, title, fixedHeight }: BaseModalProps) => {
+const BaseModal = ({ children, type, title, fixedHeight, image }: BaseModalProps) => {
   const { modalOpen, closeModal } = useModal();
   return (
     <StyledModal open={type === modalOpen} onClose={closeModal} slots={{ backdrop: StyledBackdrop }}>
       <SModal className={fixedHeight ? 'big-modal' : ''}>
         <ModalHeader>
-          {title && <Typography variant='h2'>{title}</Typography>}
+          <Box>
+            {image && <Image src={image} alt='' />}
+            {title && <Typography variant='h2'>{title}</Typography>}
+          </Box>
+
           <IconButton onClick={closeModal} className='close-button'>
             <Image src={closeIcon} alt='Close modal' />
           </IconButton>
@@ -95,6 +100,13 @@ export const ModalHeader = styled(Box)(() => {
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+    div: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      gap: '0.6rem',
+    },
     '.close-button': {
       padding: '0.4rem',
       marginRight: '-0.4rem',
