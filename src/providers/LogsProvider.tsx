@@ -1,10 +1,11 @@
-import { createContext, useEffect, useMemo, useState } from 'react';
-import { useQueries } from '@tanstack/react-query';
+import { createContext, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
+import { Address } from 'viem';
 
 import { useCustomClient } from '~/hooks';
 import { getDepositLogs, getWithdrawLogs } from '~/utils';
-import { AccountLogs, DepositLogs, WithdrawLogs } from '~/types';
+import { AccountLogs, CustomClients, DepositLogs, WithdrawLogs } from '~/types';
 
 type ContextType = {
   depositLogs?: DepositLogs;
@@ -36,26 +37,31 @@ export const LogsProvider = ({ children }: StateProps) => {
   const [orderedLogs, setOrderedLogs] = useState<AccountLogs[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const queries = useQueries({
-    queries: [
-      {
-        queryKey: ['depositLogs'],
-        queryFn: () => getDepositLogs({ userAddress, customClient }),
-        enabled: !!userAddress,
-        refetchOnWindowFocus: false, // temporary disable refetch on window focus
-      },
-      {
-        queryKey: ['withdrawLogs'],
-        queryFn: () => getWithdrawLogs({ userAddress, customClient }),
-        enabled: !!userAddress,
-        refetchOnWindowFocus: false, // temporary disable refetch on window focus
-      },
-    ],
+  const getLogs = async ({ userAddress, customClient }: { userAddress: Address; customClient: CustomClients }) => {
+    if (userAddress) {
+      const depositLogs = await getDepositLogs({ userAddress, customClient });
+      const withdrawLogs = await getWithdrawLogs({ userAddress, customClient });
+
+      setDepositLogs(depositLogs);
+      setWithdrawLogs(withdrawLogs);
+      return true;
+    }
+    return false;
+  };
+
+  const { refetch, isFetched } = useQuery({
+    queryKey: ['depositLogs'],
+    queryFn: () => getLogs({ userAddress: userAddress!, customClient }),
+    enabled: !!userAddress,
+    refetchOnWindowFocus: false, // temporary disable refetch on window focus
   });
 
-  const refetchLogs = () => {
-    queries.forEach((query) => query.refetch());
+  const refetchLogs = async () => {
+    setIsLoading(true);
+    setDepositLogs(undefined);
+    setWithdrawLogs(undefined);
     setOrderedLogs([]);
+    refetch();
   };
 
   const transactionPending = useMemo(() => {
@@ -69,17 +75,8 @@ export const LogsProvider = ({ children }: StateProps) => {
   }, [depositLogs, userAddress, withdrawLogs]);
 
   const isSuccess = useMemo(() => {
-    return queries[0].isSuccess && queries[1].isSuccess;
-  }, [queries]);
-
-  useEffect(() => {
-    if (queries[0]) {
-      setDepositLogs(queries[0].data);
-    }
-    if (queries[1]) {
-      setWithdrawLogs(queries[1].data);
-    }
-  }, [queries]);
+    return isFetched;
+  }, [isFetched]);
 
   return (
     <LogsContext.Provider

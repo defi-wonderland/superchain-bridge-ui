@@ -10,8 +10,8 @@ import { SInputLabel } from './InputField';
 import { chainData } from '~/utils';
 
 interface ChainSelectProps {
-  label: string;
   value: Chain;
+  label?: string;
   setValue: (chain: Chain) => void;
   list: Chain[];
   disabled?: boolean;
@@ -36,8 +36,8 @@ export const ChainSelect = ({ label, list, value, setValue, disabled }: ChainSel
     disabled || list.length < 2 ? null : <Image src={chevrownDown} alt='arrow-down' width={16} height={16} />;
 
   return (
-    <SBox>
-      <SInputLabel>{label}</SInputLabel>
+    <SBox className='chain-select'>
+      {label && <SInputLabel>{label}</SInputLabel>}
       <MenuButton
         aria-controls={open ? 'demo-customized-menu' : undefined}
         aria-haspopup='true'
