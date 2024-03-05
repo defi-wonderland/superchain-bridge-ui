@@ -41,10 +41,12 @@ const History = () => {
       const token =
         fromTokens.find((token) => token.address === eventLog.localToken) ||
         toTokens.find((token) => token.address === eventLog.localToken);
+      const logAmount = formatDataNumber(Number(eventLog.amount), token?.decimals, 2);
+      const parsedLogAmount = `${logAmount} ${token?.symbol}`;
 
       return createData(
         eventLog.type,
-        eventLog?.amount ? `${formatDataNumber(Number(eventLog.amount), token?.decimals, 2)} ${token?.symbol}` : '-', // amount
+        eventLog?.amount ? parsedLogAmount : '-', // amount
         eventLog.transactionHash,
         eventLog.timestamp.toString(),
         eventLog.status,

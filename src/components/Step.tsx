@@ -82,9 +82,10 @@ const StepContainer = styled(Box)(() => {
       display: 'flex',
       alignItems: 'center',
       gap: '0.4rem',
-    },
-    'a:hover': {
-      textDecoration: 'underline',
+
+      '&:hover': {
+        textDecoration: 'underline',
+      },
     },
 
     'canvas.success': {
