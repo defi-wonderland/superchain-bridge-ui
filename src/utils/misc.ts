@@ -14,11 +14,11 @@ export const getToContracts = (fromChain: Chain, toChain: Chain): OpContracts =>
   return contracts[key];
 };
 
-export const getUsdBalance = (price: number, balance: string, decimals: number): string => {
+export const getUsdBalance = (price: number, balance: string, decimals: number, compact: boolean = false): string => {
   const priceBN = parseUnits(price.toString(), decimals);
   const balanceBN = parseUnits(balance, decimals);
   const result = (priceBN * balanceBN) / BigInt(10 ** decimals);
-  return formatDataNumber(result.toString(), 18, 2, true, false);
+  return formatDataNumber(result.toString(), 18, 2, true, compact);
 };
 
 /**
@@ -44,9 +44,12 @@ export function formatDataNumber(
 
   if (res < 0.01) return `${currency ? '$' : ''}<0.01`;
 
+  const userNotation = compact ? 'compact' : 'standard';
+  const notation = res > 1e12 ? 'scientific' : userNotation;
+
   return new Intl.NumberFormat('en-US', {
     maximumFractionDigits: formatDecimal,
-    notation: compact ? 'compact' : 'standard',
+    notation: notation,
     style: currency ? 'currency' : 'decimal',
     currency: 'USD',
   }).format(res);

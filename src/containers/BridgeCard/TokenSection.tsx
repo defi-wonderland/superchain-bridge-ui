@@ -58,6 +58,7 @@ export const TokenSection = () => {
           value={inputValue}
           onChange={handleOnChange}
           fullWidth
+          onKeyDown={(evt) => ['e', 'E', '+', '-'].includes(evt.key) && evt.preventDefault()}
           InputLabelProps={{
             shrink: true,
           }}
@@ -130,6 +131,10 @@ const StyledInput = styled(TextField)(() => {
       fontSize: '3.2rem',
       lineHeight: 1.2,
       padding: '0',
+
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
     },
 
     '& .MuiInputBase-input::placeholder': {
