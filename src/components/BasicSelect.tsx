@@ -30,8 +30,7 @@ export const BasicSelect = ({ label, list, value, setValue, disabled }: BasicSel
     setValue(explorer);
   };
 
-  const endIcon =
-    disabled || list.length < 2 ? null : <Image src={chevrownDown} alt='arrow-down' width={16} height={16} />;
+  const endIcon = disabled ? null : <Image src={chevrownDown} alt='arrow-down' width={16} height={16} />;
 
   return (
     <SBox>
@@ -45,7 +44,7 @@ export const BasicSelect = ({ label, list, value, setValue, disabled }: BasicSel
         onClick={handleClick}
         endIcon={endIcon}
         fullWidth
-        disabled={disabled || list.length < 2}
+        disabled={disabled}
       >
         {value}
       </MenuButton>

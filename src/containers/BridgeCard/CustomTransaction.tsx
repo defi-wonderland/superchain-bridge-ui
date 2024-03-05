@@ -34,7 +34,14 @@ export const CustomTransaction = () => {
         <>
           <ChainSection />
           <TokenSection />
-          <InputField label='To address' value={to} setValue={setTo} error={!!isError} placeholder='' modal={false} />
+          <InputField
+            label='To'
+            value={to}
+            setValue={setTo}
+            error={!!isError}
+            placeholder='Receiver address'
+            modal={false}
+          />
         </>
       )}
 
