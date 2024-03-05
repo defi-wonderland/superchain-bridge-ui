@@ -28,7 +28,11 @@ export const SettingsModal = () => {
 
       <BasicSelect label='Public RPC' value={publicRPC} setValue={setPublicRPC} list={publicRPCs} />
 
-      <SButton variant='text' startIcon={<Image src={clearCacheIcon} alt='clear-cache' width={20} height={20} />}>
+      <SButton
+        variant='text'
+        disabled
+        startIcon={<Image src={clearCacheIcon} alt='clear-cache' width={20} height={20} />}
+      >
         Clear app cache
       </SButton>
     </BaseModal>
@@ -46,6 +50,11 @@ const SButton = styled(Button)(() => {
     '&:hover': {
       backgroundColor: 'transparent',
       color: currentTheme.ghost[300],
+    },
+
+    '&:disabled': {
+      color: currentTheme.ghost[400],
+      opacity: 0.7,
     },
   };
 });

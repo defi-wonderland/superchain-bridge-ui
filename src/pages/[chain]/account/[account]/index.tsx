@@ -141,6 +141,7 @@ const HeaderContainer = styled(Box)(() => {
     alignItems: 'start',
     gap: '1.2rem',
     width: '100%',
+    cursor: 'default',
     img: {
       width: '2rem',
       height: '2rem',
@@ -157,7 +158,6 @@ const HeaderContainer = styled(Box)(() => {
       flexDirection: 'row',
       alignItems: 'center',
       gap: '0.8rem',
-      cursor: 'pointer',
     },
     p: {
       color: currentTheme.steel[300],
@@ -167,6 +167,7 @@ const HeaderContainer = styled(Box)(() => {
     },
 
     '.account': {
+      cursor: 'pointer',
       width: 'auto',
     },
 
