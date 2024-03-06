@@ -14,12 +14,12 @@ export const BridgeIcons = ({ gas, time }: BridgeIconsProps) => {
     <IconsContainer>
       <Stack gap='2rem' direction='row'>
         <Item>
-          <Image src={gasIcon} alt='arrow-down' />
+          <Image src={gasIcon} alt='fees' />
           <Typography variant='body1'>{gas}</Typography>
         </Item>
 
         <Item>
-          <Image src={clockIcon} alt='arrow-down' />
+          <Image src={clockIcon} alt='transaction time' />
           <Typography variant='body1'>{time}</Typography>
         </Item>
       </Stack>

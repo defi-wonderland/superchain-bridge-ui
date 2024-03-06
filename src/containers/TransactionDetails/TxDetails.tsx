@@ -1,6 +1,9 @@
 import { Box, Typography, styled } from '@mui/material';
 import Image from 'next/image';
 
+import clockIcon from '~/assets/icons/clock.svg';
+import gasIcon from '~/assets/icons/gas.svg';
+
 import { chainData, formatDataNumber, formatTimestamp, supportedChains, truncateAddress } from '~/utils';
 import { useCustomTheme, useLogs, useTokenList } from '~/hooks';
 import { STooltip } from '~/components';
@@ -65,12 +68,19 @@ export const TxDetails = () => {
 
         <DataRow>
           <Typography variant='body1'>Fees</Typography>
-          <span>{selectedLog?.fees}</span>
+
+          <span>
+            <Image src={gasIcon} alt='fees' />
+            {/* {selectedLog?.fees} */} -
+          </span>
         </DataRow>
 
         <DataRow>
           <Typography variant='body1'>Transaction time</Typography>
-          <span>{selectedLog?.transactionTime}</span>
+          <span>
+            <Image src={clockIcon} alt='transaction time' />
+            {/* {selectedLog?.transactionTime} */} -
+          </span>
         </DataRow>
       </DataContainer>
 

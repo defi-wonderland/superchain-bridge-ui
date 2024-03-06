@@ -1,9 +1,13 @@
 import { Box, Divider, Typography, styled } from '@mui/material';
+import Image from 'next/image';
+
+import clockIcon from '~/assets/icons/clock.svg';
+import gasIcon from '~/assets/icons/gas.svg';
 
 import BaseModal from '~/components/BaseModal';
-import { useTransactionData, useToken, useTransactions, useCustomTheme, useModal } from '~/hooks';
-import { PrimaryButton, SecondaryButton } from '~/components';
-import { truncateAddress } from '~/utils';
+import { useTransactionData, useToken, useTransactions, useCustomTheme, useModal, useChain } from '~/hooks';
+import { PrimaryButton, STooltip, SecondaryButton } from '~/components';
+import { chainData, truncateAddress } from '~/utils';
 import { ModalType } from '~/types';
 
 export const ReviewModal = () => {
@@ -11,6 +15,7 @@ export const ReviewModal = () => {
   const { transactionType, value, mint, to, userAddress, data } = useTransactionData();
   const { selectedToken, amount } = useToken();
   const { executeTransaction } = useTransactions();
+  const { toChain } = useChain();
 
   const totalAmount = amount || mint || value;
 
@@ -29,19 +34,29 @@ export const ReviewModal = () => {
       {/* Selected Bridge */}
       <DataRow>
         <Typography variant='body1'>Bridge</Typography>
-        <span>OP Standard Bridge</span>
+        <span>
+          <Image src={chainData[toChain.id].logo} alt='standar bridge logo' width={20} height={20} />
+          OP Standard Bridge
+        </span>
       </DataRow>
 
       {/* Fees */}
       <DataRow>
         <Typography variant='body1'>Fees</Typography>
-        <span>$21.33</span>
+        <span>
+          <Image src={gasIcon} alt='fees' />
+          {/* temporary fixed value */}
+          {'-'}
+        </span>
       </DataRow>
 
       {/* Transaction time */}
       <DataRow>
         <Typography variant='body1'>Transaction time</Typography>
-        <span>2m</span>
+        <span>
+          <Image src={clockIcon} alt='transaction time' />
+          2m
+        </span>
       </DataRow>
 
       <SDivider />
@@ -49,13 +64,17 @@ export const ReviewModal = () => {
       {/* Origin address */}
       <DataRow>
         <Typography variant='body1'>From address</Typography>
-        <span>{truncateAddress(userAddress || '')}</span>
+        <STooltip title={userAddress} className='address'>
+          <span>{truncateAddress(userAddress || '')}</span>
+        </STooltip>
       </DataRow>
 
       {/* Destination address */}
       <DataRow>
         <Typography variant='body1'>To address</Typography>
-        <span>{truncateAddress(to)}</span>
+        <STooltip title={to} className='address'>
+          <span>{truncateAddress(to)}</span>
+        </STooltip>
       </DataRow>
 
       <SDivider />
@@ -74,6 +93,7 @@ export const ReviewModal = () => {
           <DataRow>
             <Typography variant='body1'>Send</Typography>
             <span>
+              <Image src={selectedToken?.logoURI} alt={selectedToken?.name} width={20} height={20} />
               {totalAmount} {selectedToken?.symbol}
             </span>
           </DataRow>
@@ -82,6 +102,7 @@ export const ReviewModal = () => {
           <DataRow>
             <Typography variant='body1'>Receive</Typography>
             <span>
+              <Image src={selectedToken?.logoURI} alt={selectedToken?.name} width={20} height={20} />
               {totalAmount} {selectedToken?.symbol}
             </span>
           </DataRow>
@@ -127,7 +148,7 @@ export const DataRow = styled(Box)(() => {
     span: {
       display: 'flex',
       alignItems: 'center',
-      gap: '0.8rem',
+      gap: '0.5rem',
 
       fontSize: '1.6rem',
       color: currentTheme.steel[100],

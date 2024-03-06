@@ -38,8 +38,13 @@ const SBox = styled(Box)(() => {
       color: '#86D5A5',
     },
 
-    'span:not(.finalized)': {
+    '.waiting-to-prove, .waiting-to-finalize': {
       background: '#291205',
+      color: '#FFBB45',
+    },
+
+    '.ready-to-prove, .ready-to-finalize': {
+      background: '#542400',
       color: '#FFBB45',
     },
   };

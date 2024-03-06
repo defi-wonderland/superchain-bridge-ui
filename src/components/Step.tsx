@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import openLinkIcon from '~/assets/icons/open-link.svg';
 import contentIcon from '~/assets/icons/content.svg';
+import pendingIcon from '~/assets/icons/pending-tx.svg';
 
 import { chainData, truncateAddress } from '~/utils';
 import { useCustomTheme } from '~/hooks';
@@ -21,7 +22,8 @@ export const Step = ({ hash, text, status, chainId = 11_155_111, connector = tru
     <StepContainer>
       <Box>
         {(status === 'success' || status === 'final') && <Image src={contentIcon} alt='success' />}
-        {(status === 'idle' || status === 'pending') && <IdleIcon />}
+        {status === 'idle' && <IdleIcon />}
+        {status === 'pending' && <Image src={pendingIcon} alt='transaction pending' className='pending-image' />}
         {status === 'loading' && <CircularProgress size='2.4rem' variant='indeterminate' thickness={4} />}
 
         {connector && <Connector className={status} />}
@@ -94,6 +96,11 @@ const StepContainer = styled(Box)(() => {
 
     'canvas.final': {
       backgroundColor: 'transparent',
+    },
+
+    '.pending-image': {
+      background: '#542400',
+      borderRadius: '50%',
     },
   };
 });
