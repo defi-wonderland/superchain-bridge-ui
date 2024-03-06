@@ -1,5 +1,6 @@
 import { injected, walletConnect } from 'wagmi/connectors';
-import { createConfig } from 'wagmi';
+import { getDefaultConfig } from '@rainbow-me/rainbowkit';
+
 import * as wagmiChains from 'wagmi/chains';
 import { Transport, http } from 'viem';
 import { sepolia, optimismSepolia, baseSepolia } from 'viem/chains';
@@ -32,9 +33,10 @@ const transport: Record<[wagmiChains.Chain, ...wagmiChains.Chain[]][number]['id'
   Object.entries(alchemyUrls).map(([chainId, url]) => [chainId, http(url)]),
 );
 
-export const config = createConfig({
+export const config = getDefaultConfig({
+  appName: 'Superchain Bridge',
+  projectId: PROJECT_ID,
   chains: supportedChains,
-  connectors,
   transports: transport,
   batch: { multicall: true },
   ssr: true,
