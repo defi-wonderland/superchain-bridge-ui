@@ -50,6 +50,7 @@ const SFormControl = styled(FormControl)(() => {
       '& .MuiInputBase-input.MuiInputBase-inputMultiline': {
         minHeight: '12.4rem',
         maxHeight: '12.4rem',
+        fontFamily: 'Roboto Mono Variable, monospace',
       },
     },
   };

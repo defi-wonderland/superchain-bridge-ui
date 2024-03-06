@@ -1,4 +1,5 @@
 import '~/assets/font/css/general-sans.css';
+import '@fontsource-variable/roboto-mono';
 import '~/i18n';
 
 import { AppProps } from 'next/app';
