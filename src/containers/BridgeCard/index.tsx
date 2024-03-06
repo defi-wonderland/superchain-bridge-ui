@@ -8,6 +8,7 @@ import { BasicMode } from './BasicMode';
 import { ExpertMode } from './ExpertMode';
 import { CardHeader } from './CardHeader';
 import { CustomTransaction } from './CustomTransaction';
+import { Connect } from '~/components';
 
 export const BridgeCard = () => {
   const { setModalOpen } = useModal();
@@ -47,6 +48,7 @@ export const BridgeCard = () => {
   }, [fromChain, toChain, setModalOpen, setTransactionType]);
 
   const isButtonDisabled = !isReady || !userAddress;
+  const showPrimaryButton = (isExpertMode && customTransaction) || !isExpertMode;
 
   const buttonMessage = useMemo(() => {
     if (!isButtonDisabled) return 'Review transaction';
@@ -72,10 +74,16 @@ export const BridgeCard = () => {
 
       {customTransaction && <CustomTransaction />}
 
-      {((isExpertMode && customTransaction) || !isExpertMode) && (
-        <StyledButton variant='contained' fullWidth onClick={handleReview} disabled={isButtonDisabled}>
-          {buttonMessage}
-        </StyledButton>
+      {showPrimaryButton && (
+        <>
+          {!userAddress && <SConnectButton fullWidth />}
+
+          {userAddress && (
+            <StyledButton variant='contained' fullWidth onClick={handleReview} disabled={isButtonDisabled}>
+              {buttonMessage}
+            </StyledButton>
+          )}
+        </>
       )}
     </MainCardContainer>
   );
@@ -122,5 +130,16 @@ const StyledButton = styled(Button)(() => {
       borderColor: currentTheme.steel[700],
       color: currentTheme.steel[500],
     },
+  };
+});
+
+const SConnectButton = styled(Connect)(() => {
+  return {
+    padding: '1rem 1.8rem',
+    borderRadius: '0.8rem',
+    textTransform: 'capitalize',
+    fontWeight: 500,
+    fontSize: '1.8rem',
+    height: '6rem',
   };
 });
