@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { Connect } from '~/components';
+import { Connect, STooltip } from '~/components';
 import { useChain, useCustomTheme, useLogs, useModal } from '~/hooks';
 import { replaceSpacesWithHyphens } from '~/utils';
 import { ModalType } from '~/types';
@@ -34,7 +34,7 @@ export const Header = () => {
 
       {/* Right section */}
       <RightSection>
-        {address && (
+        <STooltip title='Transaction History' placement='bottom'>
           <Link
             href={{
               pathname: '/[chain]/account/[account]',
@@ -47,11 +47,13 @@ export const Header = () => {
               </Badge>
             </IconButton>
           </Link>
-        )}
+        </STooltip>
 
-        <IconButton onClick={openSettings}>
-          <StyledSettingsIcon src={settingsIcon} alt='Settings' />
-        </IconButton>
+        <STooltip title='Settings' placement='bottom'>
+          <IconButton onClick={openSettings}>
+            <StyledSettingsIcon src={settingsIcon} alt='Settings' />
+          </IconButton>
+        </STooltip>
 
         <Connect />
 

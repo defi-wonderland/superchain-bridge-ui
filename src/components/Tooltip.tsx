@@ -1,7 +1,7 @@
 import { Tooltip, TooltipProps, styled } from '@mui/material';
 
-export const STooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip classes={{ popper: className }} placement='top' disableInteractive arrow {...props} />
+export const STooltip = styled(({ className, placement = 'top', ...props }: TooltipProps) => (
+  <Tooltip classes={{ popper: className }} placement={placement} disableInteractive arrow {...props} />
 ))(() => {
   return {
     '& .MuiTooltip-tooltip': {
