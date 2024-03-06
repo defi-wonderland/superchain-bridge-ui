@@ -111,7 +111,7 @@ export const TokenProvider = ({ children }: StateProps) => {
   };
 
   useEffect(() => {
-    if (!address || !from.contracts.standardBridge) return;
+    if (!address || !from.contracts?.standardBridge) return;
     const tokenAddress = fromToken?.address as Address;
 
     from.public
@@ -135,7 +135,7 @@ export const TokenProvider = ({ children }: StateProps) => {
         setBalance(balance.result?.toString() || '');
         setAllowance(allowance.result?.toString() || '');
       });
-  }, [address, from.contracts.standardBridge, from.public, fromToken?.address]);
+  }, [address, from.contracts?.standardBridge, from.public, fromToken?.address]);
 
   useEffect(() => {
     if (selectedToken?.symbol === 'ETH') {
