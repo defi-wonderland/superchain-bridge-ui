@@ -50,7 +50,7 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
           </TableRow>
         </STableHead>
 
-        {rows.length !== 0 && (
+        {!!rows.length && (
           <STableBody>
             {rows.slice(paging.from, paging.to).map((row) => (
               <STableRow key={row.txHash}>
@@ -94,7 +94,7 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
         )}
       </Table>
 
-      {rows.length === 0 && (
+      {!rows.length && (
         <NoActivityContainer>
           <Image src={noActivityIcon} alt='No activity' />
           <Typography variant='body1'>This account has no recent activity...</Typography>
