@@ -41,6 +41,7 @@ const SBox = styled(Box)(() => {
       width: '13rem',
       filter: logoFilter,
       marginTop: '-0.2rem',
+      marginLeft: '-0.3rem',
     },
   };
 });
