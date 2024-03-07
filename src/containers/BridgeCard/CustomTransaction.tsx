@@ -9,11 +9,17 @@ import { InputField, RadioButtons, FunctionSelect } from '~/components';
 
 export const CustomTransaction = () => {
   const { setTo, to, customTransactionType, data, setData } = useTransactionData();
-  const isError = to && !isAddress(to);
+  const [isCustomData, setIsCustomData] = useState<'custom-data' | 'function'>('function');
   const { abi, setAbi, handleSetSelectedFunction, functions, selectedFunction, functionParams, setFunctionParams } =
     useFunctionMethod();
 
-  const [isCustomData, setIsCustomData] = useState<'custom-data' | 'function'>('function');
+  const isError = to && !isAddress(to);
+
+  const handleSetIsCustomData = (val: 'custom-data' | 'function') => {
+    setIsCustomData(val);
+    setFunctionParams(undefined);
+    setData('');
+  };
 
   return (
     <SBox>
@@ -55,7 +61,7 @@ export const CustomTransaction = () => {
           />
 
           <SDataContainer>
-            <RadioButtons value={isCustomData} setValue={setIsCustomData} />
+            <RadioButtons value={isCustomData} setValue={handleSetIsCustomData} />
 
             {isCustomData === 'custom-data' && (
               <InputField
