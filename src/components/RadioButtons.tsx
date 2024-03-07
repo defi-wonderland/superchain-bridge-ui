@@ -18,8 +18,7 @@ export const RadioButtons = ({ value, setValue }: RadioButtonsProps) => {
         value={value}
         onChange={handleChange}
       >
-        {/* temporary disabled */}
-        <FormControlLabel disabled value='function' control={<Radio />} label='Choose function' />
+        <FormControlLabel value='function' control={<Radio />} label='Choose function' />
         <FormControlLabel value='custom-data' control={<Radio />} label='Enter custom data' />
       </SRadioGroup>
     </FormControl>
@@ -40,6 +39,7 @@ const SRadioGroup = styled(RadioGroup)(() => {
 
     '& .MuiButtonBase-root.MuiRadio-root': {
       padding: 0,
+      color: currentTheme.ghost[400],
       '.MuiSvgIcon-root': {
         width: '1.6rem',
         height: '1.6rem',

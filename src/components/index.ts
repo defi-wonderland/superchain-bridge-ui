@@ -7,6 +7,7 @@ export * from './LangButton';
 export * from './InputField';
 export * from './ThemeButton';
 export * from './CustomScrollbar';
+export * from './FunctionSelect';
 export * from './BasicSelect';
 export * from './MadeByWonderland';
 export * from './Pagination';

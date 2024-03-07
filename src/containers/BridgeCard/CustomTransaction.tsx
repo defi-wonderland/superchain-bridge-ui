@@ -1,32 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Box, styled } from '@mui/material';
-import { useAccount } from 'wagmi';
-import { isAddress, isHex } from 'viem';
+import { AbiParameter, isAddress, isHex } from 'viem';
 
-import { useAbi, useTransactionData } from '~/hooks';
+import { useFunctionMethod, useTransactionData } from '~/hooks';
 import { ChainSection } from './ChainSection';
 import { TokenSection } from './TokenSection';
-import { InputField, RadioButtons } from '~/components';
+import { InputField, RadioButtons, FunctionSelect } from '~/components';
 
 export const CustomTransaction = () => {
-  const { getAbi } = useAbi();
-  const { address } = useAccount();
   const { setTo, to, customTransactionType, data, setData } = useTransactionData();
   const isError = to && !isAddress(to);
+  const { abi, setAbi, handleSetSelectedFunction, functions, selectedFunction, functionParams, setFunctionParams } =
+    useFunctionMethod();
 
-  const [abi, setAbi] = useState('');
-  const [isCustomData, setIsCustomData] = useState<'custom-data' | 'function'>('custom-data');
-
-  useEffect(() => {
-    if (address && isAddress(address) && customTransactionType !== 'custom-tx') setTo(address);
-  }, [address, customTransactionType, setTo]);
-
-  useEffect(() => {
-    if (!abi && isAddress(to))
-      getAbi(to).then((fetchedAbi) => {
-        if (fetchedAbi) setAbi(fetchedAbi);
-      });
-  }, [abi, to, getAbi]);
+  const [isCustomData, setIsCustomData] = useState<'custom-data' | 'function'>('function');
 
   return (
     <SBox>
@@ -70,13 +57,38 @@ export const CustomTransaction = () => {
           <SDataContainer>
             <RadioButtons value={isCustomData} setValue={setIsCustomData} />
 
-            <InputField
-              value={data}
-              setValue={setData}
-              error={!!data && !isHex(data)}
-              modal={false}
-              placeholder='Enter custom data'
-            />
+            {isCustomData === 'custom-data' && (
+              <InputField
+                value={data}
+                setValue={setData}
+                error={!!data && !isHex(data)}
+                modal={false}
+                placeholder='Enter custom data'
+              />
+            )}
+
+            {isCustomData === 'function' && (
+              <>
+                <FunctionSelect
+                  list={functions}
+                  value={selectedFunction}
+                  setValue={handleSetSelectedFunction}
+                  disabled={!selectedFunction}
+                />
+
+                {selectedFunction &&
+                  selectedFunction.inputs.map((input: AbiParameter, index) => (
+                    <InputField
+                      key={input.type + input?.name + index}
+                      label={input.name}
+                      value={functionParams?.[input.name || ''] || ''}
+                      setValue={(val) => setFunctionParams({ ...functionParams, [input.name || '']: val })}
+                      modal={false}
+                      placeholder={input?.internalType || input.type}
+                    />
+                  ))}
+              </>
+            )}
           </SDataContainer>
         </>
       )}
