@@ -1,5 +1,6 @@
 export * from './Bridge';
 export * from './Confirm';
+export * from './Error';
 export * from './Loading';
 export * from './Review';
 export * from './Settings';

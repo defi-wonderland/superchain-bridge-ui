@@ -11,6 +11,7 @@ import {
   TargetAddress,
   BridgeModal,
   WarningModal,
+  ErrorModal,
 } from '~/containers';
 import { Background } from '~/containers';
 import { useCustomTheme } from '~/hooks';
@@ -28,6 +29,7 @@ export const Modals = () => {
       <TargetAddress />
       <BridgeModal />
       <WarningModal />
+      <ErrorModal />
     </>
   );
 };

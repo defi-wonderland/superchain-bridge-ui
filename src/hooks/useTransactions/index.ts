@@ -1,5 +1,6 @@
 import { useChainId, useSwitchChain } from 'wagmi';
 import { useRouter } from 'next/router';
+import { BaseError } from 'viem';
 
 import { useChain, useLogs, useModal, useTransactionData } from '~/hooks';
 import { ModalType, TransactionStep, TransactionType } from '~/types';
@@ -7,7 +8,7 @@ import { useWithdraw } from './useWithdraw';
 import { useDeposit } from './useDeposit';
 
 export const useTransactions = () => {
-  const { transactionType, setTxStep } = useTransactionData();
+  const { transactionType, setTxStep, setErrorMessage } = useTransactionData();
   const { switchChainAsync } = useSwitchChain();
   const { fromChain } = useChain();
   const { refetchLogs } = useLogs();
@@ -70,8 +71,11 @@ export const useTransactions = () => {
         // TODO: reset values and refetch data
       }, 3000);
     } catch (e) {
-      console.warn(e);
-      setModalOpen(ModalType.REVIEW);
+      const error = e as BaseError;
+
+      setTxStep(TransactionStep.NONE);
+      setErrorMessage(error.shortMessage);
+      setModalOpen(ModalType.ERROR);
     }
   };
 

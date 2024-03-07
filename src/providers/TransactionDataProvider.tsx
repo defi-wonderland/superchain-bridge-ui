@@ -32,6 +32,9 @@ type ContextType = {
 
   txStep: TransactionStep;
   setTxStep: (val: TransactionStep) => void;
+
+  errorMessage?: string;
+  setErrorMessage: (val: string) => void;
 };
 
 interface StateProps {
@@ -47,6 +50,7 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
   const [value, setValue] = useState<string>('');
   const [data, setData] = useState<string>('');
   const [to, setTo] = useState<string>(address?.toString() || '');
+  const [errorMessage, setErrorMessage] = useState<string>();
 
   const { amount } = useToken();
   const [customTransactionType, setCustomTransactionType] = useState<CustomTransactionType>();
@@ -96,6 +100,8 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
         resetValues,
         txStep,
         setTxStep,
+        errorMessage,
+        setErrorMessage,
       }}
     >
       {children}
