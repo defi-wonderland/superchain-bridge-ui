@@ -33,6 +33,9 @@ export const TokenSection = () => {
       : setAmount(formatUnits(BigInt(balance), selectedToken?.decimals || 18));
   };
 
+  const filterSymbols = (e: React.KeyboardEvent<HTMLInputElement>) =>
+    ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault();
+
   const usdValue = getUsdBalance(price, inputValue, selectedToken?.decimals);
   const formattedBalance = formatDataNumber(balance, selectedToken?.decimals, 2, false, true);
 
@@ -58,7 +61,7 @@ export const TokenSection = () => {
           value={inputValue}
           onChange={handleOnChange}
           fullWidth
-          onKeyDown={(evt) => ['e', 'E', '+', '-'].includes(evt.key) && evt.preventDefault()}
+          onKeyDown={filterSymbols}
           InputLabelProps={{
             shrink: true,
           }}

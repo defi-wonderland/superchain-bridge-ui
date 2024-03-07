@@ -45,7 +45,7 @@ export const ReviewModal = () => {
         <Typography variant='body1'>Fees</Typography>
         <span>
           <Image src={gasIcon} alt='fees' />
-          {/* temporary fixed value */}
+          {/* TODO: calculate fees */}
           {'-'}
         </span>
       </DataRow>
