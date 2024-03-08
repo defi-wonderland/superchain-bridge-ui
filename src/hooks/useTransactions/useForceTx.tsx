@@ -4,7 +4,7 @@ import { useTransactionData, useToken, useCustomClient } from '~/hooks';
 import { forceErc20Transfer, forceErc20Withdrawal, forceEthTransfer, forceEthWithdrawal } from '~/utils';
 
 export const useForceTx = () => {
-  const { userAddress, to, value, customTransactionType, setTxStep } = useTransactionData();
+  const { userAddress, to, value, customTransactionType, setTxMetadata } = useTransactionData();
   const { selectedToken, amount, toToken, fromToken, parseTokenUnits } = useToken();
   const { customClient } = useCustomClient();
 
@@ -17,7 +17,7 @@ export const useForceTx = () => {
         console.log('calling forceEthWithdrawal');
 
         await forceEthWithdrawal({
-          setTxStep,
+          setTxMetadata,
           customClient,
           userAddress,
           amount: parseTokenUnits(value),
@@ -27,7 +27,7 @@ export const useForceTx = () => {
         console.log('calling forceErc20Withdrawal');
 
         await forceErc20Withdrawal({
-          setTxStep,
+          setTxMetadata,
           customClient,
           userAddress,
           amount: parseTokenUnits(amount),
@@ -41,7 +41,7 @@ export const useForceTx = () => {
         console.log('calling forceEthTransfer');
 
         await forceEthTransfer({
-          setTxStep,
+          setTxMetadata,
           customClient,
           userAddress,
           amount: parseTokenUnits(value),
@@ -51,7 +51,7 @@ export const useForceTx = () => {
         console.log('calling forceErc20Transfer');
 
         await forceErc20Transfer({
-          setTxStep,
+          setTxMetadata,
           customClient,
           userAddress,
           amount: parseTokenUnits(amount),
