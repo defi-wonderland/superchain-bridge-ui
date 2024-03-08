@@ -8,7 +8,7 @@ import BaseModal from '~/components/BaseModal';
 import { useTransactionData, useToken, useTransactions, useCustomTheme, useModal, useChain } from '~/hooks';
 import { PrimaryButton, STooltip, SecondaryButton } from '~/components';
 import { chainData, truncateAddress } from '~/utils';
-import { ModalType } from '~/types';
+import { ModalType, TransactionType } from '~/types';
 
 export const ReviewModal = () => {
   const { closeModal } = useModal();
@@ -22,6 +22,11 @@ export const ReviewModal = () => {
   const handleConfirm = async () => {
     executeTransaction();
   };
+
+  const showData =
+    transactionType !== TransactionType.PROVE &&
+    transactionType !== TransactionType.REPLAY &&
+    transactionType !== TransactionType.FINALIZE;
 
   return (
     <BaseModal type={ModalType.REVIEW} title='Review transaction'>
@@ -77,35 +82,39 @@ export const ReviewModal = () => {
         </STooltip>
       </DataRow>
 
-      <SDivider />
-
-      {data && (
-        // Custom data sent
-        <DataRow>
-          <Typography variant='body1'>Custom data</Typography>
-          <span>{data.length > 10 ? truncateAddress(data) : data}</span>
-        </DataRow>
-      )}
-
-      {!data && (
+      {showData && (
         <>
-          {/* Token sent */}
-          <DataRow>
-            <Typography variant='body1'>Send</Typography>
-            <span>
-              <Image src={selectedToken?.logoURI} alt={selectedToken?.name} width={20} height={20} />
-              {totalAmount} {selectedToken?.symbol}
-            </span>
-          </DataRow>
+          <SDivider />
 
-          {/* Token received */}
-          <DataRow>
-            <Typography variant='body1'>Receive</Typography>
-            <span>
-              <Image src={selectedToken?.logoURI} alt={selectedToken?.name} width={20} height={20} />
-              {totalAmount} {selectedToken?.symbol}
-            </span>
-          </DataRow>
+          {data && (
+            // Custom data sent
+            <DataRow>
+              <Typography variant='body1'>Custom data</Typography>
+              <span>{data.length > 10 ? truncateAddress(data) : data}</span>
+            </DataRow>
+          )}
+
+          {!data && (
+            <>
+              {/* Token sent */}
+              <DataRow>
+                <Typography variant='body1'>Send</Typography>
+                <span>
+                  <Image src={selectedToken?.logoURI} alt={selectedToken?.name} width={20} height={20} />
+                  {totalAmount} {selectedToken?.symbol}
+                </span>
+              </DataRow>
+
+              {/* Token received */}
+              <DataRow>
+                <Typography variant='body1'>Receive</Typography>
+                <span>
+                  <Image src={selectedToken?.logoURI} alt={selectedToken?.name} width={20} height={20} />
+                  {totalAmount} {selectedToken?.symbol}
+                </span>
+              </DataRow>
+            </>
+          )}
         </>
       )}
 
