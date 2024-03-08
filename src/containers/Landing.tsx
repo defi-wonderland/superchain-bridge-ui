@@ -16,5 +16,5 @@ const Container = styled(Box)`
   justify-content: start;
   height: 100%;
   width: 100%;
-  margin-top: 8rem;
+  margin: 6rem 0;
 `;

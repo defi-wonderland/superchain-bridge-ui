@@ -15,7 +15,26 @@ export const getMuiThemeConfig = (currentTheme: Theme, themeName: ThemeName) => 
           body: {
             background: currentTheme.backgroundPrimary,
             color: currentTheme.textPrimary,
-            // other global styles...
+
+            overflowY: 'scroll', // Always show scrollbar to prevent shifting content
+            '&::-webkit-scrollbar': {
+              width: '0.6rem',
+              height: '0.6rem',
+              background: 'transparent',
+            },
+
+            '&::-webkit-scrollbar-thumb': {
+              background: currentTheme.steel[700],
+              borderRadius: '0.4rem',
+            },
+
+            '&::-webkit-scrollbar-thumb:hover': {
+              background: currentTheme.steel[600],
+            },
+
+            '&::-webkit-scrollbar-thumb:active': {
+              background: currentTheme.steel[600],
+            },
           },
           a: {
             color: 'inherit',
