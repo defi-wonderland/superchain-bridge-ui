@@ -95,7 +95,11 @@ const History = () => {
           <STooltip title={copiedText === currentAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
             <Box className='account' onClick={() => copy(currentAddress?.toString() || '')}>
               {currentAddress && <Typography variant='body1'>{currentAddress}</Typography>}
-              <Image src={copiedText === currentAddress ? copyCheckIcon : copyIcon} alt='Copy to clipboard' />
+              <Image
+                src={copiedText === currentAddress ? copyCheckIcon : copyIcon}
+                alt='Copy to clipboard'
+                className='copy-to-clipboard'
+              />
             </Box>
           </STooltip>
         </HeaderContainer>
@@ -142,7 +146,8 @@ const HeaderContainer = styled(Box)(() => {
     gap: '1.2rem',
     width: '100%',
     cursor: 'default',
-    img: {
+    '.copy-to-clipboard': {
+      transition: currentTheme.transition,
       width: '2rem',
       height: '2rem',
     },
@@ -158,12 +163,23 @@ const HeaderContainer = styled(Box)(() => {
       flexDirection: 'row',
       alignItems: 'center',
       gap: '0.8rem',
+
+      '&:hover': {
+        img: {
+          filter: 'brightness(1.2)',
+        },
+      },
     },
     p: {
+      transition: currentTheme.transition,
       color: currentTheme.steel[300],
       fontSize: '1.6rem',
       fontWeight: 400,
       lineHeight: '1.8rem',
+
+      '&:hover': {
+        color: currentTheme.steel[200],
+      },
     },
 
     '.account': {

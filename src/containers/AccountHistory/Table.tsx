@@ -10,16 +10,18 @@ import {
   Typography,
   styled,
 } from '@mui/material';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import detailsIcon from '~/assets/icons/details-arrow.svg';
-import openLinkIcon from '~/assets/icons/open-link.svg';
 import noActivityIcon from '~/assets/icons/no-activity.svg';
+import copyIcon from '~/assets/icons/copy.svg';
+import copyCheckIcon from '~/assets/icons/copy-check.svg';
 
-import { chainData, createData, replaceSpacesWithHyphens, truncateAddress } from '~/utils';
-import { useChain, useCustomTheme, useLogs } from '~/hooks';
-import { SPagination, StatusChip } from '~/components';
+import { createData, replaceSpacesWithHyphens, truncateAddress } from '~/utils';
+import { useChain, useCopyToClipboard, useCustomTheme, useLogs } from '~/hooks';
+import { SPagination, STooltip, StatusChip } from '~/components';
 import { AccountLogs } from '~/types';
 
 interface ActivityTableProps {
@@ -31,9 +33,17 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
   const { setSelectedLog } = useLogs();
   const chainPath = replaceSpacesWithHyphens(fromChain?.name || '');
   const [paging, setPaging] = useState({ from: 0, to: itemsPerPage });
+  const [copiedText, copy] = useCopyToClipboard();
+  const navigate = useRouter();
 
-  const handleOpenTransaction = (log: AccountLogs) => {
+  const handleOpenTransaction = (log: AccountLogs, hash?: string) => {
     setSelectedLog(log);
+    hash && navigate.push(`/${chainPath}/tx/${hash}`);
+  };
+
+  const handleCopy = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, text?: string) => {
+    e.stopPropagation();
+    copy(text || '');
   };
 
   return (
@@ -53,7 +63,12 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
         {!!rows.length && (
           <STableBody>
             {rows.slice(paging.from, paging.to).map((row) => (
-              <STableRow key={row.txHash}>
+              <STableRow
+                key={row.txHash}
+                className={'row-' + row.status}
+                role='button'
+                onClick={() => handleOpenTransaction(row.log, row.txHash)}
+              >
                 {/* Transaction type */}
                 <TypeCell className='type'>{row.type}</TypeCell>
 
@@ -62,10 +77,16 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
 
                 {/* Transaction Hash */}
                 <TxHashCell>
-                  <Link href={`${chainData[fromChain.id].explorer}tx/${row.txHash}`} target='_blank'>
-                    {truncateAddress(row.txHash)}
-                    <Image src={openLinkIcon} alt='Open transaction in block explorer' />
-                  </Link>
+                  <STooltip title={copiedText === row.txHash ? 'Copied!' : 'Copy to clipboard'} arrow>
+                    <Box className='account' onClick={(e) => handleCopy(e, row.txHash)}>
+                      {row.txHash && <Typography variant='body1'>{truncateAddress(row.txHash)}</Typography>}
+                      <Image
+                        src={copiedText === row.txHash ? copyCheckIcon : copyIcon}
+                        alt='Copy to clipboard'
+                        className='copy-to-clipboard'
+                      />
+                    </Box>
+                  </STooltip>
                 </TxHashCell>
 
                 {/* Date & Time */}
@@ -135,16 +156,27 @@ const STableBody = styled(TableBody)(() => {
       minWidth: '6rem',
       width: '6rem',
     },
+
+    '.row-ready-to-prove, .row-ready-to-finalize': {
+      backgroundColor: '#231710',
+    },
+    '.row-ready-to-prove:hover, .row-ready-to-finalize:hover': {
+      filter: 'brightness(1.1)',
+      backgroundColor: '#231710',
+    },
   };
 });
 
 const STableRow = styled(TableRow)(() => {
   const { currentTheme } = useCustomTheme();
   return {
-    '& .details-link': {
+    cursor: 'pointer',
+    transition: currentTheme.transition,
+
+    '.details-link': {
       padding: 0,
     },
-    '& .details-link a': {
+    '.details-link a': {
       display: 'flex',
       width: '100%',
       height: '6.4rem',
@@ -152,8 +184,7 @@ const STableRow = styled(TableRow)(() => {
       justifyContent: 'center',
     },
 
-    '& .details-link a:hover': {
-      transition: currentTheme.transition,
+    '&:hover': {
       backgroundColor: currentTheme.steel[800],
     },
   };
@@ -176,15 +207,36 @@ const AmountCell = styled(TableCell)(() => {
 const TxHashCell = styled(TableCell)(() => {
   const { currentTheme } = useCustomTheme();
   return {
-    color: currentTheme.ghost[400],
-    a: {
+    color: currentTheme.steel[400],
+    div: {
+      display: 'flex',
+      alignItems: 'center',
+      cursor: 'pointer',
+      flexDirection: 'row',
+      gap: '0.4rem',
+
+      '&:hover': {
+        p: {
+          color: currentTheme.steel[300],
+        },
+        img: {
+          opacity: 1,
+        },
+      },
+    },
+    p: {
+      transition: currentTheme.transition,
+      fontSize: '1.4rem',
       display: 'flex',
       alignItems: 'center',
       gap: '0.4rem',
     },
 
-    'a:hover': {
-      textDecoration: 'underline',
+    img: {
+      transition: currentTheme.transition,
+      width: '1.6rem',
+      height: '1.6rem',
+      opacity: 0.7,
     },
   };
 });
