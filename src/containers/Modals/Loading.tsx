@@ -19,7 +19,7 @@ export const LoadingModal = () => {
     if (txStep !== TransactionStep.FINALIZED) return;
 
     const interval = setInterval(() => {
-      setTime((prev) => prev - 1);
+      setTime((prev) => prev && prev - 1);
     }, 1000);
     return () => clearInterval(interval);
   }, [time, txStep]);

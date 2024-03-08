@@ -2,13 +2,14 @@ import { useAccount, useSwitchChain } from 'wagmi';
 import { useRouter } from 'next/router';
 import { BaseError } from 'viem';
 
-import { useChain, useLogs, useModal, useTransactionData } from '~/hooks';
+import { useChain, useLogs, useModal, useToken, useTransactionData } from '~/hooks';
 import { ModalType, TransactionStep, TransactionType } from '~/types';
 import { useWithdraw } from './useWithdraw';
 import { useDeposit } from './useDeposit';
 
 export const useTransactions = () => {
-  const { transactionType, setTxStep, setErrorMessage } = useTransactionData();
+  const { transactionType, setTxStep, setErrorMessage, resetValues: resetTransactionData } = useTransactionData();
+  const { resetValues: resetTokenValues } = useToken();
   const { switchChainAsync } = useSwitchChain();
   const { fromChain } = useChain();
   const { refetchLogs } = useLogs();
@@ -60,6 +61,8 @@ export const useTransactions = () => {
       }
 
       setTxStep(TransactionStep.FINALIZED);
+      resetTokenValues();
+      resetTransactionData();
       refetchLogs();
 
       setTimeout(() => {
