@@ -8,7 +8,7 @@ import { useWithdraw } from './useWithdraw';
 import { useDeposit } from './useDeposit';
 
 export const useTransactions = () => {
-  const { transactionType, setTxStep, setErrorMessage, resetValues: resetTransactionData } = useTransactionData();
+  const { transactionType, setErrorMessage, resetValues: resetTransactionData, setTxMetadata } = useTransactionData();
   const { resetValues: resetTokenValues } = useToken();
   const { switchChainAsync } = useSwitchChain();
   const { fromChain } = useChain();
@@ -23,7 +23,7 @@ export const useTransactions = () => {
 
   const executeTransaction = async () => {
     setModalOpen(ModalType.LOADING);
-    setTxStep(TransactionStep.INITIATE);
+    setTxMetadata((prev) => ({ ...prev, step: TransactionStep.INITIATE }));
 
     try {
       if (chainId !== fromChain.id) {
@@ -60,7 +60,7 @@ export const useTransactions = () => {
           break;
       }
 
-      setTxStep(TransactionStep.FINALIZED);
+      setTxMetadata((prev) => ({ ...prev, step: TransactionStep.FINALIZED }));
       resetTokenValues();
       resetTransactionData();
       refetchLogs();
@@ -70,13 +70,12 @@ export const useTransactions = () => {
         if (router.query.tx) router.push(`/${router.query.chain}/account/${router.query.tx}`);
 
         setModalOpen(ModalType.SUCCESS);
-        setTxStep(TransactionStep.NONE);
-        // TODO: reset values and refetch data
+        setTxMetadata({ step: TransactionStep.NONE });
       }, 3000);
     } catch (e) {
       const error = e as BaseError;
 
-      setTxStep(TransactionStep.NONE);
+      setTxMetadata({ step: TransactionStep.NONE });
       setErrorMessage(error.shortMessage);
       setModalOpen(ModalType.ERROR);
     }

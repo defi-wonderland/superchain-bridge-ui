@@ -103,3 +103,9 @@ export enum TransactionStep {
   REPLAYING = 'Replaying Transaction',
   FINALIZED = 'Finalized Transaction',
 }
+
+export interface TransactionMetadata {
+  step: TransactionStep;
+  sourceHash?: string;
+  destinationHash?: string;
+}

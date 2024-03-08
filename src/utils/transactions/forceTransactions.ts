@@ -9,7 +9,13 @@ import {
 } from '~/types';
 import { excecuteL1Deposit } from './helpers';
 
-export const forceEthTransfer = async ({ customClient, amount, to, userAddress, setTxStep }: ForceEthTransferProps) => {
+export const forceEthTransfer = async ({
+  customClient,
+  amount,
+  to,
+  userAddress,
+  setTxMetadata,
+}: ForceEthTransferProps) => {
   // temporary fixed values
   const gas = 100_000n;
   const isCreation = false;
@@ -27,7 +33,7 @@ export const forceEthTransfer = async ({ customClient, amount, to, userAddress, 
   //   });
 
   const result = await excecuteL1Deposit({
-    setTxStep,
+    setTxMetadata,
     customClient,
     userAddress,
     to: customClient.from.contracts.portal!, //portal,
@@ -50,7 +56,7 @@ export const forceErc20Transfer = async ({
   to,
   userAddress,
   tokenAddress,
-  setTxStep,
+  setTxMetadata,
 }: ForceErc20TransferProps) => {
   // temporary fixed values
   const gas = 100_000n;
@@ -69,7 +75,7 @@ export const forceErc20Transfer = async ({
   // });
 
   const result = await excecuteL1Deposit({
-    setTxStep,
+    setTxMetadata,
     customClient,
     userAddress,
     to: customClient.from.contracts.portal!, //portal,
@@ -91,7 +97,7 @@ export const forceEthWithdrawal = async ({
   userAddress,
   to,
   amount,
-  setTxStep,
+  setTxMetadata,
 }: ForceEthWithdrawalProps) => {
   // temporary fixed values
   const extraData = '0x';
@@ -125,7 +131,7 @@ export const forceEthWithdrawal = async ({
   });
 
   const result = await excecuteL1Deposit({
-    setTxStep,
+    setTxMetadata,
     customClient,
     userAddress,
     to: customClient.from.contracts.portal!, // portal
@@ -149,7 +155,7 @@ export const forceErc20Withdrawal = async ({
   amount,
   l1TokenAddress,
   l2TokenAddress,
-  setTxStep,
+  setTxMetadata,
 }: ForceErc20WithdrawalProps) => {
   // temporary fixed values
   const extraData = '0x';
@@ -179,7 +185,7 @@ export const forceErc20Withdrawal = async ({
   });
 
   const result = await excecuteL1Deposit({
-    setTxStep,
+    setTxMetadata,
     customClient,
     userAddress,
     to: customClient.from.contracts.portal!, //portal,

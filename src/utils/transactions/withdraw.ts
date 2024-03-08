@@ -12,7 +12,7 @@ export const initiateETHWithdraw = async ({
   userAddress,
   mint,
   to,
-  setTxStep,
+  setTxMetadata,
 }: InitiateWithdrawProps) => {
   // temporary fixed values
   const extraData = '0x';
@@ -28,19 +28,19 @@ export const initiateETHWithdraw = async ({
   });
 
   const hash = await customClient.from.wallet?.writeContract(request);
-  setTxStep(TransactionStep.PROCESSING);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.PROCESSING, sourceHash: hash }));
 
   if (!hash) throw new Error('No hash returned');
 
   // Wait for the initiate withdrawal transaction receipt.
   const receipt = await customClient.from.public.waitForTransactionReceipt({ hash: hash });
-  setTxStep(TransactionStep.REPLAYING);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.REPLAYING }));
 
   await customClient.to.public.waitToProve({
     receipt,
     targetChain: customClient.from.public.chain,
   } as WaitToProveParameters);
-  setTxStep(TransactionStep.FINALIZED);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.FINALIZED }));
 
   // temporary log
   console.log(receipt);
@@ -52,7 +52,7 @@ export const initiateERC20Withdraw = async ({
   amount,
   l1TokenAddress,
   l2TokenAddress,
-  setTxStep,
+  setTxMetadata,
 }: InitiateERC20WithdrawProps) => {
   // temporary fixed values
   const extraData = '0x';
@@ -68,19 +68,19 @@ export const initiateERC20Withdraw = async ({
   });
 
   const hash = await customClient.from.wallet?.writeContract(request);
-  setTxStep(TransactionStep.PROCESSING);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.PROCESSING, sourceHash: hash }));
 
   if (!hash) throw new Error('No hash returned');
 
   // Wait for the initiate withdrawal transaction receipt.
   const receipt = await customClient.from.public.waitForTransactionReceipt({ hash: hash });
-  setTxStep(TransactionStep.REPLAYING);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.REPLAYING }));
 
   await customClient.to.public.waitToProve({
     receipt,
     targetChain: customClient.from.public.chain,
   } as WaitToProveParameters);
-  setTxStep(TransactionStep.FINALIZED);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.FINALIZED }));
 
   // temporary log
   console.log(receipt);
@@ -90,7 +90,7 @@ export const initiateMessageWithdraw = async ({
   customClient,
   userAddress,
   message,
-  setTxStep,
+  setTxMetadata,
 }: InitiateMessageWithdrawProps) => {
   // temporary fixed values
   const minGasLimit = 200_000; // TODO - get this from the contract
@@ -105,19 +105,19 @@ export const initiateMessageWithdraw = async ({
   });
 
   const hash = await customClient.from.wallet?.writeContract(request);
-  setTxStep(TransactionStep.PROCESSING);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.PROCESSING, sourceHash: hash }));
 
   if (!hash) throw new Error('No hash returned');
 
   // Wait for the initiate withdrawal transaction receipt.
   const receipt = await customClient.from.public.waitForTransactionReceipt({ hash: hash });
-  setTxStep(TransactionStep.REPLAYING);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.REPLAYING }));
 
   await customClient.to.public.waitToProve({
     receipt,
     targetChain: customClient.from.public.chain,
   } as WaitToProveParameters);
-  setTxStep(TransactionStep.FINALIZED);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.FINALIZED }));
 
   // temporary log
   console.log(receipt);

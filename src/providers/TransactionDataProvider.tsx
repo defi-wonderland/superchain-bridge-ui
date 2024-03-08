@@ -1,9 +1,9 @@
-import { createContext, useEffect, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, createContext, useEffect, useMemo, useState } from 'react';
 import { Address, isAddress, isHex } from 'viem';
 import { useAccount } from 'wagmi';
 
 import { useModal, useToken } from '~/hooks';
-import { CustomTransactionType, ModalType, TransactionStep, TransactionType } from '~/types';
+import { CustomTransactionType, ModalType, TransactionMetadata, TransactionStep, TransactionType } from '~/types';
 
 type ContextType = {
   userAddress?: Address;
@@ -30,8 +30,8 @@ type ContextType = {
   transactionType: TransactionType;
   setTransactionType: (val: TransactionType) => void;
 
-  txStep: TransactionStep;
-  setTxStep: (val: TransactionStep) => void;
+  txMetadata: TransactionMetadata;
+  setTxMetadata: Dispatch<SetStateAction<TransactionMetadata>>;
 
   errorMessage?: string;
   setErrorMessage: (val: string) => void;
@@ -55,7 +55,7 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
   const { amount } = useToken();
   const [customTransactionType, setCustomTransactionType] = useState<CustomTransactionType>();
   const [transactionType, setTransactionType] = useState<TransactionType>(TransactionType.NONE);
-  const [txStep, setTxStep] = useState<TransactionStep>(TransactionStep.NONE);
+  const [txMetadata, setTxMetadata] = useState<TransactionMetadata>({ step: TransactionStep.NONE });
 
   const isReady = useMemo(() => {
     return !!((mint || value || amount || isHex(data)) && isAddress(to));
@@ -98,8 +98,8 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
         setCustomTransactionType,
         isReady,
         resetValues,
-        txStep,
-        setTxStep,
+        txMetadata,
+        setTxMetadata,
         errorMessage,
         setErrorMessage,
       }}

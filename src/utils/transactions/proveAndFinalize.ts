@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import { Address, TransactionReceipt } from 'viem';
 import {
   FinalizeWithdrawalParameters,
@@ -5,15 +6,15 @@ import {
   ProveWithdrawalParameters,
   getWithdrawals,
 } from 'viem/op-stack';
-import { CustomClients, TransactionStep } from '~/types';
+import { CustomClients, TransactionMetadata, TransactionStep } from '~/types';
 
 interface ProveWithdrawalProps {
   customClient: CustomClients;
   receipt: TransactionReceipt;
   userAddress: Address;
-  setTxStep: (val: TransactionStep) => void;
+  setTxMetadata: Dispatch<SetStateAction<TransactionMetadata>>;
 }
-export const proveWithdrawal = async ({ customClient, receipt, userAddress, setTxStep }: ProveWithdrawalProps) => {
+export const proveWithdrawal = async ({ customClient, receipt, userAddress, setTxMetadata }: ProveWithdrawalProps) => {
   const [withdrawal] = getWithdrawals(receipt);
 
   const output = await customClient.from.public.getL2Output({
@@ -29,12 +30,12 @@ export const proveWithdrawal = async ({ customClient, receipt, userAddress, setT
   });
 
   const hash = await customClient.from.wallet?.proveWithdrawal(args as ProveWithdrawalParameters);
-  setTxStep(TransactionStep.PROCESSING);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.PROCESSING, sourceHash: hash }));
 
   if (!hash) throw new Error('No hash returned');
 
   await customClient.from.public.waitForTransactionReceipt({ hash });
-  setTxStep(TransactionStep.FINALIZED);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.FINALIZED }));
 
   // temporary log
   console.log({ hash });
@@ -44,13 +45,13 @@ interface FinalizeWithdrawalProps {
   customClient: CustomClients;
   receipt: TransactionReceipt;
   userAddress: Address;
-  setTxStep: (val: TransactionStep) => void;
+  setTxMetadata: Dispatch<SetStateAction<TransactionMetadata>>;
 }
 export const finalizeWithdrawal = async ({
   customClient,
   receipt,
   userAddress,
-  setTxStep,
+  setTxMetadata,
 }: FinalizeWithdrawalProps) => {
   const [withdrawal] = getWithdrawals(receipt);
 
@@ -59,12 +60,12 @@ export const finalizeWithdrawal = async ({
     targetChain: customClient.to.public.chain, // L2 chain
     withdrawal,
   } as FinalizeWithdrawalParameters<typeof customClient.to.public.chain>);
-  setTxStep(TransactionStep.PROCESSING);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.PROCESSING, sourceHash: hash }));
 
   if (!hash) throw new Error('No hash returned');
 
   await customClient.from.public.waitForTransactionReceipt({ hash });
-  setTxStep(TransactionStep.FINALIZED);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.FINALIZED }));
 
   // temporary log
   console.log({ hash });

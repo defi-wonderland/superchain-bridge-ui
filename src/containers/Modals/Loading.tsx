@@ -3,12 +3,19 @@ import { Box, Typography, styled } from '@mui/material';
 
 import { Step } from '~/components';
 import BaseModal from '~/components/BaseModal';
-import { useCustomTheme, useTransactionData } from '~/hooks';
+import { useChain, useCustomTheme, useTransactionData } from '~/hooks';
 import { ModalType, TransactionStep, TransactionType } from '~/types';
 
 export const LoadingModal = () => {
-  const { txStep, transactionType } = useTransactionData();
+  const {
+    txMetadata: { step: txStep, sourceHash, destinationHash },
+    transactionType,
+  } = useTransactionData();
+  const { fromChain, toChain } = useChain();
   const [time, setTime] = useState(3);
+
+  const sourceChainId = fromChain?.id;
+  const destinationChainId = toChain?.id;
 
   const dynamicRedirectText = useMemo(() => {
     if (txStep === TransactionStep.FINALIZED) return `Redirecting in ${time}`;
@@ -32,29 +39,47 @@ export const LoadingModal = () => {
             {txStep === TransactionStep.INITIATE && (
               <>
                 <Step text='Initiate Transaction' status='loading' />
-                <Step text='Processing Transaction' status='idle' />
-                <Step text='Relaying Transaction' status='idle' connector={false} />
+                <Step text='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='idle' />
+                <Step
+                  text='Relaying Transaction'
+                  chainId={destinationChainId}
+                  hash={destinationHash}
+                  status='idle'
+                  connector={false}
+                />
               </>
             )}
             {txStep === TransactionStep.PROCESSING && (
               <>
                 <Step text='Initiate Transaction' status='success' />
-                <Step text='Processing Transaction' status='loading' />
-                <Step text='Relaying Transaction' status='idle' connector={false} />
+                <Step text='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='loading' />
+                <Step
+                  text='Relaying Transaction'
+                  chainId={destinationChainId}
+                  hash={destinationHash}
+                  status='idle'
+                  connector={false}
+                />
               </>
             )}
             {txStep === TransactionStep.REPLAYING && (
               <>
                 <Step text='Initiate Transaction' status='success' />
-                <Step text='Processing Transaction' status='success' />
-                <Step text='Relaying Transaction' status='loading' connector={false} />
+                <Step text='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='success' />
+                <Step
+                  text='Relaying Transaction'
+                  chainId={destinationChainId}
+                  hash={destinationHash}
+                  status='loading'
+                  connector={false}
+                />
               </>
             )}
             {txStep === TransactionStep.FINALIZED && (
               <>
                 <Step text='Initiate Transaction' status='success' />
-                <Step text='Processing Transaction' status='success' />
-                <Step text='Relaying Transaction' status='final' />
+                <Step text='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='success' />
+                <Step text='Relaying Transaction' chainId={destinationChainId} hash={destinationHash} status='final' />
               </>
             )}
           </>
@@ -65,20 +90,32 @@ export const LoadingModal = () => {
             {txStep === TransactionStep.INITIATE && (
               <>
                 <Step text='Initiate Transaction' status='loading' />
-                <Step text='Processing Transaction' status='idle' connector={false} />
+                <Step
+                  text='Processing Transaction'
+                  chainId={sourceChainId}
+                  hash={sourceHash}
+                  status='idle'
+                  connector={false}
+                />
               </>
             )}
             {txStep === TransactionStep.PROCESSING && (
               <>
                 <Step text='Initiate Transaction' status='success' />
-                <Step text='Processing Transaction' status='loading' connector={false} />
+                <Step
+                  text='Processing Transaction'
+                  chainId={sourceChainId}
+                  hash={sourceHash}
+                  status='loading'
+                  connector={false}
+                />
               </>
             )}
 
             {txStep === TransactionStep.FINALIZED && (
               <>
                 <Step text='Initiate Transaction' status='success' />
-                <Step text='Processing Transaction' status='final' />
+                <Step text='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='final' />
               </>
             )}
           </>

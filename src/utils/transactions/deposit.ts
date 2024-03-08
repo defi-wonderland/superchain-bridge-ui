@@ -2,7 +2,7 @@ import { DepositERC20Props, DepositETHProps, DepositMessageProps, TransactionSte
 import { bridgeERC20ToABI, bridgeETHToABI, sendMessageABI } from '../parsedAbis';
 import { waitForL2TransactionReceipt } from './helpers';
 
-export const depositETH = async ({ customClient, userAddress, mint, to, setTxStep }: DepositETHProps) => {
+export const depositETH = async ({ customClient, userAddress, mint, to, setTxMetadata }: DepositETHProps) => {
   // temporary fixed values
   const extraData = '0x';
   const minGasLimit = 132303;
@@ -18,16 +18,14 @@ export const depositETH = async ({ customClient, userAddress, mint, to, setTxSte
 
   const hash = await customClient.from.wallet?.writeContract(request);
 
-  setTxStep(TransactionStep.PROCESSING);
+  setTxMetadata((prev) => ({ ...prev, step: TransactionStep.PROCESSING, sourceHash: hash }));
 
   const l2Receipt = await waitForL2TransactionReceipt(
     customClient.from.public,
     customClient.to.public,
-    setTxStep,
+    setTxMetadata,
     hash,
   );
-
-  setTxStep(TransactionStep.PROCESSING);
 
   // temporary log
   console.log(l2Receipt);
@@ -41,7 +39,7 @@ export const depositERC20 = async ({
   l1TokenAddress,
   l2TokenAddress,
   approve,
-  setTxStep,
+  setTxMetadata,
 }: DepositERC20Props) => {
   if (BigInt(allowance) < amount) {
     await approve();
@@ -65,7 +63,7 @@ export const depositERC20 = async ({
   const l2Receipt = await waitForL2TransactionReceipt(
     customClient.from.public,
     customClient.to.public,
-    setTxStep,
+    setTxMetadata,
     hash,
   );
 
@@ -73,7 +71,13 @@ export const depositERC20 = async ({
   console.log(l2Receipt);
 };
 
-export const depositMessage = async ({ customClient, userAddress, target, data, setTxStep }: DepositMessageProps) => {
+export const depositMessage = async ({
+  customClient,
+  userAddress,
+  target,
+  data,
+  setTxMetadata,
+}: DepositMessageProps) => {
   // temporary fixed values
   const minGasLimit = 200_000;
 
@@ -91,7 +95,7 @@ export const depositMessage = async ({ customClient, userAddress, target, data, 
   const l2Receipt = await waitForL2TransactionReceipt(
     customClient.from.public,
     customClient.to.public,
-    setTxStep,
+    setTxMetadata,
     hash,
   );
 
