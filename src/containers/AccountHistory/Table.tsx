@@ -159,10 +159,11 @@ const STableBody = styled(TableBody)(() => {
 
     '.row-ready-to-prove, .row-ready-to-finalize': {
       backgroundColor: '#231710',
-    },
-    '.row-ready-to-prove:hover, .row-ready-to-finalize:hover': {
-      filter: 'brightness(1.1)',
-      backgroundColor: '#231710',
+
+      '&:hover': {
+        filter: 'brightness(1.1)',
+        backgroundColor: '#231710',
+      },
     },
   };
 });
