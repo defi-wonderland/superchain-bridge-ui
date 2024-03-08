@@ -1,4 +1,4 @@
-import { useChainId, useSwitchChain } from 'wagmi';
+import { useAccount, useSwitchChain } from 'wagmi';
 import { useRouter } from 'next/router';
 import { BaseError } from 'viem';
 
@@ -12,7 +12,7 @@ export const useTransactions = () => {
   const { switchChainAsync } = useSwitchChain();
   const { fromChain } = useChain();
   const { refetchLogs } = useLogs();
-  const chainId = useChainId();
+  const { chainId } = useAccount();
   const router = useRouter();
 
   const { setModalOpen } = useModal();

@@ -3,20 +3,25 @@ import Image from 'next/image';
 
 import successIcon from '~/assets/icons/check-circle.svg';
 import BaseModal from '~/components/BaseModal';
-import { useCustomTheme, useModal } from '~/hooks';
+import { useCustomTheme, useModal, useQueryParams, useTransactionData } from '~/hooks';
 import { PrimaryButton } from '~/components';
-import { ModalType } from '~/types';
+import { ModalType, QueryParamKey } from '~/types';
 import Link from 'next/link';
 
 export const SuccessModal = () => {
   const { closeModal } = useModal();
+  const { getParam } = useQueryParams();
+  const { userAddress } = useTransactionData();
+  const chain = getParam(QueryParamKey.chain);
 
   return (
     <BaseModal type={ModalType.SUCCESS}>
       <ModalBody>
         <Image src={successIcon} alt='Success' width={100} height={100} />
         <Typography variant='h4'>Transaction complete</Typography>
-        <Link href='/'>View on block explorer</Link>
+        <Link href={`/${chain}/account/${userAddress}`} onClick={closeModal}>
+          View on account history
+        </Link>
       </ModalBody>
       <PrimaryButton variant='contained' color='primary' fullWidth onClick={closeModal}>
         Confirm
