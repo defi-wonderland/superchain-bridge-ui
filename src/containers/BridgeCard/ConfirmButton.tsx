@@ -38,7 +38,7 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
         return true;
       }
     }
-    console.log({ to });
+
     if (to && !isAddress(to)) {
       setButtonErrorText('Invalid target address');
       return true;
