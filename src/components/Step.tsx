@@ -11,13 +11,14 @@ import { chainData, truncateAddress } from '~/utils';
 import { useCustomTheme } from '~/hooks';
 
 interface StepProps {
-  text: string;
+  title: string;
+  text?: string;
   status: 'success' | 'pending' | 'loading' | 'idle' | 'failed' | 'final';
   hash?: string;
   connector?: boolean;
   chainId?: number;
 }
-export const Step = ({ hash, text, status, chainId = 11_155_111, connector = true }: StepProps) => {
+export const Step = ({ hash, text, title, status, chainId = 11_155_111, connector = true }: StepProps) => {
   return (
     <StepContainer>
       <Box>
@@ -31,7 +32,7 @@ export const Step = ({ hash, text, status, chainId = 11_155_111, connector = tru
 
       <Box>
         <Typography variant='body1' className={status}>
-          {text}
+          {title}
         </Typography>
 
         {hash && (
@@ -40,6 +41,8 @@ export const Step = ({ hash, text, status, chainId = 11_155_111, connector = tru
             <Image src={openLinkIcon} alt='Open transaction in block explorer' />
           </Link>
         )}
+
+        {text && <StyledText variant='body1'>{text}</StyledText>}
       </Box>
     </StepContainer>
   );
@@ -57,6 +60,7 @@ const StepContainer = styled(Box)(() => {
     fontWeight: 500,
     lineHeight: '150%',
     gap: '1.2rem',
+    paddingRight: '2rem',
 
     '.MuiCircularProgress-circle': {
       color: '#4AA16C',
@@ -71,7 +75,7 @@ const StepContainer = styled(Box)(() => {
       gap: '0.4rem',
     },
 
-    p: {
+    'p:first-of-type': {
       fontSize: '1.6rem',
       color: currentTheme.steel[200],
     },
@@ -124,5 +128,15 @@ const Connector = styled('canvas')(() => {
     width: '0.2rem',
     height: '4.2rem',
     margin: '0.4rem auto',
+  };
+});
+
+const StyledText = styled(Typography)(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    color: currentTheme.steel[400],
+    fontSize: '1.6rem',
+    fontWeight: 400,
+    lineHeight: '2rem',
   };
 });

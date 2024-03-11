@@ -46,6 +46,9 @@ export const getMuiThemeConfig = (currentTheme: Theme, themeName: ThemeName) => 
               marginRight: '0',
             },
           },
+          img: {
+            pointerEvents: 'none',
+          },
         },
       },
     },

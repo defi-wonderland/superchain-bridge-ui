@@ -38,10 +38,11 @@ export const LoadingModal = () => {
           <>
             {txStep === TransactionStep.INITIATE && (
               <>
-                <Step text='Initiate Transaction' status='loading' />
-                <Step text='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='idle' />
+                {/* TODO: abstract and simplify this stepper */}
+                <Step title='Initiate Transaction' text='Proceed in your wallet' status='loading' />
+                <Step title='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='idle' />
                 <Step
-                  text='Relaying Transaction'
+                  title='Relaying Transaction'
                   chainId={destinationChainId}
                   hash={destinationHash}
                   status='idle'
@@ -51,10 +52,10 @@ export const LoadingModal = () => {
             )}
             {txStep === TransactionStep.PROCESSING && (
               <>
-                <Step text='Initiate Transaction' status='success' />
-                <Step text='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='loading' />
+                <Step title='Initiate Transaction' text='Proceed in your wallet' status='success' />
+                <Step title='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='loading' />
                 <Step
-                  text='Relaying Transaction'
+                  title='Relaying Transaction'
                   chainId={destinationChainId}
                   hash={destinationHash}
                   status='idle'
@@ -64,10 +65,10 @@ export const LoadingModal = () => {
             )}
             {txStep === TransactionStep.REPLAYING && (
               <>
-                <Step text='Initiate Transaction' status='success' />
-                <Step text='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='success' />
+                <Step title='Initiate Transaction' text='Proceed in your wallet' status='success' />
+                <Step title='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='success' />
                 <Step
-                  text='Relaying Transaction'
+                  title='Relaying Transaction'
                   chainId={destinationChainId}
                   hash={destinationHash}
                   status='loading'
@@ -77,9 +78,9 @@ export const LoadingModal = () => {
             )}
             {txStep === TransactionStep.FINALIZED && (
               <>
-                <Step text='Initiate Transaction' status='success' />
-                <Step text='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='success' />
-                <Step text='Relaying Transaction' chainId={destinationChainId} hash={destinationHash} status='final' />
+                <Step title='Initiate Transaction' text='Proceed in your wallet' status='success' />
+                <Step title='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='success' />
+                <Step title='Relaying Transaction' chainId={destinationChainId} hash={destinationHash} status='final' />
               </>
             )}
           </>
@@ -89,9 +90,9 @@ export const LoadingModal = () => {
           <>
             {txStep === TransactionStep.INITIATE && (
               <>
-                <Step text='Initiate Transaction' status='loading' />
+                <Step title='Initiate Transaction' text='Proceed in your wallet' status='loading' />
                 <Step
-                  text='Processing Transaction'
+                  title='Processing Transaction'
                   chainId={sourceChainId}
                   hash={sourceHash}
                   status='idle'
@@ -101,9 +102,9 @@ export const LoadingModal = () => {
             )}
             {txStep === TransactionStep.PROCESSING && (
               <>
-                <Step text='Initiate Transaction' status='success' />
+                <Step title='Initiate Transaction' text='Proceed in your wallet' status='success' />
                 <Step
-                  text='Processing Transaction'
+                  title='Processing Transaction'
                   chainId={sourceChainId}
                   hash={sourceHash}
                   status='loading'
@@ -114,8 +115,8 @@ export const LoadingModal = () => {
 
             {txStep === TransactionStep.FINALIZED && (
               <>
-                <Step text='Initiate Transaction' status='success' />
-                <Step text='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='final' />
+                <Step title='Initiate Transaction' text='Proceed in your wallet' status='success' />
+                <Step title='Processing Transaction' chainId={sourceChainId} hash={sourceHash} status='final' />
               </>
             )}
           </>

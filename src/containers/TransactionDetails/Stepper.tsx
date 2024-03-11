@@ -29,14 +29,15 @@ export const Stepper = () => {
       <SDataContainer>
         {(transactionType === 'Deposit' || transactionType === 'Force Tx') && (
           <>
+            {/* TODO: abstract and simplify this stepper */}
             <Step
-              text='Initiate Transaction'
+              title='Initiate Transaction'
               hash={selectedLog?.transactionHash || ''}
               chainId={selectedLog?.originChain}
               status='success'
             />
             <Step
-              text='Finalized Transaction'
+              title='Finalized Transaction'
               hash={selectedLog?.l2TransactionHash}
               chainId={selectedLog?.destinationChain}
               status='final'
@@ -49,71 +50,71 @@ export const Stepper = () => {
             {selectedLog?.status === 'waiting-to-prove' && (
               <>
                 <Step
-                  text='Initiate Transaction'
+                  title='Initiate Transaction'
                   hash={selectedLog?.transactionHash || ''}
                   chainId={selectedLog.originChain}
                   status='success'
                 />
-                <Step text='Wait to Prove' status='loading' />
-                <Step text='Prove Withdrawal' status='idle' />
-                <Step text='Wait 7 days' status='idle' />
-                <Step text='Finalize Withdrawal' status='idle' connector={false} />
+                <Step title='Wait to Prove' text='Wait up to 5 minutes' status='loading' />
+                <Step title='Prove Withdrawal' status='idle' />
+                <Step title='Wait 7 days' text='Wait up to 5 minutes if you are on a Tesnet' status='idle' />
+                <Step title='Finalize Withdrawal' status='idle' connector={false} />
               </>
             )}
             {selectedLog?.status === 'ready-to-prove' && (
               <>
                 <Step
-                  text='Initiate Transaction'
+                  title='Initiate Transaction'
                   hash={selectedLog?.transactionHash || ''}
                   chainId={selectedLog.originChain}
                   status='success'
                 />
-                <Step text='Wait to Prove' status='success' />
-                <Step text='Prove Withdrawal' status='pending' />
-                <Step text='Wait 7 days' status='idle' />
-                <Step text='Finalize Withdrawal' status='idle' connector={false} />
+                <Step title='Wait to Prove' text='Wait up to 5 minutes' status='success' />
+                <Step title='Prove Withdrawal' status='pending' />
+                <Step title='Wait 7 days' text='Wait up to 5 minutes if you are on a Tesnet' status='idle' />
+                <Step title='Finalize Withdrawal' status='idle' connector={false} />
               </>
             )}
             {selectedLog?.status === 'waiting-to-finalize' && (
               <>
                 <Step
-                  text='Initiate Transaction'
+                  title='Initiate Transaction'
                   hash={selectedLog?.transactionHash || ''}
                   chainId={selectedLog.originChain}
                   status='success'
                 />
-                <Step text='Wait to Prove' status='success' />
-                <Step text='Prove Withdrawal' status='success' />
-                <Step text='Wait 7 days' status='loading' />
-                <Step text='Finalize Withdrawal' status='idle' connector={false} />
+                <Step title='Wait to Prove' text='Wait up to 5 minutes' status='success' />
+                <Step title='Prove Withdrawal' status='success' />
+                <Step title='Wait 7 days' text='Wait up to 5 minutes if you are on a Tesnet' status='loading' />
+                <Step title='Finalize Withdrawal' status='idle' connector={false} />
               </>
             )}
             {selectedLog?.status === 'ready-to-finalize' && (
               <>
                 <Step
-                  text='Initiate Transaction'
+                  title='Initiate Transaction'
                   hash={selectedLog?.transactionHash || ''}
                   chainId={selectedLog.originChain}
                   status='success'
                 />
-                <Step text='Wait to Prove' status='success' />
-                <Step text='Prove Withdrawal' status='success' />
-                <Step text='Wait 7 days' status='success' />
-                <Step text='Finalize Withdrawal' status='pending' connector={false} />
+                <Step title='Wait to Prove' text='Wait up to 5 minutes' status='success' />
+                <Step title='Prove Withdrawal' status='success' />
+                <Step title='Wait 7 days' text='Wait up to 5 minutes if you are on a Tesnet' status='success' />
+                <Step title='Finalize Withdrawal' status='pending' connector={false} />
               </>
             )}
             {selectedLog?.status === 'finalized' && (
               <>
                 <Step
-                  text='Initiate Transaction'
+                  title='Initiate Transaction'
                   hash={selectedLog?.transactionHash || ''}
                   chainId={selectedLog.originChain}
                   status='success'
                 />
-                <Step text='Wait to Prove' status='success' />
-                <Step text='Prove Withdrawal' status='success' />
-                <Step text='Wait 7 days' status='success' />
-                <Step text='Finalize Withdrawal' status='final' />
+                <Step title='Wait to Prove' text='Wait up to 5 minutes' status='success' />
+                <Step title='Prove Withdrawal' status='success' />
+                <Step title='Wait 7 days' text='Wait up to 5 minutes if you are on a Tesnet' status='success' />
+                <Step title='Finalize Withdrawal' status='final' />
               </>
             )}
           </>
