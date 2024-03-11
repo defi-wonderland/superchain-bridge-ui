@@ -14,7 +14,9 @@ export function Web3ModalProvider({ children }: { children: React.ReactElement }
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={darkTheme()}>{children}</RainbowKitProvider>
+        <RainbowKitProvider modalSize='compact' theme={darkTheme()}>
+          {children}
+        </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
