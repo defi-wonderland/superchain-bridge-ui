@@ -1,4 +1,4 @@
-import { Badge, Box, IconButton } from '@mui/material';
+import { Badge, Box, IconButton, useMediaQuery } from '@mui/material';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { styled } from '@mui/material/styles';
 import { useAccount } from 'wagmi';
@@ -14,6 +14,7 @@ import historyIcon from '~/assets/icons/clock-rewind.svg';
 import settingsIcon from '~/assets/icons/settings.svg';
 
 export const Header = () => {
+  const isMobile = useMediaQuery('(max-width: 600px)');
   const { address } = useAccount();
   const { transactionPending } = useLogs();
   const { toChain } = useChain();
@@ -35,14 +36,15 @@ export const Header = () => {
         query: { chain: chainPath, account: address },
       }
     : '#';
-
   return (
     <HeaderContainer>
       {/* Left section */}
       <LeftSection>
-        <Link href='/' replace>
-          <Image src={logo} alt='Superchain Bridge' priority />
-        </Link>
+        {!isMobile && (
+          <Link href='/' replace>
+            <Image src={logo} alt='Superchain Bridge' priority />
+          </Link>
+        )}
       </LeftSection>
 
       {/* Right section */}
