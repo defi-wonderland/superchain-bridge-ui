@@ -15,9 +15,10 @@ interface ChainSelectProps {
   setValue: (chain: Chain) => void;
   list: Chain[];
   disabled?: boolean;
+  isExternal?: boolean;
 }
 
-export const ChainSelect = ({ label, list, value, setValue, disabled }: ChainSelectProps) => {
+export const ChainSelect = ({ label, list, value, setValue, disabled, isExternal }: ChainSelectProps) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -39,6 +40,7 @@ export const ChainSelect = ({ label, list, value, setValue, disabled }: ChainSel
     <SBox className='chain-select'>
       {label && <SInputLabel>{label}</SInputLabel>}
       <MenuButton
+        className={isExternal ? 'external' : ''}
         aria-controls={open ? 'demo-customized-menu' : undefined}
         aria-haspopup='true'
         aria-expanded={open ? 'true' : undefined}
@@ -79,6 +81,10 @@ const SBox = styled(Box)(() => {
     flexDirection: 'column',
     gap: '0.8rem',
     width: '100%',
+
+    '.external': {
+      backgroundColor: 'transparent',
+    },
   };
 });
 

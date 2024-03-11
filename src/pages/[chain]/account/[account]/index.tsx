@@ -89,7 +89,7 @@ const History = () => {
               <Typography variant='h1'>Account History</Typography>
             </Box>
 
-            <ChainSelect value={toChain} setValue={handleTo} list={l2Chains} />
+            <ChainSelect value={toChain} setValue={handleTo} list={l2Chains} isExternal />
           </Box>
 
           <STooltip title={copiedText === currentAddress ? 'Copied!' : 'Copy to clipboard'} arrow>

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Box, IconButton, Typography, styled } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
@@ -15,44 +16,46 @@ const Transaction = () => {
   const { address } = useAccount();
   const { getParam } = useQueryParams();
   const chain = getParam(QueryParamKey.chain);
+  const hash = getParam(QueryParamKey.tx);
   const router = useRouter();
 
   const handleBack = () => {
     router.push(address ? `/${chain}/account/${address}` : '/');
   };
 
-  // temporary redirect
-  // useEffect(() => {
-  //   if (selectedLog?.transactionHash !== hash) {
-  //     router.push('/');
-  //   }
-  // }, [hash, router, selectedLog?.transactionHash]);
+  useEffect(() => {
+    if (selectedLog?.transactionHash !== hash) {
+      router.push('/');
+    }
+  }, [hash, router, selectedLog?.transactionHash]);
 
   return (
     <>
       <CustomHead title='Transaction Details' />
 
-      <Container>
-        <SMainCardContainer>
-          <HeaderContainer>
-            <Box>
-              <IconButton onClick={handleBack}>
-                <Image src={arrowLeft} alt='back' />
-              </IconButton>
-              <Typography variant='h1'>{selectedLog?.type}</Typography>
-              <StatusChip status={selectedLog?.status || ''} title />
-            </Box>
-          </HeaderContainer>
+      {selectedLog && (
+        <Container>
+          <SMainCardContainer>
+            <HeaderContainer>
+              <Box>
+                <IconButton onClick={handleBack}>
+                  <Image src={arrowLeft} alt='back' />
+                </IconButton>
+                <Typography variant='h1'>{selectedLog?.type}</Typography>
+                <StatusChip status={selectedLog?.status || ''} title />
+              </Box>
+            </HeaderContainer>
 
-          <Content>
-            {/* Left section */}
-            <TxDetails />
+            <Content>
+              {/* Left section */}
+              <TxDetails />
 
-            {/* Right section */}
-            <Stepper />
-          </Content>
-        </SMainCardContainer>
-      </Container>
+              {/* Right section */}
+              <Stepper />
+            </Content>
+          </SMainCardContainer>
+        </Container>
+      )}
     </>
   );
 };
