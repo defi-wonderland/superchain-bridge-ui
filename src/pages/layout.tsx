@@ -71,10 +71,9 @@ const MainContent = styled(Box)`
 
   max-width: 120rem;
   padding: 0 4rem;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0 auto;
 
-  // mediaquery
   @media (max-width: 600px) {
     padding: 0 1.6rem;
   }

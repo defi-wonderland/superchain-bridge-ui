@@ -34,7 +34,15 @@ export const TargetButtons = () => {
         <SInputLabel>You receive</SInputLabel>
 
         <StyledStack direction='row' gap='0.8rem'>
-          <Image src={selectedToken.logoURI} alt={selectedToken.name} className='token-image' width={24} height={24} />
+          {selectedToken?.logoURI && (
+            <Image
+              src={selectedToken.logoURI}
+              alt={selectedToken.name}
+              className='token-image'
+              width={24}
+              height={24}
+            />
+          )}
           {formattedAmount} {selectedToken?.symbol}
           {amountToShow && <span className='usd-value'>({usdValue})</span>}
         </StyledStack>

@@ -56,7 +56,7 @@ export const MainCardContainer = styled('main')(() => {
     justifyContent: 'center',
     alignItems: 'start',
     padding: '2rem 2.4rem 3.2rem 2.4rem',
-    maxWidth: '51.2rem',
+    width: '51.2rem',
     gap: '2.4rem',
 
     '@media (max-width: 600px)': {
