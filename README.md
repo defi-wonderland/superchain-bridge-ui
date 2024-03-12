@@ -1,47 +1,52 @@
-# Web3 React Boilerplate
+# Superchain Bridge UI
 
-## Features
+Official interface for Superchain Bridge.
 
-- Modern React setup with the latest tools and libraries.
-- Boilerplate for building web3-enabled applications.
-- Example unit and integration tests included.
-- Code linting and formatting for clean and maintainable code.
-- GitHub workflows for continuous integration.
+## Development
 
-## Setup
+To set up the development environment, follow these steps:
 
-1. Clone this repository.
-2. Copy the `.env.example` file to `.env` and fill in the variables.
-3. Install the project dependencies by running:
+1. Clone the repository:
 
-   ```bash
-   yarn install
-   ```
+```bash
+git clone [this repo link] && cd superchain-bridge-ui
+```
 
-## Available Scripts
+2. Install dependencies:
 
-Available scripts that can be run using `yarn`:
+```bash
+yarn
+```
 
-| Script         | Description                                                  |
-| -------------- | ------------------------------------------------------------ |
-| `dev`          | Start the development server using Vite.                     |
-| `build`        | Build the project for production.                            |
-| `preview`      | Preview the production build using Vite.                     |
-| `lint`         | Run ESLint on the source code to check for coding standards. |
-| `lint:fix`     | Run ESLint and automatically fix code formatting issues.     |
-| `prettier`     | Check code formatting using Prettier.                        |
-| `prettier:fix` | Format code using Prettier and automatically fix issues.     |
-| `format`       | Run Prettier and ESLint to format and fix code issues.       |
-| `format:check` | Check code formatting and linting without making changes.    |
-| `test`         | Run unit tests using Vitest.                                 |
-| `test:watch`   | Run Vitest in watch mode.                                    |
+3. Configure the `.env` variables:
 
-## Technologies Used
+```bash
+cp .env.example .env
+```
 
-This boilerplate leverages the latest technologies, including:
+4. Start the app:
 
-- [Vite](https://vitejs.dev/)
-- [Vitest](https://vitest.dev/)
-- [Wagmi](https://wagmi.sh/)
-- [Viem](https://viem.sh/)
-- [Rainbowkit](https://www.rainbowkit.com/)
+```bash
+yarn dev
+```
+
+The app should be live at [http://localhost:5173/](http://localhost:5173/)
+
+## Production
+
+To build the production version of the app and preview it, use the following commands:
+
+```bash
+yarn build
+yarn preview
+```
+
+The app should be live at [http://localhost:4173/](http://localhost:4173/)
+
+## Contributors
+
+Superchain Bridge UI was built with ❤️ by [Wonderland](https://defi.sucks).
+
+Wonderland is a team of top Web3 researchers, developers, and operators who believe that the future needs to be open-source, permissionless, and decentralized.
+
+[DeFi sucks](https://defi.sucks), but Wonderland is here to make it better.

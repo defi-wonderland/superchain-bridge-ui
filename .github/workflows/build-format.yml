@@ -1,0 +1,71 @@
+name: Build and Format
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21.4'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+
+      - name: Install project dependencies
+        run: pnpm install --frozen-lockfile --prefer-frozen-lockfile
+
+      - name: Build project dependencies
+        run: pnpm run build
+        env:
+          NEXT_PUBLIC_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_PROJECT_ID }}
+
+  check:
+    name: Check for crypto
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check for crypto
+        uses: defi-wonderland/check-crypto-action@v1
+        with:
+          title: Check private key and notify
+          branch: dev
+          only_notify: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  format:
+    name: Lint and Prettier
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21.4'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+
+      - name: Install project dependencies
+        run: pnpm install --frozen-lockfile --prefer-frozen-lockfile
+
+      - name: Run Prettier
+        run: pnpm prettier
+
+      - name: Run Linter
+        run: pnpm lint

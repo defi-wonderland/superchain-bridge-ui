@@ -1,0 +1,29 @@
+name: E2E Tests
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  cypress-run:
+    if: false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Create env file
+        run: |
+          touch .env
+          echo NEXT_PUBLIC_RPC_URL="${{ secrets.NEXT_PUBLIC_RPC_URL }}" >> .env
+          echo NEXT_PUBLIC_TEST_PRIVATE_KEY="${{ secrets.NEXT_PUBLIC_TEST_PRIVATE_KEY }}" >> .env
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          start: yarn test:fork, yarn test:app

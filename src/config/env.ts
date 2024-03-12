@@ -1,11 +1,10 @@
 import { Env } from '~/types';
 
 export const getEnv = (): Env => {
-  const { VITE_RPC_URL, VITE_PROJECT_ID, VITE_ALCHEMY_KEY } = import.meta.env;
-
   return {
-    RPC_URL: VITE_RPC_URL,
-    PROJECT_ID: VITE_PROJECT_ID,
-    ALCHEMY_KEY: VITE_ALCHEMY_KEY,
+    RPC_URL: process.env.NEXT_PUBLIC_RPC_URL || '',
+    PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID || '',
+    ALCHEMY_KEY: process.env.NEXT_PUBLIC_ALCHEMY_KEY || '',
+    ETHERSCAN_KEY: process.env.NEXT_PUBLIC_ETHERSCAN_KEY || '',
   };
 };

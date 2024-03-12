@@ -25,3 +25,11 @@ dist-ssr
 
 .eslintcache
 .env
+
+# next.js
+/.next/
+/out/
+
+# cypress 
+/cypress/videos
+/cypress/screenshots
