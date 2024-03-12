@@ -29,7 +29,7 @@ export const TargetButtons = () => {
   const tooltipTitle = userAddress === to ? 'This is your connected wallet' : 'This is not your connected wallet';
 
   return (
-    <Stack direction='row' gap='0.8rem' width='100%'>
+    <Container direction='row' gap='0.8rem' width='100%'>
       <BasicButton fullWidth disabled>
         <SInputLabel>You receive</SInputLabel>
 
@@ -46,9 +46,17 @@ export const TargetButtons = () => {
           <>{to ? truncateAddress(to) : '-'}</>
         </BasicButton>
       </STooltip>
-    </Stack>
+    </Container>
   );
 };
+
+const Container = styled(Stack)(() => {
+  return {
+    '@media (max-width: 600px)': {
+      flexDirection: 'column',
+    },
+  };
+});
 
 const BasicButton = styled(Button)(() => {
   const { currentTheme } = useCustomTheme();

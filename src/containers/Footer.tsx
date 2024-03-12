@@ -28,12 +28,21 @@ export const Footer = () => {
 
 const FooterContainer = styled('footer')`
   display: flex;
-  height: 8rem;
+  height: auto;
   align-items: center;
   padding: 3.2rem 0 4.8rem 0;
   justify-content: space-between;
   margin-top: auto;
   width: 100%;
+
+  @media (max-width: 600px) {
+    display: flex;
+    margin-top: 16rem;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    padding: 2rem 1.6rem 8rem;
+  }
 `;
 
 const RightSide = styled(Box)(() => {
@@ -50,6 +59,10 @@ const RightSide = styled(Box)(() => {
         transition: currentTheme.transition,
         color: currentTheme.steel[100],
       },
+    },
+
+    '@media (max-width: 600px)': {
+      marginBottom: '3.2rem',
     },
   };
 });

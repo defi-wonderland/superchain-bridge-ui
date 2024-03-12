@@ -56,8 +56,13 @@ export const MainCardContainer = styled('main')(() => {
     justifyContent: 'center',
     alignItems: 'start',
     padding: '2rem 2.4rem 3.2rem 2.4rem',
-    width: '51.2rem',
+    maxWidth: '51.2rem',
     gap: '2.4rem',
+
+    '@media (max-width: 600px)': {
+      padding: '1.6rem 1.6rem 2.4rem',
+      width: '100%',
+    },
   };
 });
 

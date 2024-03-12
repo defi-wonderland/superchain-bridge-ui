@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { styled, MenuProps, MenuItem, Menu, Box } from '@mui/material';
+import { styled, MenuProps, MenuItem, Menu, Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import { Chain } from 'viem';
 
@@ -52,7 +52,7 @@ export const ChainSelect = ({ label, list, value, setValue, disabled, isExternal
         disabled={disabled || list.length < 2}
       >
         <Image src={chainData[value.id].logo} alt={`${value.name} logo`} width={32} height={32} />
-        {value.name}
+        <Typography>{value.name}</Typography>
       </MenuButton>
 
       <StyledMenu
@@ -100,11 +100,22 @@ const MenuButton = styled(BasicButton)(() => {
       marginLeft: 'auto',
     },
 
+    p: {
+      fontSize: '1.6rem',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    },
+
     '&:disabled': {
       backgroundColor: currentTheme.steel[800],
       color: currentTheme.steel[300],
       border: 'none',
       opacity: 1,
+    },
+
+    '@media (max-width: 600px)': {
+      gap: '0.6rem',
     },
   };
 });
