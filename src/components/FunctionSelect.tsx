@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { styled, MenuProps, MenuItem, Menu, Box } from '@mui/material';
+import { styled, MenuProps, MenuItem, Menu, Box, Typography } from '@mui/material';
 import Image from 'next/image';
 import { AbiFunction } from 'viem';
 
@@ -46,7 +46,7 @@ export const FunctionSelect = ({ list, value, setValue, disabled }: FunctionSele
         fullWidth
         disabled={disabled}
       >
-        {value?.name || 'Enter a valid ABI to see available functions'}
+        <Typography>{value?.name || 'Enter a valid ABI to see available functions'}</Typography>
       </MenuButton>
 
       <StyledMenu
@@ -89,9 +89,16 @@ const MenuButton = styled(BasicButton)(() => {
     height: '4.9rem',
     padding: '1rem 1.4rem',
     lineHeight: '2.4rem',
-    fontSize: '1.6rem',
     justifyContent: 'start',
     gap: '0.8rem',
+
+    p: {
+      fontSize: '1.6rem',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+    },
+
     '.MuiButton-endIcon': {
       marginLeft: 'auto',
     },

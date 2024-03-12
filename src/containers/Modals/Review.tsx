@@ -7,7 +7,7 @@ import gasIcon from '~/assets/icons/gas.svg';
 import BaseModal from '~/components/BaseModal';
 import { useTransactionData, useToken, useTransactions, useCustomTheme, useModal, useChain } from '~/hooks';
 import { PrimaryButton, STooltip, SecondaryButton } from '~/components';
-import { chainData, truncateAddress } from '~/utils';
+import { chainData, formatDataNumber, truncateAddress } from '~/utils';
 import { ModalType, TransactionType } from '~/types';
 
 export const ReviewModal = () => {
@@ -101,7 +101,7 @@ export const ReviewModal = () => {
                 <Typography variant='body1'>Send</Typography>
                 <span>
                   <Image src={selectedToken?.logoURI} alt={selectedToken?.name} width={20} height={20} />
-                  {totalAmount} {selectedToken?.symbol}
+                  {formatDataNumber(totalAmount, 0, 4, false)} {selectedToken?.symbol}
                 </span>
               </DataRow>
 
@@ -110,7 +110,7 @@ export const ReviewModal = () => {
                 <Typography variant='body1'>Receive</Typography>
                 <span>
                   <Image src={selectedToken?.logoURI} alt={selectedToken?.name} width={20} height={20} />
-                  {totalAmount} {selectedToken?.symbol}
+                  {formatDataNumber(totalAmount, 0, 4, false)} {selectedToken?.symbol}
                 </span>
               </DataRow>
             </>

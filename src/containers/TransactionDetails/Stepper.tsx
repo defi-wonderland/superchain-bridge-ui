@@ -136,4 +136,8 @@ const SDataContainer = styled(DataContainer)(() => {
   };
 });
 
-const RightSection = styled(LeftSection)({});
+const RightSection = styled(LeftSection)({
+  '@media (max-width: 600px)': {
+    width: '100%',
+  },
+});

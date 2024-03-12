@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from 'react';
-import { Box, IconButton, Typography, styled } from '@mui/material';
+import { Box, IconButton, Typography, styled, useMediaQuery } from '@mui/material';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useAccount } from 'wagmi';
@@ -10,11 +10,12 @@ import copyIcon from '~/assets/icons/copy.svg';
 import copyCheckIcon from '~/assets/icons/copy-check.svg';
 
 import { MainCardContainer, ActivityTable } from '~/containers';
-import { createData, formatDataNumber, getTimestamps } from '~/utils';
+import { createData, formatDataNumber, getTimestamps, truncateAddress } from '~/utils';
 import { useChain, useCopyToClipboard, useCustomClient, useCustomTheme, useLogs, useTokenList } from '~/hooks';
 import { ChainSelect, CustomHead, STooltip, TableSkeleton } from '~/components';
 
 const History = () => {
+  const isMobile = useMediaQuery('(max-width:600px)');
   const router = useRouter();
   const { refetchLogs } = useLogs();
   const { setToChain, toChain, l2Chains } = useChain();
@@ -83,18 +84,21 @@ const History = () => {
         <HeaderContainer>
           <Box>
             <Box>
-              <IconButton onClick={handleBack}>
-                <Image src={arrowLeft} alt='back' />
-              </IconButton>
+              {!isMobile && (
+                <IconButton onClick={handleBack}>
+                  <Image src={arrowLeft} alt='back' />
+                </IconButton>
+              )}
               <Typography variant='h1'>Account History</Typography>
             </Box>
-
-            <ChainSelect value={toChain} setValue={handleTo} list={l2Chains} isExternal />
+            {!isMobile && <ChainSelect value={toChain} setValue={handleTo} list={l2Chains} isExternal />}
           </Box>
 
           <STooltip title={copiedText === currentAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
             <Box className='account' onClick={() => copy(currentAddress?.toString() || '')}>
-              {currentAddress && <Typography variant='body1'>{currentAddress}</Typography>}
+              {currentAddress && (
+                <Typography variant='body1'>{isMobile ? truncateAddress(currentAddress) : currentAddress}</Typography>
+              )}
               <Image
                 src={copiedText === currentAddress ? copyCheckIcon : copyIcon}
                 alt='Copy to clipboard'
@@ -116,10 +120,16 @@ export default History;
 export const SMainCardContainer = styled(MainCardContainer)(() => {
   return {
     overflow: 'auto',
+    maxWidth: '100%',
     width: '84.3rem',
     maxHeight: '68rem',
     boxShadow: 'none',
     padding: '2rem 3.2rem',
+
+    '@media (max-width: 600px)': {
+      padding: '2rem 1.6rem',
+      maxHeight: '100%',
+    },
   };
 });
 

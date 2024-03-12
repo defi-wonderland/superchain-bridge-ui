@@ -90,6 +90,7 @@ export const SModal = styled(Box)(() => {
     '@media (max-width: 600px)': {
       minWidth: '100%',
       margin: '0rem 1.6rem',
+      padding: '1.6rem 2rem 3.2rem',
     },
   };
 });

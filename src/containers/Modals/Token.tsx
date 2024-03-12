@@ -79,8 +79,6 @@ export const ListContainer = styled(Box)(() => {
     display: 'flex',
     flexDirection: 'column',
     maxHeight: '40rem',
-    // marginLeft: '-1.2rem',
-    // width: 'calc(100% + 2.4rem)',
     width: '100%',
   };
 });

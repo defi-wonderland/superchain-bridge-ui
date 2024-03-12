@@ -83,7 +83,15 @@ const SBox = styled(Box)(() => {
     width: '100%',
 
     '.external': {
+      height: 'auto',
       backgroundColor: 'transparent',
+      '&:hover': {
+        backgroundColor: 'transparent',
+      },
+      img: {
+        height: '2.2rem',
+        width: '2.2rem',
+      },
     },
   };
 });

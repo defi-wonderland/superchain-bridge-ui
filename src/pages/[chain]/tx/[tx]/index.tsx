@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Box, IconButton, Typography, styled } from '@mui/material';
+import { Box, IconButton, Typography, styled, useMediaQuery } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
@@ -12,6 +12,7 @@ import { CustomHead, StatusChip } from '~/components';
 import { QueryParamKey } from '~/types';
 
 const Transaction = () => {
+  const isMobile = useMediaQuery('(max-width:600px)');
   const { selectedLog } = useLogs();
   const { address } = useAccount();
   const { getParam } = useQueryParams();
@@ -38,9 +39,11 @@ const Transaction = () => {
           <SMainCardContainer>
             <HeaderContainer>
               <Box>
-                <IconButton onClick={handleBack}>
-                  <Image src={arrowLeft} alt='back' />
-                </IconButton>
+                {!isMobile && (
+                  <IconButton onClick={handleBack}>
+                    <Image src={arrowLeft} alt='back' />
+                  </IconButton>
+                )}
                 <Typography variant='h1'>{selectedLog?.type}</Typography>
                 <StatusChip status={selectedLog?.status || ''} title />
               </Box>
@@ -65,10 +68,16 @@ export default Transaction;
 export const SMainCardContainer = styled(MainCardContainer)(() => {
   return {
     overflow: 'auto',
+    maxWidth: '100%',
     width: '84.3rem',
     maxHeight: '68rem',
     boxShadow: 'none',
     padding: '2rem 3.2rem 3.2rem 3.2rem',
+
+    '@media (max-width: 600px)': {
+      padding: '2rem 1.6rem',
+      maxHeight: '100%',
+    },
   };
 });
 
@@ -134,5 +143,10 @@ const Content = styled(Box)(() => {
     justifyContent: 'start',
     width: '100%',
     gap: '3.2rem',
+
+    '@media (max-width: 600px)': {
+      flexDirection: 'column-reverse',
+      gap: '1.6rem',
+    },
   };
 });
