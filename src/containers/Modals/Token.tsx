@@ -57,8 +57,9 @@ export const TokensModal = () => {
               {/* Token balances */}
               <RightSection>
                 <Box>
-                  <Typography variant='h3'>2.6</Typography>
-                  <Typography variant='body1'>$4.813,43</Typography>
+                  {/* TODO: fetch token balances and prices */}
+                  {/* <Typography variant='h3'>2.6</Typography>
+                  <Typography variant='body1'>$4.813,43</Typography> */}
                 </Box>
               </RightSection>
             </Token>

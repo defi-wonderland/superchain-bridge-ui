@@ -29,7 +29,8 @@ export const BridgeSection = () => {
           <Image src={optimismLogo} alt='' className='bridge-image' />
           <Typography>Optimism Gateway</Typography>
         </Box>
-        <BridgeIcons gas='$7.21' time='2m' />
+        {/* TODO: calculate gas */}
+        <BridgeIcons gas='-' time='2m' />
       </Box>
     </MenuButton>
   );

@@ -29,6 +29,7 @@ export interface TokenData {
   symbol: string;
   decimals: number;
   logoURI: string;
+  cctp?: boolean;
   extensions: {
     optimismBridgeAddress?: string;
     baseBridgeAddress?: string;
@@ -46,6 +47,7 @@ export enum TransactionType {
   REPLAY = 'Replay transaction',
   BRIDGE = 'Bridge',
   SWAP = 'Swap',
+  CCTP = 'Cross-Chain Transfer',
 }
 
 export type CustomTransactionType = 'custom-tx' | 'force-withdrawal' | 'force-transfer';
@@ -108,4 +110,13 @@ export interface TransactionMetadata {
   step: TransactionStep;
   sourceHash?: string;
   destinationHash?: string;
+}
+
+export interface CCTPData {
+  [chain: string]: {
+    domain: number;
+    tokenMessenger: Address;
+    messageTransmitter: Address;
+    tokenMinter: Address;
+  };
 }

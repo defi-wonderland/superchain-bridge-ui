@@ -6,12 +6,13 @@ import { useChain, useLogs, useModal, useToken, useTransactionData } from '~/hoo
 import { ModalType, TransactionStep, TransactionType } from '~/types';
 import { useWithdraw } from './useWithdraw';
 import { useDeposit } from './useDeposit';
+import { useCCTP } from './useCCTP';
 
 export const useTransactions = () => {
   const { transactionType, setErrorMessage, resetValues: resetTransactionData, setTxMetadata } = useTransactionData();
   const { resetValues: resetTokenValues } = useToken();
   const { switchChainAsync } = useSwitchChain();
-  const { fromChain } = useChain();
+  const { fromChain, toChain } = useChain();
   const { refetchLogs } = useLogs();
   const { chainId } = useAccount();
   const router = useRouter();
@@ -19,7 +20,8 @@ export const useTransactions = () => {
   const { setModalOpen } = useModal();
 
   const deposit = useDeposit();
-  const { withdraw, prove, finalize } = useWithdraw();
+  const { withdraw, prove, finalize: finalizeWithdrawal } = useWithdraw();
+  const { initiate, finalize } = useCCTP();
 
   const executeTransaction = async () => {
     setModalOpen(ModalType.LOADING);
@@ -44,7 +46,7 @@ export const useTransactions = () => {
           break;
 
         case TransactionType.FINALIZE:
-          await finalize();
+          await finalizeWithdrawal();
           break;
 
         case TransactionType.SWAP:
@@ -57,6 +59,19 @@ export const useTransactions = () => {
 
         case TransactionType.BRIDGE:
           // TODO: Implement bridge <- use Lifi
+          break;
+
+        case TransactionType.CCTP:
+          {
+            // initiate the transaction on the source chain
+            const result = await initiate();
+            const { message, attestation } = result || {};
+
+            await switchChainAsync({ chainId: toChain.id });
+
+            // finalize the transaction on the destination chain
+            await finalize(message, attestation);
+          }
           break;
       }
 

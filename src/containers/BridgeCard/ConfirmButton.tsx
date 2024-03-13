@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Button, styled } from '@mui/material';
-import { isAddress, isHex, parseEther } from 'viem';
+import { isAddress, isHex, parseEther, parseUnits } from 'viem';
 
 import { useChain, useCustomTheme, useModal, useToken, useTransactionData } from '~/hooks';
 import { ModalType, TransactionType } from '~/types';
@@ -31,18 +31,13 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
   const isButtonDisabled = useMemo(() => {
     setButtonErrorText('');
 
-    if (isFromAnL2 && isToAnL2) {
-      setButtonErrorText('Coming soon');
-      return true;
-    }
-
     if (selectedToken.symbol === 'ETH') {
       if (parseEther(mint) > BigInt(ethBalance) || parseEther(value) > BigInt(ethBalance)) {
         setButtonErrorText('Insufficient balance');
         return true;
       }
     } else {
-      if (parseEther(amount) > BigInt(balance)) {
+      if (parseUnits(amount, selectedToken?.decimals) > BigInt(balance)) {
         setButtonErrorText('Insufficient balance');
         return true;
       }
@@ -64,10 +59,9 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
     balance,
     data,
     ethBalance,
-    isFromAnL2,
     isReady,
-    isToAnL2,
     mint,
+    selectedToken?.decimals,
     selectedToken?.symbol,
     to,
     userAddress,
@@ -77,23 +71,26 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
   const handleReview = useCallback(() => {
     let openModal = ModalType.REVIEW;
 
-    // If both chains are L2, it's a bridge transaction
-    if (isFromAnL2 && isToAnL2) {
+    if (selectedToken.cctp) {
+      // TODO: display a warning modal if the ip is not allowed
+      setTransactionType(TransactionType.CCTP);
+    } else if (isFromAnL2 && isToAnL2) {
+      // If both chains are L2, it's a bridge transaction
       setTransactionType(TransactionType.BRIDGE);
-      // If the source chain is L2 and the destination chain is L1, it's a withdraw transaction
     } else if (isFromAnL2 && !isToAnL2) {
+      // If the source chain is L2 and the destination chain is L1, it's a withdraw transaction
       setTransactionType(TransactionType.WITHDRAW);
       openModal = ModalType.WARNING;
-      // If the source chain is L1 and the destination chain is L2, it's a deposit transaction
     } else if (!isFromAnL2 && isToAnL2) {
+      // If the source chain is L1 and the destination chain is L2, it's a deposit transaction
       setTransactionType(TransactionType.DEPOSIT);
-      // If both chains are L1, it's a swap transaction
     } else {
+      // If both chains are L1, it's a swap transaction
       setTransactionType(TransactionType.SWAP);
     }
 
     setModalOpen(openModal);
-  }, [isFromAnL2, isToAnL2, setModalOpen, setTransactionType]);
+  }, [isFromAnL2, isToAnL2, selectedToken.cctp, setModalOpen, setTransactionType]);
 
   const buttonMessage = useMemo(() => {
     if (!isButtonDisabled) return 'Review transaction';

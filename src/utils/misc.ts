@@ -1,4 +1,4 @@
-import { Chain, PublicClient, formatUnits, parseUnits } from 'viem';
+import { Chain, Hex, PublicClient, formatUnits, parseUnits } from 'viem';
 import { contracts } from './variables';
 import { AccountLogs, CustomClients, OpContracts } from '~/types';
 
@@ -124,4 +124,8 @@ export const createData = (
   log: AccountLogs,
 ) => {
   return { type, amount, txHash, dateTime: formatTimestamp(timestamp), status, log };
+};
+
+export const bytes20ToBytes32 = (address: string): Hex => {
+  return ('0x' + address.slice(2).padStart(64, '0')) as Hex;
 };

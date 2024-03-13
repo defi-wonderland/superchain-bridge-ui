@@ -30,7 +30,8 @@ export const BridgeModal = () => {
             </LeftSection>
 
             {/* Bridge Info */}
-            <BridgeIcons gas='$7.21' time='2m' />
+            {/* TODO: calculate gas */}
+            <BridgeIcons gas='-' time='2m' />
           </Bridge>
         </CustomScrollbar>
       </ListContainer>

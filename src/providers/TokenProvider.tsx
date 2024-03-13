@@ -25,7 +25,7 @@ type ContextType = {
   allowance: string;
   setAllowance: (val: string) => void;
 
-  approve: () => Promise<void>;
+  approve: (spender: string) => Promise<void>;
 
   parseTokenUnits: (val: string) => bigint;
 
@@ -51,8 +51,7 @@ export const TokenProvider = ({ children }: StateProps) => {
     customClient: { from },
   } = useCustomClient();
 
-  const ethToken = fromTokens.find((token) => token.symbol === 'ETH');
-  const [selectedToken, setSelectedToken] = useState<TokenData>(ethToken!);
+  const [selectedToken, setSelectedToken] = useState<TokenData>(fromTokens[0]);
   const [price, setPrice] = useState<number>(1242.36);
 
   // amount is the value of the input field
@@ -82,15 +81,14 @@ export const TokenProvider = ({ children }: StateProps) => {
     [selectedToken],
   );
 
-  const approve = async () => {
+  const approve = async (spender: string) => {
     try {
       const { request } = await from.public.simulateContract({
         account: address,
         abi: erc20Abi,
         address: selectedToken?.address as Address,
         functionName: 'approve',
-        // temporary fixed spender
-        args: [from.contracts.standardBridge, parseTokenUnits(amount)],
+        args: [spender as Address, parseTokenUnits(amount)],
       });
       const hash = await from.wallet?.writeContract(request);
 
@@ -153,6 +151,10 @@ export const TokenProvider = ({ children }: StateProps) => {
     },
     [selectedToken],
   );
+
+  useEffect(() => {
+    setSelectedToken(fromTokens[0]);
+  }, [fromTokens]);
 
   return (
     <TokenContext.Provider
