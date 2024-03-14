@@ -95,8 +95,10 @@ export const getStatusText = (status: string) => {
   }
 };
 
-export const getTxDetailsButtonText = (status: string) => {
-  switch (status) {
+export const getTxDetailsButtonText = (selectedLog: AccountLogs) => {
+  if (selectedLog.type === 'CCTP') return 'Receive Message';
+
+  switch (selectedLog?.status) {
     case 'ready-to-prove':
       return 'Prove Withdrawal';
     case 'ready-to-finalize':

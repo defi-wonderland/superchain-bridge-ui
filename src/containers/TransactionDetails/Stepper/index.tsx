@@ -36,7 +36,7 @@ export const Stepper = () => {
 
         {isActionRequired && (
           <PrimaryButton onClick={handleReview} disabled={!userAddress}>
-            {getTxDetailsButtonText(selectedLog?.status || '')}
+            {getTxDetailsButtonText(selectedLog)}
           </PrimaryButton>
         )}
       </SDataContainer>
