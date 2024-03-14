@@ -17,13 +17,22 @@ import { ChainSelect, CustomHead, STooltip, TableSkeleton } from '~/components';
 const History = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
   const router = useRouter();
-  const { refetchLogs } = useLogs();
   const { setToChain, toChain, l2Chains } = useChain();
   const { address: currentAddress } = useAccount();
   const [copiedText, copy] = useCopyToClipboard();
   const { customClient } = useCustomClient();
   const { fromTokens, toTokens } = useTokenList();
-  const { depositLogs, withdrawLogs, orderedLogs, isSuccess, setOrderedLogs, isLoading, setIsLoading } = useLogs();
+  const {
+    cctpLogs,
+    depositLogs,
+    withdrawLogs,
+    orderedLogs,
+    isSuccess,
+    setOrderedLogs,
+    isLoading,
+    setIsLoading,
+    refetchLogs,
+  } = useLogs();
 
   const handleTo = (chain: Chain) => {
     setToChain(chain);
@@ -32,7 +41,7 @@ const History = () => {
 
   const getOrderedLogs = useCallback(async () => {
     if (!depositLogs || !withdrawLogs) return;
-    const accountLogs = [...depositLogs.accountLogs, ...withdrawLogs.accountLogs];
+    const accountLogs = [...depositLogs.accountLogs, ...withdrawLogs.accountLogs, ...cctpLogs];
     const blocks = await getTimestamps(accountLogs, customClient);
 
     const logsWithTimestamp = accountLogs.map((log, index) => {
@@ -43,7 +52,7 @@ const History = () => {
     const reversedLogs = orderedLogs.reverse(); // latest logs first
     setOrderedLogs(reversedLogs);
     setIsLoading(false);
-  }, [customClient, depositLogs, setIsLoading, setOrderedLogs, withdrawLogs]);
+  }, [cctpLogs, customClient, depositLogs, setIsLoading, setOrderedLogs, withdrawLogs]);
 
   const rows = useMemo(() => {
     const data = orderedLogs.map((eventLog) => {
