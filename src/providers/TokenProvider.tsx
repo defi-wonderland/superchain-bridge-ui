@@ -140,7 +140,7 @@ export const TokenProvider = ({ children }: StateProps) => {
   }, [
     address,
     cctpData,
-    from.contracts.standardBridge,
+    from.contracts?.standardBridge,
     from.public,
     fromChain.id,
     fromToken?.address,

@@ -92,7 +92,11 @@ const getMintEvents = async ({ customClient, data, burnData }: GetAllMintLogsPar
       return burn;
     });
 
-    return newBurnData;
+    const filteredBurnData = newBurnData.filter(
+      (burn) => burn.destinationDomain === data[customClient.to.public.chain!.id].domain,
+    );
+
+    return filteredBurnData;
   } catch (error) {
     console.error(error);
     return [];

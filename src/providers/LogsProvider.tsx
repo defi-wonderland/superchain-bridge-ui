@@ -77,6 +77,7 @@ export const LogsProvider = ({ children }: StateProps) => {
     setIsLoading(true);
     setDepositLogs(undefined);
     setWithdrawLogs(undefined);
+    setCctpLogs([]);
     setOrderedLogs([]);
     refetch();
   };
