@@ -1,6 +1,6 @@
 import { Address, Chain, Hex, keccak256, parseAbi, parseEventLogs } from 'viem';
 
-import { CCTPData, CustomClients } from '~/types';
+import { CctpType, CustomClients } from '~/types';
 import { bytes20ToBytes32 } from '~/utils';
 
 const depositForBurnAbi = parseAbi([
@@ -17,7 +17,7 @@ interface BurnUSDCParams {
   amount: bigint;
   allowance: string;
   approve: (spender: string) => Promise<void>;
-  data: CCTPData;
+  data: CctpType;
 }
 export const depositForBurn = async ({
   customClient,
@@ -95,7 +95,7 @@ interface ReceiveMessageParams {
   message: Hex;
   attestation: Hex;
   destinationChain?: Chain;
-  data: CCTPData;
+  data: CctpType;
 }
 export const receiveMessage = async ({
   customClient,

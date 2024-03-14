@@ -31,7 +31,7 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
   const isButtonDisabled = useMemo(() => {
     setButtonErrorText('');
 
-    if (selectedToken.symbol === 'ETH') {
+    if (selectedToken?.symbol === 'ETH') {
       if (parseEther(mint) > BigInt(ethBalance) || parseEther(value) > BigInt(ethBalance)) {
         setButtonErrorText('Insufficient balance');
         return true;
@@ -71,7 +71,7 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
   const handleReview = useCallback(() => {
     let openModal = ModalType.REVIEW;
 
-    if (selectedToken.cctp) {
+    if (selectedToken?.cctp) {
       // TODO: display a warning modal if the ip is not allowed
       setTransactionType(TransactionType.CCTP);
     } else if (isFromAnL2 && isToAnL2) {
@@ -90,7 +90,7 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
     }
 
     setModalOpen(openModal);
-  }, [isFromAnL2, isToAnL2, selectedToken.cctp, setModalOpen, setTransactionType]);
+  }, [isFromAnL2, isToAnL2, selectedToken?.cctp, setModalOpen, setTransactionType]);
 
   const buttonMessage = useMemo(() => {
     if (!isButtonDisabled) return 'Review transaction';

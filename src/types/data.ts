@@ -112,7 +112,7 @@ export interface TransactionMetadata {
   destinationHash?: string;
 }
 
-export interface CCTPData {
+export interface CctpType {
   [chain: string]: {
     domain: number;
     tokenMessenger: Address;

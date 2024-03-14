@@ -4,11 +4,11 @@ import { Address, Hex } from 'viem';
 import { useTransactionData, useToken, useCustomClient } from '~/hooks';
 import { depositForBurn, receiveMessage } from '~/utils';
 
-import cctp from '~/data/cctp.json';
-import { CCTPData } from '~/types';
+import CCTP from '~/data/cctp.json';
+import { CctpType } from '~/types';
 
 export const useCCTP = () => {
-  const cctpData = cctp as CCTPData;
+  const cctpData = CCTP as CctpType;
   const { userAddress } = useTransactionData();
   const { selectedToken, amount, allowance, approve, parseTokenUnits } = useToken();
   const { customClient } = useCustomClient();

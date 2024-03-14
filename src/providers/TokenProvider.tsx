@@ -2,8 +2,9 @@ import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
 import { Address, erc20Abi, parseUnits } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
 
+import CCTP from '~/data/cctp.json';
 import { useChain, useCustomClient, useTokenList } from '~/hooks';
-import { TokenData } from '~/types';
+import { TokenData, CctpType } from '~/types';
 
 type ContextType = {
   selectedToken: TokenData;
@@ -39,6 +40,8 @@ interface StateProps {
 export const TokenContext = createContext({} as ContextType);
 
 export const TokenProvider = ({ children }: StateProps) => {
+  const cctpData = CCTP as CctpType;
+
   const { address } = useAccount();
   const { toTokens, fromTokens } = useTokenList();
   const { toChain, fromChain } = useChain();
@@ -111,6 +114,7 @@ export const TokenProvider = ({ children }: StateProps) => {
   useEffect(() => {
     if (!address || !from.contracts?.standardBridge) return;
     const tokenAddress = fromToken?.address as Address;
+    const contractAddress = fromToken?.cctp ? cctpData[fromChain.id].tokenMessenger : from.contracts.standardBridge;
 
     from.public
       .multicall({
@@ -125,7 +129,7 @@ export const TokenProvider = ({ children }: StateProps) => {
             address: tokenAddress,
             abi: erc20Abi,
             functionName: 'allowance',
-            args: [address, from.contracts.standardBridge],
+            args: [address, contractAddress],
           },
         ],
       })
@@ -133,7 +137,15 @@ export const TokenProvider = ({ children }: StateProps) => {
         setBalance(balance.result?.toString() || '');
         setAllowance(allowance.result?.toString() || '');
       });
-  }, [address, from.contracts?.standardBridge, from.public, fromToken?.address]);
+  }, [
+    address,
+    cctpData,
+    from.contracts.standardBridge,
+    from.public,
+    fromChain.id,
+    fromToken?.address,
+    fromToken?.cctp,
+  ]);
 
   useEffect(() => {
     if (selectedToken?.symbol === 'ETH') {

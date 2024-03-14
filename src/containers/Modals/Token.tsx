@@ -11,7 +11,7 @@ export const TokensModal = () => {
   const { closeModal } = useModal();
   const { fromTokens, toTokens } = useTokenList();
   const { customTransactionType, resetValues: resetTransactionData } = useTransactionData();
-  const { setSelectedToken, resetValues: resetTokenValues } = useToken();
+  const { selectedToken, setSelectedToken, resetValues: resetTokenValues } = useToken();
 
   const [searchValue, setSearchValue] = useState('');
 
@@ -30,6 +30,11 @@ export const TokensModal = () => {
   }, [fromTokens, customTransactionType, searchValue, toTokens]);
 
   const handleToken = async (token: TokenData) => {
+    if (selectedToken?.address === token.address) {
+      closeModal();
+      return;
+    }
+
     resetTokenValues();
     resetTransactionData();
     setSelectedToken(token);
