@@ -24,6 +24,7 @@ export const ReviewModal = () => {
   };
 
   const showData =
+    transactionType !== TransactionType.FINALIZE_CCTP &&
     transactionType !== TransactionType.PROVE &&
     transactionType !== TransactionType.REPLAY &&
     transactionType !== TransactionType.FINALIZE;

@@ -13,7 +13,7 @@ export const useTransactions = () => {
   const { resetValues: resetTokenValues } = useToken();
   const { switchChainAsync } = useSwitchChain();
   const { fromChain, toChain } = useChain();
-  const { refetchLogs } = useLogs();
+  const { refetchLogs, selectedLog } = useLogs();
   const { chainId } = useAccount();
   const router = useRouter();
 
@@ -50,7 +50,7 @@ export const useTransactions = () => {
           break;
 
         case TransactionType.SWAP:
-          // TODO: Implement swap <- use Lifi
+          // TODO: Implement swap
           break;
 
         case TransactionType.REPLAY:
@@ -58,19 +58,24 @@ export const useTransactions = () => {
           break;
 
         case TransactionType.BRIDGE:
-          // TODO: Implement bridge <- use Lifi
+          // TODO: Implement bridge
           break;
 
         case TransactionType.CCTP:
           {
             // initiate the transaction on the source chain
-            const result = await initiate();
-            const { message, attestation } = result || {};
-
+            const hash = await initiate();
             await switchChainAsync({ chainId: toChain.id });
 
             // finalize the transaction on the destination chain
-            await finalize(message, attestation);
+            await finalize(hash);
+          }
+          break;
+
+        case TransactionType.FINALIZE_CCTP:
+          {
+            await switchChainAsync({ chainId: toChain.id });
+            await finalize(selectedLog?.transactionHash);
           }
           break;
       }

@@ -40,14 +40,20 @@ export interface TokenData {
 
 export enum TransactionType {
   NONE = '',
+  // OP Canonical Bridge
   DEPOSIT = 'Deposit',
   WITHDRAW = 'Withdraw',
   PROVE = 'Prove withdrawal',
   FINALIZE = 'Finalize withdrawal',
   REPLAY = 'Replay transaction',
+
+  // CCTP
+  CCTP = 'Cross-Chain Transfer',
+  FINALIZE_CCTP = 'Mint USDC',
+
+  // Other
   BRIDGE = 'Bridge',
   SWAP = 'Swap',
-  CCTP = 'Cross-Chain Transfer',
 }
 
 export type CustomTransactionType = 'custom-tx' | 'force-withdrawal' | 'force-transfer';

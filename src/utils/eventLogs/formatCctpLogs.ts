@@ -5,14 +5,14 @@ import { UsdcBurnData } from '~/types';
 
 export const formatCctpLogs = (customClient: CustomClients, logs: UsdcBurnData): { accountLogs: AccountLogs[] } => {
   const accountLogs: AccountLogs[] = logs.map((log) => ({
-    type: 'Bridge',
+    type: 'CCTP',
     blockNumber: log.sourceBlockNumber,
     timestamp: 0,
     transactionHash: log.sourceHash,
     l2TransactionHash: log.destinationHash,
     originChain: customClient.from.public.chain!.id,
     destinationChain: customClient.to.public.chain!.id,
-    bridge: 'CCTP',
+    bridge: 'Cross-Chain Transfer Protocol',
     fees: '-',
     transactionTime: '2m',
     status: log.received ? 'finalized' : 'ready-to-finalize',

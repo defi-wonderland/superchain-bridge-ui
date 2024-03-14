@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { Address, Hex } from 'viem';
 
 import { useTransactionData, useToken, useCustomClient } from '~/hooks';
-import { depositForBurn, receiveMessage } from '~/utils';
+import { depositForBurn, getAttestation, receiveMessage } from '~/utils';
 
 import CCTP from '~/data/cctp.json';
 import { CctpType } from '~/types';
@@ -16,7 +16,7 @@ export const useCCTP = () => {
   const initiate = useCallback(async () => {
     if (!userAddress) return;
 
-    const { message, attestation } = await depositForBurn({
+    return await depositForBurn({
       customClient,
       userAddress,
       usdcAddress: selectedToken?.address as Address,
@@ -25,13 +25,16 @@ export const useCCTP = () => {
       approve,
       data: cctpData,
     });
-
-    return { message, attestation };
   }, [allowance, amount, approve, cctpData, customClient, parseTokenUnits, selectedToken?.address, userAddress]);
 
   const finalize = useCallback(
-    async (message?: string | Hex, attestation?: string | Hex) => {
-      if (!userAddress || !message || !attestation) return;
+    async (hash?: string | Hex) => {
+      if (!userAddress || !hash) return;
+
+      const { message, attestation } = await getAttestation({
+        customClient,
+        hash,
+      });
 
       await receiveMessage({
         customClient,

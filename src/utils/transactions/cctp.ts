@@ -61,11 +61,17 @@ export const depositForBurn = async ({
 
   if (!hash) throw new Error('No hash returned');
 
-  const receipt = await customClient.from.public.waitForTransactionReceipt({
-    hash,
-  });
+  return hash;
+};
 
-  console.log({ sourceReceipt: receipt });
+interface GetAttestationParams {
+  customClient: CustomClients;
+  hash: Hex | string;
+}
+export const getAttestation = async ({ customClient, hash }: GetAttestationParams) => {
+  const receipt = await customClient.from.public.waitForTransactionReceipt({
+    hash: hash as Hex,
+  });
 
   const [log] = parseEventLogs({
     abi: parseAbi(['event MessageSent(bytes message)']),
