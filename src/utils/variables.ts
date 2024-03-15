@@ -1,8 +1,12 @@
-import { ChainData, OpContracts } from '~/types';
 import { base, baseSepolia, optimismSepolia, sepolia } from 'viem/chains';
+
 import sepoliaLogo from '~/assets/chains/ethereum.svg';
 import opSepoliaLogo from '~/assets/chains/optimism.svg';
 import baseSepoliaLogo from '~/assets/chains/base.svg';
+import circleLogo from '~/assets/icons/circle.png';
+import optimismLogo from '~/assets/chains/optimism.svg';
+
+import { ChainData, OpContracts, BridgeData } from '~/types';
 
 /*=============================================
 =                Misc Variables               =
@@ -85,6 +89,21 @@ export const contracts: { [key: string]: OpContracts } = {
   //   portal: '0x49048044D57e1C92A77f79988d21Fa8fAF74E97e',
   // },
 };
+
+export const bridges: BridgeData[] = [
+  {
+    name: 'OP Standard Bridge',
+    logoUrl: optimismLogo.src,
+    time: '2m',
+    fees: '-',
+  },
+  {
+    name: 'CCTP',
+    logoUrl: circleLogo,
+    time: '2m',
+    fees: '-',
+  },
+];
 
 /*=============================================
 =               Style Variables               =

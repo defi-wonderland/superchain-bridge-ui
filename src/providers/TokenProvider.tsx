@@ -4,7 +4,8 @@ import { useAccount, useBalance } from 'wagmi';
 
 import CCTP from '~/data/cctp.json';
 import { useChain, useCustomClient, useTokenList } from '~/hooks';
-import { TokenData, CctpType } from '~/types';
+import { TokenData, CctpType, BridgeData } from '~/types';
+import { bridges } from '~/utils';
 
 type ContextType = {
   selectedToken: TokenData;
@@ -31,6 +32,12 @@ type ContextType = {
   parseTokenUnits: (val: string) => bigint;
 
   resetValues: () => void;
+
+  availableBridges: BridgeData[];
+  setAvailableBridges: (val: BridgeData[]) => void;
+
+  bridgeData: BridgeData;
+  setBridgeData: (val: BridgeData) => void;
 };
 
 interface StateProps {
@@ -64,6 +71,9 @@ export const TokenProvider = ({ children }: StateProps) => {
   const [balance, setBalance] = useState<string>('');
   const [ethBalance, setEthBalance] = useState<string>('');
   const [allowance, setAllowance] = useState<string>('');
+
+  const [availableBridges, setAvailableBridges] = useState<BridgeData[]>([bridges[0]]); // set op bridge as default
+  const [bridgeData, setBridgeData] = useState<BridgeData>(bridges[0]);
 
   // toToken is the token in the destination chain
   const toToken = useMemo(() => {
@@ -186,6 +196,11 @@ export const TokenProvider = ({ children }: StateProps) => {
         price,
         setPrice,
         resetValues,
+
+        availableBridges,
+        setAvailableBridges,
+        bridgeData,
+        setBridgeData,
       }}
     >
       {children}
