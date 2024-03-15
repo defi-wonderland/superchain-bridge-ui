@@ -40,18 +40,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <Background />
       <CssBaseline />
       <Modals />
-      {/* TODO: remove when responsive is done */}
-      <ResponsiveDisclaimer>
-        <p>
-          This website is not yet optimized for mobile devices. Please use a desktop browser for the best experience.
-        </p>
-      </ResponsiveDisclaimer>
-
-      <NoScriptMessage>
-        <p>This website requires JavaScript to function properly.</p>
-      </NoScriptMessage>
 
       <MainContent>
+        <NoScriptMessage>
+          <p>This website requires JavaScript to function properly.</p>
+        </NoScriptMessage>
+
+        {/* TODO: remove when responsive is done */}
+        <ResponsiveDisclaimer>
+          <p>
+            This website is not yet optimized for mobile devices. Please use a desktop browser for the best experience.
+          </p>
+        </ResponsiveDisclaimer>
         <Header />
         {children}
         <Footer />
@@ -71,12 +71,11 @@ const MainContent = styled(Box)`
 
   max-width: 120rem;
   padding: 0 4rem;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0 auto;
 
-  // mediaquery
   @media (max-width: 600px) {
-    padding: 0 1.2rem;
+    padding: 0 1.6rem;
   }
 `;
 
@@ -104,9 +103,8 @@ const ResponsiveDisclaimer = styled('div')(({ theme }) => {
     margin: '0 auto',
     textAlign: 'start',
     fontSize: '1.6rem',
-    padding: '1rem 0.8rem 3rem',
+    padding: '1rem 0.8rem 1rem',
     color: currentTheme.steel[100],
-    background: `linear-gradient(180deg, ${currentTheme.steel[900]} 80%, rgba(0, 0, 0, 0) 100%)`,
 
     p: {
       padding: '1rem 0',

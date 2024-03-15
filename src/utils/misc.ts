@@ -15,6 +15,7 @@ export const getToContracts = (fromChain: Chain, toChain: Chain): OpContracts =>
 };
 
 export const getUsdBalance = (price: number, balance: string, decimals: number, compact: boolean = false): string => {
+  if (!price || !balance || !decimals) return '0';
   const priceBN = parseUnits(price.toString(), decimals);
   const balanceBN = parseUnits(balance, decimals);
   const result = (priceBN * balanceBN) / BigInt(10 ** decimals);

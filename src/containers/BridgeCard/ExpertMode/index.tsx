@@ -32,7 +32,10 @@ export const ExpertMode = ({ setCustomTransaction }: ExpertModeProps) => {
       >
         <SBox>
           <Image src={customTxIcon} alt='custom-tx' />
-          Custom transaction
+          <Box>
+            <Title variant='body1'>Custom transaction</Title>
+            <Description variant='body1'>Call a contract in the destination chain</Description>
+          </Box>
         </SBox>
       </StyledButton>
 
@@ -44,7 +47,10 @@ export const ExpertMode = ({ setCustomTransaction }: ExpertModeProps) => {
       >
         <SBox>
           <Image src={customWithdrawalIcon} alt='custom-withdrawal' />
-          Force withdrawal
+          <Box>
+            <Title variant='body1'>Force withdrawal</Title>
+            <Description variant='body1'>Initiate a withdrawal from L1</Description>
+          </Box>
         </SBox>
       </StyledButton>
 
@@ -56,7 +62,10 @@ export const ExpertMode = ({ setCustomTransaction }: ExpertModeProps) => {
       >
         <SBox>
           <Image src={customTransferIcon} alt='custom-transfer' />
-          Force transfer
+          <Box>
+            <Title variant='body1'>Force transfer</Title>
+            <Description variant='body1'>Make a transfer in L2 from L1</Description>
+          </Box>
         </SBox>
       </StyledButton>
     </ContentSection>
@@ -86,7 +95,7 @@ const StyledButton = styled(Button)(() => {
     boxShadow: '0px 1px 2px 0px rgba(16, 24, 40, 0.05)',
     background: currentTheme.ghost[800],
     color: currentTheme.ghost[300],
-    padding: '1.4rem 1.6rem',
+    padding: '2.2rem 1.6rem',
     textTransform: 'none',
     lineHeight: '2.8rem',
     fontSize: '1.6rem',
@@ -101,11 +110,42 @@ const StyledButton = styled(Button)(() => {
 });
 
 const SBox = styled(Box)(() => {
+  const { currentTheme } = useCustomTheme();
   return {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'start',
     justifyContent: 'center',
-    gap: '0.8rem',
+    gap: '1.2rem',
+    img: {
+      width: '2.4rem',
+      height: '2.4rem',
+    },
+    div: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.4rem',
+      textAlign: 'start',
+      'p:first-of-type': {
+        color: currentTheme.ghost[300],
+      },
+      'p:last-of-type': {
+        color: currentTheme.ghost[400],
+      },
+    },
+  };
+});
+
+const Title = styled(Typography)(() => {
+  return {
+    fontSize: '1.6rem',
+    fontWeight: 500,
+  };
+});
+
+const Description = styled(Typography)(() => {
+  return {
+    fontSize: '1.4rem',
+    fontWeight: 400,
   };
 });

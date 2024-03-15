@@ -24,8 +24,17 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
   const { fromChain, toChain } = useChain();
   const [buttonErrorText, setButtonErrorText] = useState('');
 
+  // If the selected chain has a sourceId, its because it's a L2 chain
+  const isFromAnL2 = !!fromChain?.sourceId;
+  const isToAnL2 = !!toChain?.sourceId;
+
   const isButtonDisabled = useMemo(() => {
     setButtonErrorText('');
+
+    if (isFromAnL2 && isToAnL2) {
+      setButtonErrorText('Coming soon');
+      return true;
+    }
 
     if (selectedToken.symbol === 'ETH') {
       if (parseEther(mint) > BigInt(ethBalance) || parseEther(value) > BigInt(ethBalance)) {
@@ -50,13 +59,22 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
     }
 
     if (!isReady || !userAddress) return true;
-  }, [amount, balance, data, ethBalance, isReady, mint, selectedToken.symbol, userAddress, value, to]);
+  }, [
+    amount,
+    balance,
+    data,
+    ethBalance,
+    isFromAnL2,
+    isReady,
+    isToAnL2,
+    mint,
+    selectedToken?.symbol,
+    to,
+    userAddress,
+    value,
+  ]);
 
   const handleReview = useCallback(() => {
-    // If the selected chain has a sourceId, its because it's a L2 chain
-    const isFromAnL2 = !!fromChain?.sourceId;
-    const isToAnL2 = !!toChain?.sourceId;
-
     let openModal = ModalType.REVIEW;
 
     // If both chains are L2, it's a bridge transaction
@@ -75,7 +93,7 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
     }
 
     setModalOpen(openModal);
-  }, [fromChain, toChain, setModalOpen, setTransactionType]);
+  }, [isFromAnL2, isToAnL2, setModalOpen, setTransactionType]);
 
   const buttonMessage = useMemo(() => {
     if (!isButtonDisabled) return 'Review transaction';
