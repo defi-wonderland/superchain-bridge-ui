@@ -52,28 +52,22 @@ export const getWithdrawLogs = async ({
     }),
   );
 
-  const formattedEthLogs = formatETHWithdrawalLogs(customClient, ethLogs, statusMap);
-  const formattedErc20Logs = formatERC20WithdrawalLogs(customClient, erc20Logs, statusMap);
-  const formattedMessageLogs = formatMessageWithdrawalLogs(customClient, messageLogs, statusMap);
-  const formattedCustomLogs = formatCustomWithdrawalLogs(customClient, customLogs, statusMap);
-
-  const accountLogs = [
-    ...formattedCustomLogs.accountLogs,
-    ...formattedMessageLogs.accountLogs,
-    ...formattedEthLogs.accountLogs,
-    ...formattedErc20Logs.accountLogs,
-  ];
-
   // Get the message hashes and args
-  const { msgHashes: msgHashesFromMessages, args: argsFromMessages } = getMsgHashes(
-    formattedMessageLogs.receipts,
+  const messageData = getMsgHashes(
+    messageLogs.map(({ transactionHash }) => statusMap[transactionHash].receipt),
     'message',
   );
-  const { msgHashes: msgHashesFromErc20, args: argsFromErc20 } = getMsgHashes(formattedErc20Logs.receipts, 'erc20');
-  const { msgHashes: msgHashesFromEth, args: argsFromEth } = getMsgHashes(formattedEthLogs.receipts, 'eth');
+  const erc20Data = getMsgHashes(
+    erc20Logs.map(({ transactionHash }) => statusMap[transactionHash].receipt),
+    'erc20',
+  );
+  const ethData = getMsgHashes(
+    ethLogs.map(({ transactionHash }) => statusMap[transactionHash].receipt),
+    'eth',
+  );
 
-  const msgHashes = [...msgHashesFromMessages, ...msgHashesFromErc20, ...msgHashesFromEth];
-  const args = [...argsFromMessages, ...argsFromErc20, ...argsFromEth];
+  const failedData = { ...erc20Data, ...messageData, ...ethData };
+  const msgHashes = Object.values(failedData).map(({ msgHash }) => msgHash);
 
   const failedTxs = await getFailedTransactionLogs({
     // for withdrawal txs, should be the L1 client
@@ -83,18 +77,24 @@ export const getWithdrawLogs = async ({
     msgHashes,
   });
 
+  const formattedEthLogs = formatETHWithdrawalLogs(customClient, ethLogs, failedTxs, failedData, statusMap);
+  const formattedErc20Logs = formatERC20WithdrawalLogs(customClient, erc20Logs, failedTxs, failedData, statusMap);
+  const formattedMessageLogs = formatMessageWithdrawalLogs(customClient, messageLogs, failedTxs, failedData, statusMap);
+  const formattedCustomLogs = formatCustomWithdrawalLogs(customClient, customLogs, statusMap);
+
+  const accountLogs = [
+    ...formattedCustomLogs.accountLogs,
+    ...formattedMessageLogs.accountLogs,
+    ...formattedEthLogs.accountLogs,
+    ...formattedErc20Logs.accountLogs,
+  ];
+
   // temporary logs
   console.log({
     accountLogs,
-    msgHashes,
-    failedTxs,
-    args,
   });
 
   return {
     accountLogs,
-    msgHashes,
-    failedTxs,
-    args,
   };
 };

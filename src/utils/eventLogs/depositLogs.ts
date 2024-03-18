@@ -49,23 +49,18 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
     }),
   );
 
-  const formattedLogsFromEthDeposited = formatDepositETHLogs(customClient, logsFromEthDeposited, receiptsMap);
-  const formattedLogsFromErc20Deposited = formatERC20DepositLogs(customClient, logsFromErc20Deposited, receiptsMap);
-  const formattedLogsFromMessages = formatMessageDepositLogs(customClient, logsFromMessagesDeposited, receiptsMap);
-  const formattedLogsFromForcedTxs = formatForceDepositLogs(customClient, logsFromForcedTransactions, receiptsMap);
-
-  const { msgHashes: msgHashesFromMessages, args: argsFromMessages } = getMsgHashes(
-    formattedLogsFromMessages.receipts,
+  const customDataMsghashMap = getMsgHashes(
+    logsFromMessagesDeposited.map(({ transactionHash }) => receiptsMap[transactionHash].receipt),
     'message',
   );
 
-  const { msgHashes: msgHashesFromErc20, args: argsFromErc20 } = getMsgHashes(
-    formattedLogsFromErc20Deposited.receipts,
+  const erc20MsghashMap = getMsgHashes(
+    logsFromErc20Deposited.map(({ transactionHash }) => receiptsMap[transactionHash].receipt),
     'erc20',
   );
 
-  const msgHashes = [...msgHashesFromMessages, ...msgHashesFromErc20];
-  const args = [...argsFromMessages, ...argsFromErc20];
+  const failedData = { ...erc20MsghashMap, ...customDataMsghashMap };
+  const msgHashes = Object.values(failedData).map(({ msgHash }) => msgHash);
 
   const failedTxs = await getFailedTransactionLogs({
     // for deposit txs, should be the L2 client
@@ -74,6 +69,24 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
     userAddress,
     msgHashes,
   });
+
+  const formattedLogsFromEthDeposited = formatDepositETHLogs(customClient, logsFromEthDeposited, receiptsMap);
+  const formattedLogsFromForcedTxs = formatForceDepositLogs(customClient, logsFromForcedTransactions, receiptsMap);
+
+  const formattedLogsFromErc20Deposited = formatERC20DepositLogs(
+    customClient,
+    logsFromErc20Deposited,
+    failedTxs,
+    failedData,
+    receiptsMap,
+  );
+  const formattedLogsFromMessages = formatMessageDepositLogs(
+    customClient,
+    logsFromMessagesDeposited,
+    failedTxs,
+    failedData,
+    receiptsMap,
+  );
 
   const accountLogs = [
     ...formattedLogsFromEthDeposited.accountLogs,
@@ -85,15 +98,9 @@ export const getDepositLogs = async ({ customClient, userAddress }: GetDepositLo
   // temporary log
   console.log({
     accountLogs,
-    msgHashes,
-    failedTxs,
-    args,
   });
 
   return {
     accountLogs,
-    msgHashes,
-    failedTxs,
-    args,
   };
 };

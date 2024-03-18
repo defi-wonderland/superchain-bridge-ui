@@ -8,13 +8,18 @@ import { PrimaryButton } from '~/components';
 import { DepositSteps } from './DepositSteps';
 import { CCTPSteps } from './CCTPSteps';
 import { WithdrawalSteps } from './WithdrawalSteps';
+import { FailedSteps } from './FailedSteps';
 
 export const Stepper = () => {
   const { setModalOpen } = useModal();
   const { selectedLog } = useLogs();
   const { setTransactionType, userAddress } = useTransactionData();
   const transactionType = selectedLog?.type;
-  const isActionRequired = selectedLog?.status === 'ready-to-prove' || selectedLog?.status === 'ready-to-finalize';
+
+  const isActionRequired =
+    selectedLog?.status === 'ready-to-prove' ||
+    selectedLog?.status === 'ready-to-finalize' ||
+    selectedLog?.status === 'failed';
 
   const handleReview = () => {
     const statusToTransactionTypeMap: { [k: string]: TransactionType } = {
@@ -27,12 +32,18 @@ export const Stepper = () => {
     setModalOpen(ModalType.REVIEW);
   };
 
+  const StepComponent = (() => {
+    if (transactionType === 'CCTP') return <CCTPSteps />;
+    if (transactionType === 'Deposit' && selectedLog?.status === 'failed') return <FailedSteps />;
+    if (transactionType === 'Deposit' || transactionType === 'Force Tx') return <DepositSteps />;
+    if (transactionType === 'Withdrawal') return <WithdrawalSteps />;
+    return null;
+  })();
+
   return (
     <RightSection>
       <SDataContainer>
-        {transactionType === 'CCTP' && <CCTPSteps />}
-        {(transactionType === 'Deposit' || transactionType === 'Force Tx') && <DepositSteps />}
-        {transactionType === 'Withdrawal' && <WithdrawalSteps />}
+        {StepComponent}
 
         {isActionRequired && (
           <PrimaryButton onClick={handleReview} disabled={!userAddress}>

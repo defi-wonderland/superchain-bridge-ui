@@ -1,6 +1,6 @@
-import { Address, GetLogsReturnType, Hex, PublicClient, TransactionReceipt, WalletClient } from 'viem';
+import { Address, Hex, PublicClient, TransactionReceipt, WalletClient } from 'viem';
 import { WalletActionsL1, WalletActionsL2, PublicActionsL1, PublicActionsL2 } from 'viem/op-stack';
-import { failedRelayedMessageABI } from '~/utils';
+import { Args } from '~/utils';
 
 export interface OpContracts {
   standardBridge: Address;
@@ -77,22 +77,15 @@ export interface AccountLogs {
   remoteToken?: Address;
   amount?: bigint;
   data?: Hex;
+  args?: Args;
 }
 
 export type DepositLogs = {
   accountLogs: AccountLogs[];
-
-  msgHashes: Hex[];
-  args: RelayMessageArgs[];
-  failedTxs: GetLogsReturnType<typeof failedRelayedMessageABI>;
 };
 
 export type WithdrawLogs = {
   accountLogs: AccountLogs[];
-
-  msgHashes: Hex[];
-  args: RelayMessageArgs[];
-  failedTxs: GetLogsReturnType<typeof failedRelayedMessageABI>;
 };
 
 export interface RelayMessageArgs {

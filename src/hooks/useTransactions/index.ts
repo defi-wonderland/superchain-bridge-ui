@@ -6,6 +6,7 @@ import { useChain, useLogs, useModal, useToken, useTransactionData } from '~/hoo
 import { ModalType, TransactionStep, TransactionType } from '~/types';
 import { useWithdraw } from './useWithdraw';
 import { useDeposit } from './useDeposit';
+import { useReplay } from './useReplay';
 import { useCCTP } from './useCCTP';
 
 export const useTransactions = () => {
@@ -22,6 +23,7 @@ export const useTransactions = () => {
   const deposit = useDeposit();
   const { withdraw, prove, finalize: finalizeWithdrawal } = useWithdraw();
   const { initiate, finalize } = useCCTP();
+  const replay = useReplay();
 
   const executeTransaction = async () => {
     setModalOpen(ModalType.LOADING);
@@ -54,7 +56,7 @@ export const useTransactions = () => {
           break;
 
         case TransactionType.REPLAY:
-          // TODO: Implement replay
+          await replay();
           break;
 
         case TransactionType.BRIDGE:
