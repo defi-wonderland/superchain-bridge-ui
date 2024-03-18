@@ -12,7 +12,7 @@ import { bridges } from '~/utils';
 
 export const BridgeSection = () => {
   const { setModalOpen } = useModal();
-  const { selectedToken, bridgeData, availableBridges, setBridgeData, setAvailableBridges } = useToken();
+  const { selectedToken, bridgeData, setBridgeData, setAvailableBridges } = useToken();
 
   const openBridgeModal = () => {
     setModalOpen(ModalType.SELECT_BRIDGE);
@@ -26,7 +26,7 @@ export const BridgeSection = () => {
       setAvailableBridges(newBridgeData);
       setBridgeData(newBridgeData[0]);
     }
-  }, [availableBridges, selectedToken, setAvailableBridges, setBridgeData]);
+  }, [selectedToken, setAvailableBridges, setBridgeData]);
 
   return (
     <MenuButton
