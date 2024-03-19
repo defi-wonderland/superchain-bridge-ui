@@ -93,6 +93,16 @@ const SBox = styled(Box)(() => {
         width: '2.2rem',
       },
     },
+
+    '@media (max-width: 600px)': {
+      '.external': {
+        width: 'auto',
+        marginLeft: 'auto',
+        p: {
+          display: 'none',
+        },
+      },
+    },
   };
 });
 
