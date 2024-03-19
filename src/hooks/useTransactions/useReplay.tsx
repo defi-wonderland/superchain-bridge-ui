@@ -11,7 +11,7 @@ export const useReplay = () => {
   const replay = useCallback(async () => {
     if (!userAddress || !selectedLog || !selectedLog?.args) return;
 
-    replayDeposit({
+    await replayDeposit({
       customClient,
       userAddress,
       args: selectedLog.args,
