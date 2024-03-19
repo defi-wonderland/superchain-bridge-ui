@@ -131,5 +131,9 @@ const StyledButton = styled(Button)(() => {
       borderColor: currentTheme.steel[700],
       color: currentTheme.steel[500],
     },
+
+    '@media (max-width: 600px)': {
+      fontSize: '1.6rem',
+    },
   };
 });

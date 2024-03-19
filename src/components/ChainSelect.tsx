@@ -124,6 +124,14 @@ const MenuButton = styled(BasicButton)(() => {
 
     '@media (max-width: 600px)': {
       gap: '0.6rem',
+      p: {
+        fontSize: '1.4rem',
+      },
+
+      img: {
+        height: '2.4rem',
+        width: '2.4rem',
+      },
     },
   };
 });

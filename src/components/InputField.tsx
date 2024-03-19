@@ -81,13 +81,22 @@ const BootstrapInput = styled(InputBase)(() => {
       lineHeight: '2.4rem',
       padding: '1.2rem 1.4rem',
 
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap',
+
       '&:focus': {
-        // boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
         borderColor: currentTheme.steel[500],
       },
     },
     '&.Mui-error .MuiInputBase-input, &.Mui-error.MuiInputBase-input:focus': {
       borderColor: currentTheme.errorPrimary,
+    },
+
+    '@media (max-width: 600px)': {
+      '& .MuiInputBase-input': {
+        fontSize: '1.4rem',
+      },
     },
   };
 });

@@ -140,6 +140,13 @@ const StyledMenu = styled((props: MenuProps) => (
           backgroundColor: currentTheme.steel[700],
         },
       },
+
+      '@media (max-width: 600px)': {
+        minWidth: 'calc(100% - 7.4rem)',
+        ul: {
+          padding: '0.2rem 0',
+        },
+      },
     },
   };
 });

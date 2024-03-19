@@ -109,6 +109,12 @@ const MenuButton = styled(BasicButton)(() => {
       border: 'none',
       opacity: 1,
     },
+
+    '@media (max-width: 600px)': {
+      p: {
+        fontSize: '1.4rem',
+      },
+    },
   };
 });
 
