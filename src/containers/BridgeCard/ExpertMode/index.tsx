@@ -87,6 +87,10 @@ const ContentSection = styled('section')(() => {
     '.select-txn-type-label': {
       fontSize: '1.6rem',
       color: currentTheme.steel[300],
+
+      '@media (max-width: 600px)': {
+        fontSize: '1.4rem',
+      },
     },
   };
 });

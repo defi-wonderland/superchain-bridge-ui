@@ -50,5 +50,16 @@ const StyledButton = styled(Button)(() => {
       borderColor: currentTheme.steel[600],
       backgroundColor: currentTheme.steel[900],
     },
+
+    '@media (max-width: 600px)': {
+      fontSize: '1.6rem',
+      padding: '0.4rem 0.6rem 0.4rem 0.4rem',
+
+      '.token-image': {
+        width: '2.8rem',
+        height: '2.8rem',
+        marginRight: '0.4rem',
+      },
+    },
   };
 });

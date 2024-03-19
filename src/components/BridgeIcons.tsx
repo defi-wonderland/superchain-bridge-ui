@@ -44,6 +44,12 @@ const IconsContainer = styled(Box)(() => {
       height: '1.6rem',
       width: '1.6rem',
     },
+
+    '@media (max-width: 600px)': {
+      p: {
+        fontSize: '1.4rem',
+      },
+    },
   };
 });
 

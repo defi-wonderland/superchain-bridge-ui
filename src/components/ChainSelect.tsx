@@ -180,5 +180,18 @@ const StyledMenu = styled((props: MenuProps) => (
         },
       },
     },
+
+    '@media (max-width: 600px)': {
+      '& .MuiPaper-root': {
+        '& .MuiMenuItem-root': {
+          fontSize: '1.4rem',
+
+          img: {
+            height: '2.2rem',
+            width: '2.2rem',
+          },
+        },
+      },
+    },
   };
 });
