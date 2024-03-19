@@ -3,9 +3,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
 import { Address } from 'viem';
 
+import CCTP from '~/data/cctp.json';
 import { useCustomClient } from '~/hooks';
-import { getDepositLogs, getWithdrawLogs } from '~/utils';
-import { AccountLogs, CustomClients, DepositLogs, WithdrawLogs } from '~/types';
+import { getCctpLogs, getDepositLogs, getWithdrawLogs } from '~/utils';
+import { AccountLogs, CctpType, CustomClients, DepositLogs, WithdrawLogs } from '~/types';
 
 type ContextType = {
   depositLogs?: DepositLogs;
@@ -18,6 +19,8 @@ type ContextType = {
   isSuccess: boolean;
   refetchLogs: () => void;
 
+  cctpLogs: AccountLogs[];
+
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
 };
@@ -29,23 +32,37 @@ interface StateProps {
 export const LogsContext = createContext({} as ContextType);
 
 export const LogsProvider = ({ children }: StateProps) => {
+  const cctpData = CCTP as CctpType;
   const { address: userAddress } = useAccount();
   const { customClient } = useCustomClient();
   const [depositLogs, setDepositLogs] = useState<DepositLogs>();
   const [withdrawLogs, setWithdrawLogs] = useState<WithdrawLogs>();
   const [selectedLog, setSelectedLog] = useState<AccountLogs>();
+  const [cctpLogs, setCctpLogs] = useState<AccountLogs[]>([]);
   const [orderedLogs, setOrderedLogs] = useState<AccountLogs[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const getLogs = async ({ userAddress, customClient }: { userAddress: Address; customClient: CustomClients }) => {
     if (userAddress) {
-      const depositLogs = await getDepositLogs({ userAddress, customClient });
-      const withdrawLogs = await getWithdrawLogs({ userAddress, customClient });
+      //  OP Canonical bridge
+      const depositLogsPromise = getDepositLogs({ userAddress, customClient });
+      const withdrawLogsPromise = getWithdrawLogs({ userAddress, customClient });
+
+      // Cross-Chain Transfer Protocol (CCTP)
+      const cctpLogsPromise = getCctpLogs({ customClient, userAddress, data: cctpData });
+
+      const [depositLogs, withdrawLogs, cctpLogs] = await Promise.all([
+        depositLogsPromise,
+        withdrawLogsPromise,
+        cctpLogsPromise,
+      ]);
 
       setDepositLogs(depositLogs);
       setWithdrawLogs(withdrawLogs);
+      setCctpLogs(cctpLogs.accountLogs);
       return true;
     }
+
     return false;
   };
 
@@ -60,6 +77,7 @@ export const LogsProvider = ({ children }: StateProps) => {
     setIsLoading(true);
     setDepositLogs(undefined);
     setWithdrawLogs(undefined);
+    setCctpLogs([]);
     setOrderedLogs([]);
     refetch();
   };
@@ -92,6 +110,8 @@ export const LogsProvider = ({ children }: StateProps) => {
         isLoading,
         setIsLoading,
         refetchLogs,
+
+        cctpLogs,
       }}
     >
       {children}

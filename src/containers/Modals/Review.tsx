@@ -5,17 +5,16 @@ import clockIcon from '~/assets/icons/clock.svg';
 import gasIcon from '~/assets/icons/gas.svg';
 
 import BaseModal from '~/components/BaseModal';
-import { useTransactionData, useToken, useTransactions, useCustomTheme, useModal, useChain } from '~/hooks';
+import { useTransactionData, useToken, useTransactions, useCustomTheme, useModal } from '~/hooks';
 import { PrimaryButton, STooltip, SecondaryButton } from '~/components';
-import { chainData, formatDataNumber, truncateAddress } from '~/utils';
+import { formatDataNumber, truncateAddress } from '~/utils';
 import { ModalType, TransactionType } from '~/types';
 
 export const ReviewModal = () => {
   const { closeModal } = useModal();
   const { transactionType, value, mint, to, userAddress, data } = useTransactionData();
-  const { selectedToken, amount } = useToken();
+  const { selectedToken, amount, bridgeData } = useToken();
   const { executeTransaction } = useTransactions();
-  const { toChain } = useChain();
 
   const totalAmount = amount || mint || value;
 
@@ -24,6 +23,7 @@ export const ReviewModal = () => {
   };
 
   const showData =
+    transactionType !== TransactionType.FINALIZE_CCTP &&
     transactionType !== TransactionType.PROVE &&
     transactionType !== TransactionType.REPLAY &&
     transactionType !== TransactionType.FINALIZE;
@@ -40,8 +40,8 @@ export const ReviewModal = () => {
       <DataRow>
         <Typography variant='body1'>Bridge</Typography>
         <span>
-          <Image src={chainData[toChain.id].logo} alt='standar bridge logo' width={20} height={20} />
-          OP Standard Bridge
+          <Image src={bridgeData.logoUrl} alt='bridge logo' width={20} height={20} />
+          {bridgeData.name}
         </span>
       </DataRow>
 
@@ -50,8 +50,7 @@ export const ReviewModal = () => {
         <Typography variant='body1'>Fees</Typography>
         <span>
           <Image src={gasIcon} alt='fees' />
-          {/* TODO: calculate fees */}
-          {'-'}
+          {bridgeData.fees}
         </span>
       </DataRow>
 
@@ -60,7 +59,7 @@ export const ReviewModal = () => {
         <Typography variant='body1'>Transaction time</Typography>
         <span>
           <Image src={clockIcon} alt='transaction time' />
-          2m
+          {bridgeData.time}
         </span>
       </DataRow>
 

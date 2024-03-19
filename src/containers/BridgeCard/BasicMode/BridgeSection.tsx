@@ -1,20 +1,32 @@
+import { useEffect } from 'react';
 import { Box, Typography, styled } from '@mui/material';
 import Image from 'next/image';
 
-import optimismLogo from '~/assets/chains/optimism.svg';
 import chevrownDown from '~/assets/icons/chevron-down.svg';
 
 import { BridgeIcons } from '~/components/BridgeIcons';
 import { BasicButton } from '~/components/Buttons';
-import { useModal } from '~/hooks';
+import { useCustomTheme, useModal, useToken } from '~/hooks';
 import { ModalType } from '~/types';
+import { bridges } from '~/utils';
 
 export const BridgeSection = () => {
   const { setModalOpen } = useModal();
+  const { selectedToken, bridgeData, setBridgeData, setAvailableBridges } = useToken();
 
   const openBridgeModal = () => {
     setModalOpen(ModalType.SELECT_BRIDGE);
   };
+
+  useEffect(() => {
+    if (selectedToken) {
+      const defaultBridge = selectedToken.cctp ? 'CCTP' : 'OP Standard Bridge';
+      const newBridgeData = bridges.filter((bridge) => bridge.name === defaultBridge);
+
+      setAvailableBridges(newBridgeData);
+      setBridgeData(newBridgeData[0]);
+    }
+  }, [selectedToken, setAvailableBridges, setBridgeData]);
 
   return (
     <MenuButton
@@ -26,16 +38,18 @@ export const BridgeSection = () => {
     >
       <Box className='bridge-name'>
         <Box>
-          <Image src={optimismLogo} alt='' className='bridge-image' />
-          <Typography>Optimism Gateway</Typography>
+          <Image src={bridgeData.logoUrl} alt='' className='bridge-image' width={24} height={24} />
+          <Typography>{bridgeData.name}</Typography>
         </Box>
-        <BridgeIcons gas='$7.21' time='2m' />
+        {/* TODO: calculate gas */}
+        <BridgeIcons gas={bridgeData.fees} time={bridgeData.time} />
       </Box>
     </MenuButton>
   );
 };
 
 const MenuButton = styled(BasicButton)(() => {
+  const { currentTheme } = useCustomTheme();
   return {
     padding: '1.2rem 1.6rem',
     height: '5.6rem',
@@ -76,6 +90,12 @@ const MenuButton = styled(BasicButton)(() => {
 
     '.chevron-down': {
       marginLeft: '1.7rem',
+    },
+
+    '&:disabled': {
+      backgroundColor: currentTheme.steel[800],
+      color: currentTheme.steel[300],
+      border: 'none',
     },
 
     '@media (max-width: 600px)': {

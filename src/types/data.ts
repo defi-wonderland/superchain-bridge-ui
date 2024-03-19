@@ -29,6 +29,7 @@ export interface TokenData {
   symbol: string;
   decimals: number;
   logoURI: string;
+  cctp?: boolean;
   extensions: {
     optimismBridgeAddress?: string;
     baseBridgeAddress?: string;
@@ -39,11 +40,18 @@ export interface TokenData {
 
 export enum TransactionType {
   NONE = '',
+  // OP Canonical Bridge
   DEPOSIT = 'Deposit',
   WITHDRAW = 'Withdraw',
   PROVE = 'Prove withdrawal',
   FINALIZE = 'Finalize withdrawal',
   REPLAY = 'Replay transaction',
+
+  // CCTP
+  CCTP = 'Cross-Chain Transfer',
+  FINALIZE_CCTP = 'Mint USDC',
+
+  // Other
   BRIDGE = 'Bridge',
   SWAP = 'Swap',
 }

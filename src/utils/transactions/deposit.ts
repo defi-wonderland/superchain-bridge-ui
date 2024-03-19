@@ -42,7 +42,7 @@ export const depositERC20 = async ({
   setTxMetadata,
 }: DepositERC20Props) => {
   if (BigInt(allowance) < amount) {
-    await approve();
+    await approve(customClient.from.contracts.standardBridge);
   }
 
   // temporary fixed values

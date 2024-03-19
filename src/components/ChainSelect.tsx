@@ -29,7 +29,7 @@ export const ChainSelect = ({ label, list, value, setValue, disabled, isExternal
   const selectChain = (chain: Chain) => {
     setAnchorEl(null);
 
-    if (!chain?.name) return;
+    if (!chain?.name || value.name === chain.name) return;
     setValue(chain);
   };
 

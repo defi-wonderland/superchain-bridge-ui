@@ -6,20 +6,22 @@ import { useChain, useLogs, useModal, useToken, useTransactionData } from '~/hoo
 import { ModalType, TransactionStep, TransactionType } from '~/types';
 import { useWithdraw } from './useWithdraw';
 import { useDeposit } from './useDeposit';
+import { useCCTP } from './useCCTP';
 
 export const useTransactions = () => {
   const { transactionType, setErrorMessage, resetValues: resetTransactionData, setTxMetadata } = useTransactionData();
   const { resetValues: resetTokenValues } = useToken();
   const { switchChainAsync } = useSwitchChain();
-  const { fromChain } = useChain();
-  const { refetchLogs } = useLogs();
+  const { fromChain, toChain } = useChain();
+  const { refetchLogs, selectedLog } = useLogs();
   const { chainId } = useAccount();
   const router = useRouter();
 
   const { setModalOpen } = useModal();
 
   const deposit = useDeposit();
-  const { withdraw, prove, finalize } = useWithdraw();
+  const { withdraw, prove, finalize: finalizeWithdrawal } = useWithdraw();
+  const { initiate, finalize } = useCCTP();
 
   const executeTransaction = async () => {
     setModalOpen(ModalType.LOADING);
@@ -44,11 +46,11 @@ export const useTransactions = () => {
           break;
 
         case TransactionType.FINALIZE:
-          await finalize();
+          await finalizeWithdrawal();
           break;
 
         case TransactionType.SWAP:
-          // TODO: Implement swap <- use Lifi
+          // TODO: Implement swap
           break;
 
         case TransactionType.REPLAY:
@@ -56,7 +58,25 @@ export const useTransactions = () => {
           break;
 
         case TransactionType.BRIDGE:
-          // TODO: Implement bridge <- use Lifi
+          // TODO: Implement bridge
+          break;
+
+        case TransactionType.CCTP:
+          {
+            // initiate the transaction on the source chain
+            const hash = await initiate();
+            await switchChainAsync({ chainId: toChain.id });
+
+            // finalize the transaction on the destination chain
+            await finalize(hash);
+          }
+          break;
+
+        case TransactionType.FINALIZE_CCTP:
+          {
+            await switchChainAsync({ chainId: toChain.id });
+            await finalize(selectedLog?.transactionHash);
+          }
           break;
       }
 

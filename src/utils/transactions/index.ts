@@ -1,3 +1,4 @@
+export * from './cctp';
 export * from './deposit';
 export * from './forceTransactions';
 export * from './getFailedTxs';
