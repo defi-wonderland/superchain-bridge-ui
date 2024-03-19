@@ -209,5 +209,11 @@ const HeaderContainer = styled(Box)(() => {
     '& .chain-select': {
       maxWidth: '20rem',
     },
+
+    '@media (max-width: 600px)': {
+      h1: {
+        fontSize: '2.4rem',
+      },
+    },
   };
 });

@@ -163,6 +163,15 @@ export const DataRow = styled(Box)(() => {
       lineHeight: '150%' /* 24px */,
       letterSpacing: '-0.352px',
     },
+
+    '@media (max-width: 600px)': {
+      p: {
+        fontSize: '1.4rem',
+      },
+      span: {
+        fontSize: '1.4rem',
+      },
+    },
   };
 });
 

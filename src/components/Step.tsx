@@ -106,6 +106,15 @@ const StepContainer = styled(Box)(() => {
       background: '#542400',
       borderRadius: '50%',
     },
+
+    '@media (max-width: 600px)': {
+      p: {
+        fontSize: '1.4rem',
+      },
+      a: {
+        fontSize: '1.4rem',
+      },
+    },
   };
 });
 

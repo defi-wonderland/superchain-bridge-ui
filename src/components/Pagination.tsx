@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Pagination, PaginationItem, styled } from '@mui/material';
+import { Box, Pagination, PaginationItem, styled, useMediaQuery } from '@mui/material';
 import Image from 'next/image';
 
 import nextIcon from '~/assets/icons/next.svg';
@@ -10,6 +10,7 @@ interface Props {
   setPaging: ({ from, to }: { from: number; to: number }) => void;
 }
 export function SPagination({ numberOfItems = 6, perPage, setPaging }: Props) {
+  const isMobile = useMediaQuery('(max-width:600px)');
   const [page, setPage] = useState(1);
   const count = Math.ceil(numberOfItems / perPage);
 
@@ -22,7 +23,7 @@ export function SPagination({ numberOfItems = 6, perPage, setPaging }: Props) {
 
   return (
     <>
-      {count > 1 && (
+      {count > 1 && !isMobile && (
         <SBox>
           <Pagination
             count={count}
