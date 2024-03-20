@@ -85,12 +85,12 @@ export const LogsProvider = ({ children }: StateProps) => {
   const transactionPending = useMemo(() => {
     let isTransactionPending = false;
     if (depositLogs && withdrawLogs && userAddress) {
-      const logs = [...depositLogs.accountLogs, ...withdrawLogs.accountLogs];
+      const logs = [...depositLogs.accountLogs, ...withdrawLogs.accountLogs, ...cctpLogs];
       isTransactionPending = logs.some((log) => log.status.includes('waiting-') || log.status.includes('ready-to'));
     }
 
     return isTransactionPending;
-  }, [depositLogs, userAddress, withdrawLogs]);
+  }, [cctpLogs, depositLogs, userAddress, withdrawLogs]);
 
   const isSuccess = useMemo(() => {
     return isFetched;
