@@ -52,7 +52,7 @@ export const CardHeader = ({
     <Header>
       {!customTransaction && (
         <>
-          <Box>
+          <Box className='primary-title'>
             <Typography variant='h1'>Superchain Bridge</Typography>
             {isExpertMode && <strong>Expert mode</strong>}
           </Box>
@@ -113,6 +113,16 @@ const Header = styled(Box)(() => {
       fontSize: '1.4rem',
       padding: '0.8rem',
       lineHeight: 1.2,
+    },
+
+    '@media (max-width: 600px)': {
+      alignItems: 'flex-start',
+
+      '.primary-title': {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: '0.4rem',
+      },
     },
   };
 });

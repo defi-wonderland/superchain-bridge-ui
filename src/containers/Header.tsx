@@ -5,13 +5,15 @@ import { useAccount } from 'wagmi';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import logo from '~/assets/logo.svg';
+import responsiveLogo from '~/assets/responsive-logo.svg';
+import historyIcon from '~/assets/icons/clock-rewind.svg';
+import settingsIcon from '~/assets/icons/settings.svg';
+
 import { Connect, STooltip } from '~/components';
 import { useChain, useCustomTheme, useLogs, useModal } from '~/hooks';
 import { replaceSpacesWithHyphens } from '~/utils';
 import { ModalType } from '~/types';
-import logo from '~/assets/logo.svg';
-import historyIcon from '~/assets/icons/clock-rewind.svg';
-import settingsIcon from '~/assets/icons/settings.svg';
 
 export const Header = () => {
   const isMobile = useMediaQuery('(max-width: 600px)');
@@ -40,32 +42,43 @@ export const Header = () => {
     <HeaderContainer>
       {/* Left section */}
       <LeftSection>
-        {!isMobile && (
-          <Link href='/' replace>
-            <Image src={logo} alt='Superchain Bridge' priority />
-          </Link>
-        )}
+        <Link href='/' replace>
+          {!isMobile && <Image src={logo} alt='Superchain Bridge' priority />}
+          {isMobile && <Image src={responsiveLogo} alt='Superchain Bridge' priority />}
+        </Link>
       </LeftSection>
 
       {/* Right section */}
       <RightSection>
-        <STooltip title='Account History' placement='bottom'>
-          <IconButton onClick={handleAccountHistory}>
-            <Link href={settingsHref}>
-              <Badge invisible={!transactionPending} variant='dot' color='primary' overlap='circular'>
-                <SHistoryIcon src={historyIcon} alt='Account History' />
-              </Badge>
-            </Link>
-          </IconButton>
-        </STooltip>
+        {!isMobile && (
+          <>
+            <STooltip title='Account History' placement='bottom'>
+              <IconButton onClick={handleAccountHistory}>
+                <Link href={settingsHref}>
+                  <Badge invisible={!transactionPending} variant='dot' color='primary' overlap='circular'>
+                    <SHistoryIcon src={historyIcon} alt='Account History' />
+                  </Badge>
+                </Link>
+              </IconButton>
+            </STooltip>
 
-        <STooltip title='Settings' placement='bottom'>
-          <IconButton onClick={openSettings}>
-            <StyledSettingsIcon src={settingsIcon} alt='Settings' />
-          </IconButton>
-        </STooltip>
+            <STooltip title='Settings' placement='bottom'>
+              <IconButton onClick={openSettings}>
+                <StyledSettingsIcon src={settingsIcon} alt='Settings' />
+              </IconButton>
+            </STooltip>
+          </>
+        )}
 
         <Connect />
+
+        {isMobile && (
+          <STooltip title='Settings' placement='bottom'>
+            <IconButton onClick={openSettings}>
+              <StyledSettingsIcon src={settingsIcon} alt='Settings' />
+            </IconButton>
+          </STooltip>
+        )}
       </RightSection>
     </HeaderContainer>
   );
@@ -86,6 +99,11 @@ const HeaderContainer = styled('header')(() => {
     },
     svg: {
       fontSize: '2.8rem',
+    },
+
+    '@media (max-width: 600px)': {
+      height: '7.2rem',
+      minHeight: '7.2rem',
     },
   };
 });

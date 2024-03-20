@@ -1,3 +1,4 @@
+export * from './cctpLogs';
 export * from './depositLogs';
 export * from './formatDepositLogs';
 export * from './getDepositLogs';

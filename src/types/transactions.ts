@@ -32,7 +32,7 @@ export interface DepositERC20Props {
   l1TokenAddress: Address;
   l2TokenAddress: Address;
   allowance: string;
-  approve: () => Promise<void>;
+  approve: (spender: string) => Promise<void>;
 }
 
 export interface DepositMessageProps {

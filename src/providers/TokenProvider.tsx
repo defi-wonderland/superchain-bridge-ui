@@ -2,8 +2,10 @@ import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
 import { Address, erc20Abi, parseUnits } from 'viem';
 import { useAccount, useBalance } from 'wagmi';
 
+import CCTP from '~/data/cctp.json';
 import { useChain, useCustomClient, useTokenList } from '~/hooks';
-import { TokenData } from '~/types';
+import { TokenData, CctpType, BridgeData } from '~/types';
+import { bridges } from '~/utils';
 
 type ContextType = {
   selectedToken: TokenData;
@@ -25,11 +27,17 @@ type ContextType = {
   allowance: string;
   setAllowance: (val: string) => void;
 
-  approve: () => Promise<void>;
+  approve: (spender: string) => Promise<void>;
 
   parseTokenUnits: (val: string) => bigint;
 
   resetValues: () => void;
+
+  availableBridges: BridgeData[];
+  setAvailableBridges: (val: BridgeData[]) => void;
+
+  bridgeData: BridgeData;
+  setBridgeData: (val: BridgeData) => void;
 };
 
 interface StateProps {
@@ -39,6 +47,8 @@ interface StateProps {
 export const TokenContext = createContext({} as ContextType);
 
 export const TokenProvider = ({ children }: StateProps) => {
+  const cctpData = CCTP as CctpType;
+
   const { address } = useAccount();
   const { toTokens, fromTokens } = useTokenList();
   const { toChain, fromChain } = useChain();
@@ -51,8 +61,7 @@ export const TokenProvider = ({ children }: StateProps) => {
     customClient: { from },
   } = useCustomClient();
 
-  const ethToken = fromTokens.find((token) => token.symbol === 'ETH');
-  const [selectedToken, setSelectedToken] = useState<TokenData>(ethToken!);
+  const [selectedToken, setSelectedToken] = useState<TokenData>(fromTokens[0]);
   const [price, setPrice] = useState<number>(1242.36);
 
   // amount is the value of the input field
@@ -62,6 +71,9 @@ export const TokenProvider = ({ children }: StateProps) => {
   const [balance, setBalance] = useState<string>('');
   const [ethBalance, setEthBalance] = useState<string>('');
   const [allowance, setAllowance] = useState<string>('');
+
+  const [availableBridges, setAvailableBridges] = useState<BridgeData[]>([bridges[0]]); // set op bridge as default
+  const [bridgeData, setBridgeData] = useState<BridgeData>(bridges[0]);
 
   // toToken is the token in the destination chain
   const toToken = useMemo(() => {
@@ -82,15 +94,14 @@ export const TokenProvider = ({ children }: StateProps) => {
     [selectedToken],
   );
 
-  const approve = async () => {
+  const approve = async (spender: string) => {
     try {
       const { request } = await from.public.simulateContract({
         account: address,
         abi: erc20Abi,
         address: selectedToken?.address as Address,
         functionName: 'approve',
-        // temporary fixed spender
-        args: [from.contracts.standardBridge, parseTokenUnits(amount)],
+        args: [spender as Address, parseTokenUnits(amount)],
       });
       const hash = await from.wallet?.writeContract(request);
 
@@ -113,6 +124,7 @@ export const TokenProvider = ({ children }: StateProps) => {
   useEffect(() => {
     if (!address || !from.contracts?.standardBridge) return;
     const tokenAddress = fromToken?.address as Address;
+    const contractAddress = fromToken?.cctp ? cctpData[fromChain.id].tokenMessenger : from.contracts.standardBridge;
 
     from.public
       .multicall({
@@ -127,7 +139,7 @@ export const TokenProvider = ({ children }: StateProps) => {
             address: tokenAddress,
             abi: erc20Abi,
             functionName: 'allowance',
-            args: [address, from.contracts.standardBridge],
+            args: [address, contractAddress],
           },
         ],
       })
@@ -135,7 +147,15 @@ export const TokenProvider = ({ children }: StateProps) => {
         setBalance(balance.result?.toString() || '');
         setAllowance(allowance.result?.toString() || '');
       });
-  }, [address, from.contracts?.standardBridge, from.public, fromToken?.address]);
+  }, [
+    address,
+    cctpData,
+    from.contracts?.standardBridge,
+    from.public,
+    fromChain.id,
+    fromToken?.address,
+    fromToken?.cctp,
+  ]);
 
   useEffect(() => {
     if (selectedToken?.symbol === 'ETH') {
@@ -153,6 +173,10 @@ export const TokenProvider = ({ children }: StateProps) => {
     },
     [selectedToken],
   );
+
+  useEffect(() => {
+    setSelectedToken(fromTokens[0]);
+  }, [fromTokens]);
 
   return (
     <TokenContext.Provider
@@ -172,6 +196,11 @@ export const TokenProvider = ({ children }: StateProps) => {
         price,
         setPrice,
         resetValues,
+
+        availableBridges,
+        setAvailableBridges,
+        bridgeData,
+        setBridgeData,
       }}
     >
       {children}

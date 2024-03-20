@@ -1,6 +1,6 @@
-import { Address, GetLogsReturnType, Hex, PublicClient, TransactionReceipt, WalletClient } from 'viem';
+import { Address, Hex, PublicClient, TransactionReceipt, WalletClient } from 'viem';
 import { WalletActionsL1, WalletActionsL2, PublicActionsL1, PublicActionsL2 } from 'viem/op-stack';
-import { failedRelayedMessageABI } from '~/utils';
+import { Args } from '~/utils';
 
 export interface OpContracts {
   standardBridge: Address;
@@ -29,6 +29,7 @@ export interface TokenData {
   symbol: string;
   decimals: number;
   logoURI: string;
+  cctp?: boolean;
   extensions: {
     optimismBridgeAddress?: string;
     baseBridgeAddress?: string;
@@ -39,11 +40,18 @@ export interface TokenData {
 
 export enum TransactionType {
   NONE = '',
+  // OP Canonical Bridge
   DEPOSIT = 'Deposit',
   WITHDRAW = 'Withdraw',
   PROVE = 'Prove withdrawal',
   FINALIZE = 'Finalize withdrawal',
   REPLAY = 'Replay transaction',
+
+  // CCTP
+  CCTP = 'Cross-Chain Transfer',
+  FINALIZE_CCTP = 'Mint USDC',
+
+  // Other
   BRIDGE = 'Bridge',
   SWAP = 'Swap',
 }
@@ -69,22 +77,15 @@ export interface AccountLogs {
   remoteToken?: Address;
   amount?: bigint;
   data?: Hex;
+  args?: Args;
 }
 
 export type DepositLogs = {
   accountLogs: AccountLogs[];
-
-  msgHashes: Hex[];
-  args: RelayMessageArgs[];
-  failedTxs: GetLogsReturnType<typeof failedRelayedMessageABI>;
 };
 
 export type WithdrawLogs = {
   accountLogs: AccountLogs[];
-
-  msgHashes: Hex[];
-  args: RelayMessageArgs[];
-  failedTxs: GetLogsReturnType<typeof failedRelayedMessageABI>;
 };
 
 export interface RelayMessageArgs {

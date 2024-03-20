@@ -4,36 +4,45 @@ import { AccountLogs, CustomClients } from '~/types';
 import {
   erc20BridgeInitiatedABI,
   ethBridgeInitiatedABI,
+  failedRelayedMessageABI,
   messagePassedAbi,
   sentMessageExtensionABI,
 } from '~/utils/parsedEvents';
-import { getMsgHashes } from '../transactions';
+import { GetMsgHashesReturn } from '../transactions';
 
 export const formatETHWithdrawalLogs = (
   customClient: CustomClients,
   logs: GetLogsReturnType<typeof ethBridgeInitiatedABI>,
+  failedLogs: GetLogsReturnType<typeof failedRelayedMessageABI>,
+  msgData: GetMsgHashesReturn,
   statusMap: { [hash: string]: { status: StatusType; receipt: TransactionReceipt } },
 ): { accountLogs: AccountLogs[]; receipts: TransactionReceipt[] } => {
   const receipts = logs.map(({ transactionHash }) => statusMap[transactionHash].receipt);
 
-  const accountLogs: AccountLogs[] = logs.map((log) => ({
-    type: 'Withdrawal', // Withdrawal ETH
-    blockNumber: log.blockNumber,
-    timestamp: 0, // log.date,
-    transactionHash: log.transactionHash,
-    originChain: customClient.to.public.chain!.id,
-    destinationChain: customClient.from.public.chain!.id,
-    bridge: 'OP Standard Bridge',
-    fees: '0',
-    transactionTime: '2m',
-    remoteToken: '0x0000000000000000000000000000000000000000',
-    localToken: '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000',
-    status: statusMap[log.transactionHash].status,
-    from: log.args.from!,
-    to: log.args.to!,
-    amount: log.args.amount!,
-    receipt: statusMap[log.transactionHash].receipt,
-  }));
+  const accountLogs: AccountLogs[] = logs.map((log) => {
+    const { args, msgHash } = msgData[log.transactionHash];
+    const isFailed = failedLogs.some((failedLog) => failedLog.args.msgHash === msgHash);
+
+    return {
+      type: 'Withdrawal', // Withdrawal ETH
+      blockNumber: log.blockNumber,
+      timestamp: 0, // log.date,
+      transactionHash: log.transactionHash,
+      originChain: customClient.to.public.chain!.id,
+      destinationChain: customClient.from.public.chain!.id,
+      bridge: 'OP Standard Bridge',
+      fees: '-',
+      transactionTime: '2m',
+      remoteToken: '0x0000000000000000000000000000000000000000',
+      localToken: '0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000',
+      status: isFailed ? 'failed' : statusMap[log.transactionHash].status,
+      from: log.args.from!,
+      to: log.args.to!,
+      amount: log.args.amount!,
+      receipt: statusMap[log.transactionHash].receipt,
+      args: args,
+    };
+  });
 
   return { accountLogs, receipts };
 };
@@ -41,28 +50,36 @@ export const formatETHWithdrawalLogs = (
 export const formatERC20WithdrawalLogs = (
   customClient: CustomClients,
   logs: GetLogsReturnType<typeof erc20BridgeInitiatedABI>,
+  failedLogs: GetLogsReturnType<typeof failedRelayedMessageABI>,
+  msgData: GetMsgHashesReturn,
   statusMap: { [hash: string]: { status: StatusType; receipt: TransactionReceipt } },
 ): { accountLogs: AccountLogs[]; receipts: TransactionReceipt[] } => {
   const receipts = logs.map(({ transactionHash }) => statusMap[transactionHash].receipt);
 
-  const accountLogs: AccountLogs[] = logs.map((log) => ({
-    type: 'Withdrawal', // Withdrawal ERC20
-    blockNumber: log.blockNumber,
-    timestamp: 0,
-    transactionHash: log.transactionHash,
-    originChain: customClient.to.public.chain!.id,
-    destinationChain: customClient.from.public.chain!.id,
-    bridge: 'OP Standard Bridge',
-    fees: '0',
-    transactionTime: '2m',
-    status: statusMap[log.transactionHash].status,
-    from: log.args.from!,
-    to: log.args.to!,
-    amount: log.args.amount!,
-    localToken: log.args.localToken!,
-    remoteToken: log.args.remoteToken!,
-    receipt: statusMap[log.transactionHash].receipt,
-  }));
+  const accountLogs: AccountLogs[] = logs.map((log) => {
+    const { args, msgHash } = msgData[log.transactionHash];
+    const isFailed = failedLogs.some((failedLog) => failedLog.args.msgHash === msgHash);
+
+    return {
+      type: 'Withdrawal', // Withdrawal ERC20
+      blockNumber: log.blockNumber,
+      timestamp: 0,
+      transactionHash: log.transactionHash,
+      originChain: customClient.to.public.chain!.id,
+      destinationChain: customClient.from.public.chain!.id,
+      bridge: 'OP Standard Bridge',
+      fees: '-',
+      transactionTime: '2m',
+      status: isFailed ? 'failed' : statusMap[log.transactionHash].status,
+      from: log.args.from!,
+      to: log.args.to!,
+      amount: log.args.amount!,
+      localToken: log.args.localToken!,
+      remoteToken: log.args.remoteToken!,
+      receipt: statusMap[log.transactionHash].receipt,
+      args: args,
+    };
+  });
 
   return { accountLogs, receipts };
 };
@@ -70,28 +87,34 @@ export const formatERC20WithdrawalLogs = (
 export const formatMessageWithdrawalLogs = (
   customClient: CustomClients,
   logs: GetLogsReturnType<typeof sentMessageExtensionABI>,
+  failedLogs: GetLogsReturnType<typeof failedRelayedMessageABI>,
+  msgData: GetMsgHashesReturn,
   statusMap: { [hash: string]: { status: StatusType; receipt: TransactionReceipt } },
 ): { accountLogs: AccountLogs[]; receipts: TransactionReceipt[] } => {
   const receipts = logs.map(({ transactionHash }) => statusMap[transactionHash].receipt);
 
-  const { args } = getMsgHashes(receipts, 'message');
+  const accountLogs: AccountLogs[] = logs.map((log) => {
+    const { args, msgHash } = msgData[log.transactionHash];
+    const isFailed = failedLogs.some((failedLog) => failedLog.args.msgHash === msgHash);
 
-  const accountLogs: AccountLogs[] = logs.map((log, index) => ({
-    type: 'Withdrawal', // Withdrawal Message
-    blockNumber: log.blockNumber,
-    timestamp: 0,
-    transactionHash: log.transactionHash,
-    originChain: customClient.to.public.chain!.id,
-    destinationChain: customClient.from.public.chain!.id,
-    bridge: 'OP Standard Bridge',
-    fees: '0',
-    transactionTime: '2m',
-    status: statusMap[log.transactionHash].status,
-    from: log.args.sender!,
-    to: args[index].target,
-    data: args[index].message,
-    receipt: statusMap[log.transactionHash].receipt,
-  }));
+    return {
+      type: 'Withdrawal', // Withdrawal Message
+      blockNumber: log.blockNumber,
+      timestamp: 0,
+      transactionHash: log.transactionHash,
+      originChain: customClient.to.public.chain!.id,
+      destinationChain: customClient.from.public.chain!.id,
+      bridge: 'OP Standard Bridge',
+      fees: '-',
+      transactionTime: '2m',
+      status: isFailed ? 'failed' : statusMap[log.transactionHash].status,
+      from: log.args.sender!,
+      to: msgData[log.transactionHash].args.target!,
+      data: msgData[log.transactionHash].args.message!,
+      receipt: statusMap[log.transactionHash].receipt,
+      args: args,
+    };
+  });
 
   return { accountLogs, receipts };
 };
@@ -111,7 +134,7 @@ export const formatCustomWithdrawalLogs = (
     originChain: customClient.to.public.chain!.id,
     destinationChain: customClient.from.public.chain!.id,
     bridge: 'OP Standard Bridge',
-    fees: '0',
+    fees: '-',
     transactionTime: '2m',
     status: statusMap[log.transactionHash].status,
     from: log.args.sender!,

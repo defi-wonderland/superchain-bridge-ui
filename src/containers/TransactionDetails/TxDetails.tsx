@@ -138,6 +138,10 @@ export const LeftSection = styled(Box)(() => {
     flexDirection: 'column',
     gap: '1.6rem',
     width: '50%',
+
+    '@media (max-width: 600px)': {
+      width: '100%',
+    },
   };
 });
 

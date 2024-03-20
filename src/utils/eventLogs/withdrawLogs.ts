@@ -22,79 +22,93 @@ export const getWithdrawLogs = async ({
 }: GetWithdrawalLogsParameters): Promise<WithdrawLogs> => {
   if (!userAddress) throw new Error('No user address provided');
 
-  const { customLogs, messageLogs, ethLogs, erc20Logs } = await getAllWithdrawalLogs({
-    customClient,
-    userAddress,
-  });
+  try {
+    const { customLogs, messageLogs, ethLogs, erc20Logs } = await getAllWithdrawalLogs({
+      customClient,
+      userAddress,
+    });
 
-  const logs = [...customLogs, ...messageLogs, ...ethLogs, ...erc20Logs];
+    const logs = [...customLogs, ...messageLogs, ...ethLogs, ...erc20Logs];
 
-  // Get all receipts
-  const receipts = await Promise.all(
-    logs.map(({ transactionHash }) => {
-      return customClient.to.public.getTransactionReceipt({ hash: transactionHash });
-    }),
-  );
+    // Get all receipts
+    const receipts = await Promise.all(
+      logs.map(({ transactionHash }) => {
+        return customClient.to.public.getTransactionReceipt({ hash: transactionHash });
+      }),
+    );
 
-  // Get all status of the withdrawals
-  const status = await Promise.all(
-    receipts.map((receipt) => {
-      return customClient.from.public.getWithdrawalStatus({
-        receipt,
-        targetChain: customClient.to.public.chain,
-      } as GetWithdrawalStatusParameters);
-    }),
-  );
+    // Get all status of the withdrawals
+    const status = await Promise.all(
+      receipts.map((receipt) => {
+        return customClient.from.public.getWithdrawalStatus({
+          receipt,
+          targetChain: customClient.to.public.chain,
+        } as GetWithdrawalStatusParameters);
+      }),
+    );
 
-  const statusMap = Object.fromEntries(
-    status.map((status, i) => {
-      return [logs[i].transactionHash, { status: status, receipt: receipts[i] }];
-    }),
-  );
+    const statusMap = Object.fromEntries(
+      status.map((status, i) => {
+        return [logs[i].transactionHash, { status: status, receipt: receipts[i] }];
+      }),
+    );
 
-  const formattedEthLogs = formatETHWithdrawalLogs(customClient, ethLogs, statusMap);
-  const formattedErc20Logs = formatERC20WithdrawalLogs(customClient, erc20Logs, statusMap);
-  const formattedMessageLogs = formatMessageWithdrawalLogs(customClient, messageLogs, statusMap);
-  const formattedCustomLogs = formatCustomWithdrawalLogs(customClient, customLogs, statusMap);
+    // Get the message hashes and args
+    const messageData = getMsgHashes(
+      messageLogs.map(({ transactionHash }) => statusMap[transactionHash].receipt),
+      'message',
+    );
+    const erc20Data = getMsgHashes(
+      erc20Logs.map(({ transactionHash }) => statusMap[transactionHash].receipt),
+      'erc20',
+    );
+    const ethData = getMsgHashes(
+      ethLogs.map(({ transactionHash }) => statusMap[transactionHash].receipt),
+      'eth',
+    );
 
-  const accountLogs = [
-    ...formattedCustomLogs.accountLogs,
-    ...formattedMessageLogs.accountLogs,
-    ...formattedEthLogs.accountLogs,
-    ...formattedErc20Logs.accountLogs,
-  ];
+    const failedData = { ...erc20Data, ...messageData, ...ethData };
+    const msgHashes = Object.values(failedData).map(({ msgHash }) => msgHash);
 
-  // Get the message hashes and args
-  const { msgHashes: msgHashesFromMessages, args: argsFromMessages } = getMsgHashes(
-    formattedMessageLogs.receipts,
-    'message',
-  );
-  const { msgHashes: msgHashesFromErc20, args: argsFromErc20 } = getMsgHashes(formattedErc20Logs.receipts, 'erc20');
-  const { msgHashes: msgHashesFromEth, args: argsFromEth } = getMsgHashes(formattedEthLogs.receipts, 'eth');
+    const failedTxs = await getFailedTransactionLogs({
+      // for withdrawal txs, should be the L1 client
+      publicClient: customClient.from.public,
+      crossDomainMessenger: customClient.from.contracts.crossDomainMessenger,
+      userAddress,
+      msgHashes,
+    });
 
-  const msgHashes = [...msgHashesFromMessages, ...msgHashesFromErc20, ...msgHashesFromEth];
-  const args = [...argsFromMessages, ...argsFromErc20, ...argsFromEth];
+    const formattedEthLogs = formatETHWithdrawalLogs(customClient, ethLogs, failedTxs, failedData, statusMap);
+    const formattedErc20Logs = formatERC20WithdrawalLogs(customClient, erc20Logs, failedTxs, failedData, statusMap);
+    const formattedMessageLogs = formatMessageWithdrawalLogs(
+      customClient,
+      messageLogs,
+      failedTxs,
+      failedData,
+      statusMap,
+    );
+    const formattedCustomLogs = formatCustomWithdrawalLogs(customClient, customLogs, statusMap);
 
-  const failedTxs = await getFailedTransactionLogs({
-    // for withdrawal txs, should be the L1 client
-    publicClient: customClient.from.public,
-    crossDomainMessenger: customClient.from.contracts.crossDomainMessenger,
-    userAddress,
-    msgHashes,
-  });
+    const accountLogs = [
+      ...formattedCustomLogs.accountLogs,
+      ...formattedMessageLogs.accountLogs,
+      ...formattedEthLogs.accountLogs,
+      ...formattedErc20Logs.accountLogs,
+    ];
 
-  // temporary logs
-  console.log({
-    accountLogs,
-    msgHashes,
-    failedTxs,
-    args,
-  });
+    // temporary logs
+    console.log({
+      accountLogs,
+    });
 
-  return {
-    accountLogs,
-    msgHashes,
-    failedTxs,
-    args,
-  };
+    return {
+      accountLogs,
+    };
+  } catch (error) {
+    console.warn(error);
+
+    return {
+      accountLogs: [],
+    };
+  }
 };

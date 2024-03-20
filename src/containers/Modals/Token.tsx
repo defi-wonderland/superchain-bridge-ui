@@ -11,7 +11,7 @@ export const TokensModal = () => {
   const { closeModal } = useModal();
   const { fromTokens, toTokens } = useTokenList();
   const { customTransactionType, resetValues: resetTransactionData } = useTransactionData();
-  const { setSelectedToken, resetValues: resetTokenValues } = useToken();
+  const { selectedToken, setSelectedToken, resetValues: resetTokenValues } = useToken();
 
   const [searchValue, setSearchValue] = useState('');
 
@@ -30,6 +30,11 @@ export const TokensModal = () => {
   }, [fromTokens, customTransactionType, searchValue, toTokens]);
 
   const handleToken = async (token: TokenData) => {
+    if (selectedToken?.address === token.address) {
+      closeModal();
+      return;
+    }
+
     resetTokenValues();
     resetTransactionData();
     setSelectedToken(token);
@@ -57,8 +62,9 @@ export const TokensModal = () => {
               {/* Token balances */}
               <RightSection>
                 <Box>
-                  <Typography variant='h3'>2.6</Typography>
-                  <Typography variant='body1'>$4.813,43</Typography>
+                  {/* TODO: fetch token balances and prices */}
+                  {/* <Typography variant='h3'>2.6</Typography>
+                  <Typography variant='body1'>$4.813,43</Typography> */}
                 </Box>
               </RightSection>
             </Token>
@@ -79,8 +85,6 @@ export const ListContainer = styled(Box)(() => {
     display: 'flex',
     flexDirection: 'column',
     maxHeight: '40rem',
-    // marginLeft: '-1.2rem',
-    // width: 'calc(100% + 2.4rem)',
     width: '100%',
   };
 });

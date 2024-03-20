@@ -67,6 +67,10 @@ const SwitchIcon = styled(IconButton)(() => {
       border: 'none',
       opacity: 1,
     },
+
+    '@media (max-width: 600px)': {
+      display: 'none',
+    },
   };
 });
 
@@ -80,6 +84,9 @@ const ChainSectionContainer = styled(Box)(() => {
     width: '100%',
     button: {
       marginTop: 'auto',
+    },
+    div: {
+      maxWidth: '50%',
     },
   };
 });

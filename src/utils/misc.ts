@@ -1,4 +1,4 @@
-import { Chain, PublicClient, formatUnits, parseUnits } from 'viem';
+import { Address, Chain, Hex, PublicClient, formatUnits, parseUnits } from 'viem';
 import { contracts } from './variables';
 import { AccountLogs, CustomClients, OpContracts } from '~/types';
 
@@ -15,6 +15,7 @@ export const getToContracts = (fromChain: Chain, toChain: Chain): OpContracts =>
 };
 
 export const getUsdBalance = (price: number, balance: string, decimals: number, compact: boolean = false): string => {
+  if (!price || !balance || !decimals) return '0';
   const priceBN = parseUnits(price.toString(), decimals);
   const balanceBN = parseUnits(balance, decimals);
   const result = (priceBN * balanceBN) / BigInt(10 ** decimals);
@@ -94,8 +95,10 @@ export const getStatusText = (status: string) => {
   }
 };
 
-export const getTxDetailsButtonText = (status: string) => {
-  switch (status) {
+export const getTxDetailsButtonText = (selectedLog: AccountLogs) => {
+  if (selectedLog.type === 'CCTP') return 'Receive Message';
+
+  switch (selectedLog?.status) {
     case 'ready-to-prove':
       return 'Prove Withdrawal';
     case 'ready-to-finalize':
@@ -123,4 +126,12 @@ export const createData = (
   log: AccountLogs,
 ) => {
   return { type, amount, txHash, dateTime: formatTimestamp(timestamp), status, log };
+};
+
+export const bytes20ToBytes32 = (address: string | Address): Hex => {
+  return ('0x' + address.slice(2).padStart(64, '0')) as Hex;
+};
+
+export const bytes32ToBytes20 = (address: string | Hex): Address => {
+  return ('0x' + address.slice(26)) as Address;
 };
