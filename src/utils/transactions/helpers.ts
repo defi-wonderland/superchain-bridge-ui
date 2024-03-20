@@ -1,5 +1,14 @@
 import { Dispatch, SetStateAction } from 'react';
-import { Hex, PublicClient, TransactionReceipt, decodeEventLog, encodeFunctionData, keccak256, parseAbi } from 'viem';
+import {
+  Address,
+  Hex,
+  PublicClient,
+  TransactionReceipt,
+  decodeEventLog,
+  encodeFunctionData,
+  keccak256,
+  parseAbi,
+} from 'viem';
 import { getL2TransactionHashes } from 'viem/op-stack';
 
 import { ExecuteL1DepositProps, TransactionMetadata, TransactionStep } from '~/types';
@@ -77,7 +86,21 @@ export const excecuteL1Deposit = async ({
   };
 };
 
-export const getMsgHashes = (messageReceipts: TransactionReceipt[], receiptType: 'erc20' | 'message' | 'eth') => {
+export interface Args {
+  messageNonce: bigint;
+  sender: Address;
+  target: Address;
+  value: bigint;
+  gasLimit: bigint;
+  message: Hex;
+}
+export interface GetMsgHashesReturn {
+  [key: string]: { receipt: TransactionReceipt; args: Args; msgHash: Hex };
+}
+export const getMsgHashes = (
+  messageReceipts: TransactionReceipt[],
+  receiptType: 'erc20' | 'message' | 'eth',
+): GetMsgHashesReturn => {
   const sentMessageLogIndex = getSenMessageLogIndex(receiptType);
   const sentMessageExtensionLogIndex = getSentMessageExtensionLogIndex(receiptType);
 
@@ -122,7 +145,11 @@ export const getMsgHashes = (messageReceipts: TransactionReceipt[], receiptType:
     ),
   );
 
-  return { msgHashes, args };
+  return Object.fromEntries(
+    messageReceipts.map((receipt, index) => {
+      return [receipt.transactionHash, { receipt, args: args[index], msgHash: msgHashes[index] }];
+    }),
+  );
 };
 
 const getSenMessageLogIndex = (receiptType: 'erc20' | 'message' | 'eth') => {

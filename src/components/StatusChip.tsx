@@ -18,6 +18,7 @@ const SBox = styled(Box)(() => {
   return {
     fontSize: '1.2rem',
     background: 'transparent',
+    width: 'max-content',
     span: {
       padding: '0.2rem 0.8rem',
       display: 'flex',
@@ -36,6 +37,11 @@ const SBox = styled(Box)(() => {
     '.finalized': {
       background: '#15281D',
       color: '#86D5A5',
+    },
+
+    '.failed': {
+      background: '#40100A',
+      color: '#FDA29B',
     },
 
     '.waiting-to-prove, .waiting-to-finalize': {
