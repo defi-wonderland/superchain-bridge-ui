@@ -93,6 +93,16 @@ const SBox = styled(Box)(() => {
         width: '2.2rem',
       },
     },
+
+    '@media (max-width: 600px)': {
+      '.external': {
+        width: 'auto',
+        marginLeft: 'auto',
+        p: {
+          display: 'none',
+        },
+      },
+    },
   };
 });
 
@@ -124,6 +134,14 @@ const MenuButton = styled(BasicButton)(() => {
 
     '@media (max-width: 600px)': {
       gap: '0.6rem',
+      p: {
+        fontSize: '1.4rem',
+      },
+
+      img: {
+        height: '2.4rem',
+        width: '2.4rem',
+      },
     },
   };
 });
@@ -169,6 +187,19 @@ const StyledMenu = styled((props: MenuProps) => (
 
         '&:active': {
           backgroundColor: currentTheme.steel[700],
+        },
+      },
+    },
+
+    '@media (max-width: 600px)': {
+      '& .MuiPaper-root': {
+        '& .MuiMenuItem-root': {
+          fontSize: '1.4rem',
+
+          img: {
+            height: '2.2rem',
+            width: '2.2rem',
+          },
         },
       },
     },

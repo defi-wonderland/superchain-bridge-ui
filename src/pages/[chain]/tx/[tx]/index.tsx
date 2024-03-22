@@ -132,6 +132,12 @@ const HeaderContainer = styled(Box)(() => {
       fontWeight: 400,
       lineHeight: '1.8rem',
     },
+
+    '@media (max-width: 600px)': {
+      h1: {
+        fontSize: '2.4rem',
+      },
+    },
   };
 });
 

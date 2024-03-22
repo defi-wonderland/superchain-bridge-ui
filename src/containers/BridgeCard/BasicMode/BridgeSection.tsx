@@ -107,6 +107,10 @@ const MenuButton = styled(BasicButton)(() => {
         alignItems: 'start',
         gap: '0.8rem',
 
+        p: {
+          fontSize: '1.4rem',
+        },
+
         'div:last-of-type': {
           display: 'flex',
           flexDirection: 'row',
@@ -115,8 +119,8 @@ const MenuButton = styled(BasicButton)(() => {
         },
 
         img: {
-          height: '1.6rem',
-          width: '1.6rem',
+          height: '1.8rem',
+          width: '1.8rem',
         },
       },
     },

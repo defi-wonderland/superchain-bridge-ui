@@ -53,5 +53,11 @@ const SBox = styled(Box)(() => {
       background: '#542400',
       color: '#FFBB45',
     },
+
+    '@media (max-width: 600px)': {
+      '.title': {
+        fontSize: '1.4rem',
+      },
+    },
   };
 });

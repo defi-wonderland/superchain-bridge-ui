@@ -100,7 +100,7 @@ const History = () => {
               )}
               <Typography variant='h1'>Account History</Typography>
             </Box>
-            {!isMobile && <ChainSelect value={toChain} setValue={handleTo} list={l2Chains} isExternal />}
+            <ChainSelect value={toChain} setValue={handleTo} list={l2Chains} isExternal />
           </Box>
 
           <STooltip title={copiedText === currentAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
@@ -171,6 +171,7 @@ const HeaderContainer = styled(Box)(() => {
       height: '2rem',
     },
     h1: {
+      width: 'max-content',
       color: currentTheme.steel[50],
       fontSize: '3rem',
       fontWeight: 500,
@@ -208,6 +209,12 @@ const HeaderContainer = styled(Box)(() => {
 
     '& .chain-select': {
       maxWidth: '20rem',
+    },
+
+    '@media (max-width: 600px)': {
+      h1: {
+        fontSize: '2.4rem',
+      },
     },
   };
 });

@@ -51,5 +51,9 @@ const SConnectButton = styled(PrimaryButton)(() => {
     '&.connected:hover': {
       backgroundColor: currentTheme.steel[700],
     },
+
+    '@media (max-width: 600px)': {
+      fontSize: '1.4rem',
+    },
   };
 });

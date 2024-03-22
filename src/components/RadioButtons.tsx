@@ -49,5 +49,10 @@ const SRadioGroup = styled(RadioGroup)(() => {
     '& .MuiButtonBase-root': {
       color: currentTheme.ghost[400],
     },
+
+    '@media (max-width: 600px)': {
+      gap: '0.4rem',
+      justifyContent: 'space-between',
+    },
   };
 });

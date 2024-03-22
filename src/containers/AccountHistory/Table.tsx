@@ -9,6 +9,7 @@ import {
   TableRow,
   Typography,
   styled,
+  useMediaQuery,
 } from '@mui/material';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
@@ -29,12 +30,15 @@ interface ActivityTableProps {
 }
 export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
   const itemsPerPage = 6;
+  const isMobile = useMediaQuery('(max-width:600px)');
   const { fromChain } = useChain();
   const { setSelectedLog } = useLogs();
   const chainPath = replaceSpacesWithHyphens(fromChain?.name || '');
   const [paging, setPaging] = useState({ from: 0, to: itemsPerPage });
   const [copiedText, copy] = useCopyToClipboard();
   const navigate = useRouter();
+
+  const slicedRows = isMobile ? rows : rows.slice(paging.from, paging.to);
 
   const handleOpenTransaction = (log: AccountLogs, hash?: string) => {
     setSelectedLog(log);
@@ -49,20 +53,22 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
   return (
     <TableContainer>
       <Table>
-        <STableHead>
-          <TableRow>
-            <TableCell>Type</TableCell>
-            <TableCell>Amount</TableCell>
-            <TableCell>Tx Hash</TableCell>
-            <TableCell>Date & Time</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        </STableHead>
+        {!isMobile && (
+          <STableHead>
+            <TableRow>
+              <TableCell>Type</TableCell>
+              <TableCell>Amount</TableCell>
+              <TableCell>Tx Hash</TableCell>
+              <TableCell>Date & Time</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </STableHead>
+        )}
 
         {!!rows.length && (
           <STableBody>
-            {rows.slice(paging.from, paging.to).map((row) => (
+            {slicedRows.map((row) => (
               <STableRow
                 key={row.txHash}
                 className={'row-' + row.status}
@@ -76,18 +82,20 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
                 <AmountCell>{row.amount}</AmountCell>
 
                 {/* Transaction Hash */}
-                <TxHashCell>
-                  <STooltip title={copiedText === row.txHash ? 'Copied!' : 'Copy to clipboard'} arrow>
-                    <Box className='account' onClick={(e) => handleCopy(e, row.txHash)}>
-                      {row.txHash && <Typography variant='body1'>{truncateAddress(row.txHash)}</Typography>}
-                      <Image
-                        src={copiedText === row.txHash ? copyCheckIcon : copyIcon}
-                        alt='Copy to clipboard'
-                        className='copy-to-clipboard'
-                      />
-                    </Box>
-                  </STooltip>
-                </TxHashCell>
+                {!isMobile && (
+                  <TxHashCell>
+                    <STooltip title={copiedText === row.txHash ? 'Copied!' : 'Copy to clipboard'} arrow>
+                      <Box className='account' onClick={(e) => handleCopy(e, row.txHash)}>
+                        {row.txHash && <Typography variant='body1'>{truncateAddress(row.txHash)}</Typography>}
+                        <Image
+                          src={copiedText === row.txHash ? copyCheckIcon : copyIcon}
+                          alt='Copy to clipboard'
+                          className='copy-to-clipboard'
+                        />
+                      </Box>
+                    </STooltip>
+                  </TxHashCell>
+                )}
 
                 {/* Date & Time */}
                 <DateTimeCell>{row.dateTime}</DateTimeCell>
@@ -98,17 +106,19 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
                 </StatusCell>
 
                 {/* Go to transaction detials */}
-                <TableCell className='details-link'>
-                  <Link
-                    onClick={() => handleOpenTransaction(row.log)}
-                    href={{
-                      pathname: '/[chain]/tx/[tx]',
-                      query: { chain: chainPath, tx: row.txHash },
-                    }}
-                  >
-                    <Image src={detailsIcon} alt='Open transaction details page' />
-                  </Link>
-                </TableCell>
+                {!isMobile && (
+                  <TableCell className='details-link'>
+                    <Link
+                      onClick={() => handleOpenTransaction(row.log)}
+                      href={{
+                        pathname: '/[chain]/tx/[tx]',
+                        query: { chain: chainPath, tx: row.txHash },
+                      }}
+                    >
+                      <Image src={detailsIcon} alt='Open transaction details page' />
+                    </Link>
+                  </TableCell>
+                )}
               </STableRow>
             ))}
           </STableBody>
@@ -165,6 +175,15 @@ const STableBody = styled(TableBody)(() => {
         backgroundColor: '#231710',
       },
     },
+
+    '@media (max-width: 600px)': {
+      td: {
+        borderBottom: 'none',
+      },
+      'td:last-child': {
+        width: '50%',
+      },
+    },
   };
 });
 
@@ -187,6 +206,36 @@ const STableRow = styled(TableRow)(() => {
 
     '&:hover': {
       backgroundColor: currentTheme.steel[800],
+    },
+
+    '@media (max-width: 600px)': {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      width: '100%',
+      justifyContent: 'space-between',
+      padding: '2rem 0.6rem',
+      rowGap: '0.8rem',
+      borderTop: `1px solid ${currentTheme.steel[700]}`,
+
+      td: {
+        width: '50%',
+        minWidth: '50%',
+        padding: '0',
+      },
+
+      'td:nth-of-type(2)': {
+        order: 3,
+      },
+      'td:nth-of-type(3)': {
+        order: 4,
+      },
+
+      'td:nth-of-type(4), td:nth-of-type(3)': {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'end',
+      },
     },
   };
 });
