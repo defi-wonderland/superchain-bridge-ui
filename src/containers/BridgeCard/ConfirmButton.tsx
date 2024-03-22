@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, styled } from '@mui/material';
 import { isHex, parseEther, parseUnits } from 'viem';
 
@@ -11,7 +11,7 @@ interface ConfirmButtonProps {
 }
 export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
   const { setModalOpen } = useModal();
-  const { amount, selectedToken, balance, ethBalance } = useToken();
+  const { amount, selectedToken, balance, ethBalance, loadTokenData } = useToken();
   const {
     userAddress,
     isReady,
@@ -28,6 +28,11 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
   // If the selected chain has a sourceId, its because it's a L2 chain
   const isFromAnL2 = !!fromChain?.sourceId;
   const isToAnL2 = !!toChain?.sourceId;
+
+  useEffect(() => {
+    const client = customTransaction?.includes('force') ? 'to' : 'from';
+    loadTokenData(client);
+  }, [customTransaction, isFromAnL2, loadTokenData]);
 
   const isButtonDisabled = useMemo(() => {
     setButtonErrorText('');

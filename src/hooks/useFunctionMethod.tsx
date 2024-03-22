@@ -27,11 +27,11 @@ export const useFunctionMethod = () => {
   }, [address, customTransactionType, setTo]);
 
   useEffect(() => {
-    if (!abi && isValidAddress(to))
+    if (!abi && isValidAddress(to) && customTransactionType?.includes('custom-tx'))
       getAbi(to).then((fetchedAbi) => {
         if (fetchedAbi) setAbi(fetchedAbi);
       });
-  }, [abi, to, getAbi]);
+  }, [abi, to, getAbi, customTransactionType]);
 
   useEffect(() => {
     if (!abi) return;
