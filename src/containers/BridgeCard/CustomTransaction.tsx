@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Box, styled } from '@mui/material';
-import { AbiParameter, isAddress, isHex } from 'viem';
+import { AbiParameter, isHex } from 'viem';
 
 import { useFunctionMethod, useTransactionData } from '~/hooks';
 import { ChainSection } from './ChainSection';
 import { TokenSection } from './TokenSection';
 import { InputField, RadioButtons, FunctionSelect } from '~/components';
+import { isValidAddress } from '~/utils';
 
 export const CustomTransaction = () => {
   const { setTo, to, customTransactionType, data, setData } = useTransactionData();
@@ -13,7 +14,7 @@ export const CustomTransaction = () => {
   const { abi, setAbi, handleSetSelectedFunction, functions, selectedFunction, functionParams, setFunctionParams } =
     useFunctionMethod();
 
-  const isError = to && !isAddress(to);
+  const isError = to && !isValidAddress(to);
 
   const handleSetIsCustomData = (val: 'custom-data' | 'function') => {
     setIsCustomData(val);

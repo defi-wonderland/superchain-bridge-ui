@@ -135,3 +135,7 @@ export const bytes20ToBytes32 = (address: string | Address): Hex => {
 export const bytes32ToBytes20 = (address: string | Hex): Address => {
   return ('0x' + address.slice(26)) as Address;
 };
+
+export const isValidAddress = (address: string): boolean => {
+  return /^0x[a-fA-F0-9]{40}$/.test(address);
+};

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Abi, AbiFunction, AbiItem, encodeFunctionData, isAddress } from 'viem';
+import { Abi, AbiFunction, AbiItem, encodeFunctionData } from 'viem';
 import { useAccount } from 'wagmi';
 
 import { useTransactionData } from '~/hooks';
 import { useAbi } from './useAbi';
+import { isValidAddress } from '~/utils';
 
 export const useFunctionMethod = () => {
   const { getAbi } = useAbi();
@@ -22,11 +23,11 @@ export const useFunctionMethod = () => {
   };
 
   useEffect(() => {
-    if (address && isAddress(address) && customTransactionType !== 'custom-tx') setTo(address);
+    if (address && isValidAddress(address) && customTransactionType !== 'custom-tx') setTo(address);
   }, [address, customTransactionType, setTo]);
 
   useEffect(() => {
-    if (!abi && isAddress(to))
+    if (!abi && isValidAddress(to))
       getAbi(to).then((fetchedAbi) => {
         if (fetchedAbi) setAbi(fetchedAbi);
       });

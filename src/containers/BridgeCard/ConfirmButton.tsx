@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
 import { Button, styled } from '@mui/material';
-import { isAddress, isHex, parseEther, parseUnits } from 'viem';
+import { isHex, parseEther, parseUnits } from 'viem';
 
 import { useChain, useCustomTheme, useModal, useToken, useTransactionData } from '~/hooks';
 import { ModalType, TransactionType } from '~/types';
+import { isValidAddress } from '~/utils';
 
 interface ConfirmButtonProps {
   isExpertMode?: boolean;
@@ -43,7 +44,7 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
       }
     }
 
-    if (to && !isAddress(to)) {
+    if (to && !isValidAddress(to)) {
       setButtonErrorText('Invalid target address');
       return true;
     }
