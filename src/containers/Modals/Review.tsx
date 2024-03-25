@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Box, Divider, Typography, styled, IconButton } from '@mui/material';
 import Image from 'next/image';
 
@@ -12,17 +13,38 @@ import { PrimaryButton, STooltip, SecondaryButton } from '~/components';
 import { formatDataNumber, truncateAddress } from '~/utils';
 import { ModalType, TransactionType } from '~/types';
 
+type CopiedValue = string | null;
+
 export const ReviewModal = () => {
   const { closeModal } = useModal();
   const { transactionType, value, mint, to, userAddress, data } = useTransactionData();
   const { selectedToken, amount, bridgeData } = useToken();
   const { executeTransaction } = useTransactions();
-  const [copiedText, copy] = useCopyToClipboard();
+  const [, copy] = useCopyToClipboard();
+  const [copiedOrigin, setCopiedOrigin] = useState<CopiedValue>(null);
+  const [copiedDestination, setCopiedDestination] = useState<CopiedValue>(null);
+  const copiedTextTimeout = 800;
 
   const totalAmount = amount || mint || value;
 
   const handleConfirm = async () => {
     executeTransaction();
+  };
+
+  const handleCopyOrigin = async () => {
+    const success = await copy(userAddress?.toString() || '');
+    if (success) {
+      setCopiedOrigin(userAddress?.toString() || '');
+      setTimeout(() => setCopiedOrigin(''), copiedTextTimeout);
+    }
+  };
+
+  const handleCopyDestination = async () => {
+    const success = await copy(to?.toString() || '');
+    if (success) {
+      setCopiedDestination(to?.toString() || '');
+      setTimeout(() => setCopiedDestination(''), copiedTextTimeout);
+    }
   };
 
   const showData =
@@ -75,9 +97,13 @@ export const ReviewModal = () => {
           <STooltip title={userAddress} className='address'>
             <span>{truncateAddress(userAddress || '')}</span>
           </STooltip>
-          <STooltip title={copiedText === userAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
-            <IconButton onClick={() => copy(userAddress?.toString() || '')}>
-              <Image src={copiedText === userAddress ? copyCheckIcon : copyIcon} alt='Copy to clipboard' />
+          <STooltip title={copiedOrigin === userAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
+            <IconButton onClick={() => handleCopyOrigin()} className='icon-button'>
+              <Image
+                src={copiedOrigin === userAddress ? copyCheckIcon : copyIcon}
+                alt='Copy to clipboard'
+                className='icon-image'
+              />
             </IconButton>
           </STooltip>
         </Box>
@@ -90,9 +116,13 @@ export const ReviewModal = () => {
           <STooltip title={to} className='address'>
             <span>{truncateAddress(to)}</span>
           </STooltip>
-          <STooltip title={copiedText === to ? 'Copied!' : 'Copy to clipboard'} arrow>
-            <IconButton onClick={() => copy(to?.toString() || '')}>
-              <Image src={copiedText === to ? copyCheckIcon : copyIcon} alt='Copy to clipboard' />
+          <STooltip title={copiedDestination === to ? 'Copied!' : 'Copy to clipboard'} arrow>
+            <IconButton onClick={() => handleCopyDestination()} className='icon-button'>
+              <Image
+                src={copiedDestination === to ? copyCheckIcon : copyIcon}
+                alt='Copy to clipboard'
+                className='icon-image'
+              />
             </IconButton>
           </STooltip>
         </Box>
@@ -174,7 +204,6 @@ export const DataRow = styled(Box)(() => {
       display: 'flex',
       alignItems: 'center',
       gap: '0.5rem',
-
       fontSize: '1.6rem',
       color: currentTheme.steel[100],
       lineHeight: '150%' /* 24px */,
@@ -183,6 +212,17 @@ export const DataRow = styled(Box)(() => {
     '.address-container': {
       display: 'flex',
       alignItems: 'center',
+    },
+    '.icon-button': {
+      width: '32px',
+      height: '32px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    '.icon-image': {
+      width: '100%',
+      height: '100%',
     },
     '@media (max-width: 600px)': {
       p: {

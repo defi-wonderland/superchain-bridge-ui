@@ -1,4 +1,6 @@
-import { Box, IconButton, styled, Typography } from '@mui/material';
+import { useState } from 'react';
+
+import { Box, IconButton, styled, Typography, Menu, Switch, MenuProps } from '@mui/material';
 import Image from 'next/image';
 
 import adjustmentsIcon from '~/assets/icons/adjustments.svg';
@@ -25,6 +27,8 @@ export const CardHeader = ({
   const { resetChains } = useChain();
   const { resetValues } = useTransactionData();
   const { resetValues: resetTokenValues } = useToken();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
   const tooltipTitle = isExpertMode ? 'Disable expert mode' : 'Enable expert mode';
 
@@ -39,6 +43,7 @@ export const CardHeader = ({
     resetChains();
     resetValues();
     resetTokenValues();
+    handleMenuClose();
   };
 
   const handleBack = () => {
@@ -46,6 +51,14 @@ export const CardHeader = ({
     resetChains();
     resetValues();
     resetTokenValues();
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -56,16 +69,21 @@ export const CardHeader = ({
             <Typography variant='h1'>Superchain Bridge</Typography>
             {isExpertMode && <strong>Expert mode</strong>}
           </Box>
-
           <STooltip title={tooltipTitle}>
-            <StyledAdvanceButton onClick={activateExpertMode}>
+            <IconButton onClick={handleMenuOpen}>
               <Image
                 src={isExpertMode ? adjustmentsActivated : adjustmentsIcon}
                 alt='Advance mode'
                 className={isExpertMode ? 'advance-activated' : ''}
               />
-            </StyledAdvanceButton>
+            </IconButton>
           </STooltip>
+          <StyledMenu id='expert-mode-menu' anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
+            <Box className='menu-item'>
+              <span>Expert mode</span>
+              <ExpertModeSwitch checked={isExpertMode} onChange={activateExpertMode} disableRipple />
+            </Box>
+          </StyledMenu>
         </>
       )}
 
@@ -131,19 +149,102 @@ const Header = styled(Box)(() => {
   };
 });
 
-const StyledAdvanceButton = styled(IconButton)(() => {
-  const { currentTheme } = useCustomTheme();
-  return {
-    '&:has(.advance-activated)': {
-      background: currentTheme.ghost[800],
-    },
-  };
-});
-
 export const SBox = styled(Box)(() => {
   return {
     h1: {
       fontSize: '2rem',
+    },
+  };
+});
+
+const StyledMenu = styled((props: MenuProps) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'right',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'right',
+    }}
+    {...props}
+  />
+))(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    '& .MuiPaper-root': {
+      borderRadius: '1.6rem',
+      border: '1px solid',
+      borderColor: currentTheme.steel[700],
+      background: currentTheme.steel[900],
+      color: currentTheme.steel[100],
+      fontSize: '1.6rem',
+      minWidth: '208px',
+      minHeight: '72px',
+      padding: '1rem',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      '.menu-item': {
+        display: 'flex',
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 'var(--spacing-2xl, 1.25rem)',
+        alignSelf: 'stretch',
+      },
+      '@media (max-width: 600px)': {
+        minWidth: '13rem',
+        minHeigth: '4.5rem',
+        '& .MuiPaper-root': {
+          fontSize: '1rem',
+          lineHeight: '1.5rem',
+        },
+      },
+    },
+  };
+});
+
+const ExpertModeSwitch = styled(Switch)(() => {
+  return {
+    width: 42,
+    height: 24,
+    padding: 0,
+    '& .MuiSwitch-switchBase': {
+      padding: 2,
+      margin: '0 5%',
+      '&.Mui-checked': {
+        transform: 'translateX(16px)',
+        '& + .MuiSwitch-track': {
+          backgroundColor: '#7365C7',
+        },
+        '& .MuiSwitch-thumb': {
+          backgroundColor: '#fff',
+        },
+      },
+      '&.Mui-checked + .MuiSwitch-track': {
+        opacity: '1',
+      },
+    },
+    '& .MuiSwitch-thumb': {
+      width: 20,
+      height: 20,
+      boxShadow: 'none',
+    },
+    '& .MuiSwitch-track': {
+      borderRadius: 13,
+      backgroundColor: '#292B2E',
+      opacity: 1,
+      boxSizing: 'border-box',
+    },
+    '&:active': {
+      '& .MuiSwitch-thumb': {
+        width: 22,
+      },
+      '& .MuiSwitch-switchBase.Mui-checked': {
+        transform: 'translateX(16px)',
+      },
     },
   };
 });

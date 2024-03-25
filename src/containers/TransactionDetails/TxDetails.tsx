@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Box, Typography, styled, IconButton } from '@mui/material';
 import Image from 'next/image';
 
@@ -11,10 +12,15 @@ import { useCustomTheme, useLogs, useTokenList, useCopyToClipboard } from '~/hoo
 import { STooltip } from '~/components';
 import { DataRow } from '~/containers';
 
+type CopiedValue = string | null;
+
 export const TxDetails = () => {
   const { selectedLog } = useLogs();
   const { fromTokens, toTokens } = useTokenList();
-  const [copiedText, copy] = useCopyToClipboard();
+  const [, copy] = useCopyToClipboard();
+  const [copiedOrigin, setCopiedOrigin] = useState<CopiedValue>(null);
+  const [copiedDestination, setCopiedDestination] = useState<CopiedValue>(null);
+  const copiedTextTimeout = 800;
   const selectedToken =
     fromTokens.find((token) => token.address === selectedLog?.localToken) ||
     toTokens.find((token) => token.address === selectedLog?.localToken);
@@ -29,6 +35,22 @@ export const TxDetails = () => {
   const destinationChainLogo = chainData[selectedLog?.destinationChain || 0]?.logo;
   const originChainName = supportedChains.find((chain) => chain.id === selectedLog?.originChain)?.name;
   const destinationChainName = supportedChains.find((chain) => chain.id === selectedLog?.destinationChain)?.name;
+
+  const handleCopyOrigin = async () => {
+    const success = await copy(selectedLog?.from || '0x');
+    if (success) {
+      setCopiedOrigin(selectedLog?.from || '0x');
+      setTimeout(() => setCopiedOrigin(''), copiedTextTimeout);
+    }
+  };
+
+  const handleCopyDestination = async () => {
+    const success = await copy(selectedLog?.to || '0x');
+    if (success) {
+      setCopiedDestination(selectedLog?.to || '0x');
+      setTimeout(() => setCopiedDestination(''), copiedTextTimeout);
+    }
+  };
 
   return (
     <LeftSection>
@@ -90,13 +112,18 @@ export const TxDetails = () => {
       <DataContainer>
         <DataRow>
           <Typography variant='body1'>From</Typography>
+
           <Box className='address-container'>
             <STooltip title={selectedLog?.from} className='address'>
               <span>{truncateAddress(selectedLog?.from || '0x')}</span>
             </STooltip>
-            <STooltip title={copiedText === selectedLog?.from ? 'Copied!' : 'Copy to clipboard'} arrow>
-              <IconButton onClick={() => copy(selectedLog?.from?.toString() || '0x')}>
-                <Image src={copiedText === selectedLog?.from ? copyCheckIcon : copyIcon} alt='Copy to clipboard' />
+            <STooltip title={copiedOrigin === selectedLog?.from ? 'Copied!' : 'Copy to clipboard'} arrow>
+              <IconButton onClick={() => handleCopyOrigin()} className='icon-button'>
+                <Image
+                  src={copiedOrigin === selectedLog?.from ? copyCheckIcon : copyIcon}
+                  alt='Copy to clipboard'
+                  className='icon-image'
+                />
               </IconButton>
             </STooltip>
           </Box>
@@ -108,9 +135,13 @@ export const TxDetails = () => {
             <STooltip title={selectedLog?.to} className='address'>
               <span>{truncateAddress(selectedLog?.to || '0x')}</span>
             </STooltip>
-            <STooltip title={copiedText === selectedLog?.to ? 'Copied!' : 'Copy to clipboard'} arrow>
-              <IconButton onClick={() => copy(selectedLog?.to?.toString() || '0x')}>
-                <Image src={copiedText === selectedLog?.to ? copyCheckIcon : copyIcon} alt='Copy to clipboard' />
+            <STooltip title={copiedDestination === selectedLog?.to ? 'Copied!' : 'Copy to clipboard'} arrow>
+              <IconButton onClick={() => handleCopyDestination()} className='icon-button'>
+                <Image
+                  src={copiedDestination === selectedLog?.to ? copyCheckIcon : copyIcon}
+                  alt='Copy to clipboard'
+                  className='icon-image'
+                />
               </IconButton>
             </STooltip>
           </Box>
