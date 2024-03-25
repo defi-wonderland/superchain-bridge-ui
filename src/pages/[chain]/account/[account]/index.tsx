@@ -17,10 +17,10 @@ import { ChainSelect, CustomHead, STooltip, TableSkeleton } from '~/components';
 const History = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
   const router = useRouter();
-  const { setToChain, toChain, l2Chains } = useChain();
+  const { l2Chains, logsChain, setLogsChain } = useChain();
   const { address: currentAddress } = useAccount();
   const [copiedText, copy] = useCopyToClipboard();
-  const { customClient } = useCustomClient();
+  const { logsClient } = useCustomClient();
   const { fromTokens, toTokens } = useTokenList();
   const {
     cctpLogs,
@@ -28,31 +28,35 @@ const History = () => {
     withdrawLogs,
     orderedLogs,
     isSuccess,
-    setOrderedLogs,
     isLoading,
+    setOrderedLogs,
     setIsLoading,
     refetchLogs,
   } = useLogs();
 
   const handleTo = (chain: Chain) => {
-    setToChain(chain);
+    setLogsChain(chain);
     setTimeout(refetchLogs);
   };
 
   const getOrderedLogs = useCallback(async () => {
     if (!depositLogs || !withdrawLogs) return;
-    const accountLogs = [...depositLogs.accountLogs, ...withdrawLogs.accountLogs, ...cctpLogs];
-    const blocks = await getTimestamps(accountLogs, customClient);
+    try {
+      const accountLogs = [...depositLogs.accountLogs, ...withdrawLogs.accountLogs, ...cctpLogs];
+      const blocks = await getTimestamps(accountLogs, logsClient);
 
-    const logsWithTimestamp = accountLogs.map((log, index) => {
-      return { ...log, timestamp: blocks[index].timestamp };
-    });
-    const orderedLogs = logsWithTimestamp.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+      const logsWithTimestamp = accountLogs.map((log, index) => {
+        return { ...log, timestamp: blocks[index].timestamp };
+      });
+      const orderedLogs = logsWithTimestamp.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
 
-    const reversedLogs = orderedLogs.reverse(); // latest logs first
-    setOrderedLogs(reversedLogs);
-    setIsLoading(false);
-  }, [cctpLogs, customClient, depositLogs, setIsLoading, setOrderedLogs, withdrawLogs]);
+      const reversedLogs = orderedLogs.reverse(); // latest logs first
+      setOrderedLogs(reversedLogs);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error loading timestamps:', error);
+    }
+  }, [cctpLogs, logsClient, depositLogs, setIsLoading, setOrderedLogs, withdrawLogs]);
 
   const rows = useMemo(() => {
     const data = orderedLogs.map((eventLog) => {
@@ -100,7 +104,7 @@ const History = () => {
               )}
               <Typography variant='h1'>Account History</Typography>
             </Box>
-            <ChainSelect value={toChain} setValue={handleTo} list={l2Chains} isExternal />
+            <ChainSelect value={logsChain} setValue={handleTo} list={l2Chains} isExternal />
           </Box>
 
           <STooltip title={copiedText === currentAddress ? 'Copied!' : 'Copy to clipboard'} arrow>

@@ -5,6 +5,9 @@ import { useConfig } from 'wagmi';
 type ContextType = {
   availableChains: readonly Chain[];
 
+  logsChain: Chain;
+  setLogsChain: (val: Chain) => void;
+
   fromChain: Chain;
   setFromChain: (val: Chain) => void;
   toChain: Chain;
@@ -32,6 +35,7 @@ export const ChainProvider = ({ children }: StateProps) => {
   const availableChains = useMemo(() => config.chains, [config.chains]);
   const [fromChain, setFromChain] = useState<Chain>(availableChains[0] as Chain);
   const [toChain, setToChain] = useState<Chain>(availableChains[1] as Chain);
+  const [logsChain, setLogsChain] = useState<Chain>(availableChains[1] as Chain);
 
   const switchChains = useCallback(() => {
     const temp = fromChain;
@@ -69,6 +73,8 @@ export const ChainProvider = ({ children }: StateProps) => {
         availableChains,
         switchChains,
         resetChains,
+        logsChain,
+        setLogsChain,
 
         l1Chains,
         l2Chains,

@@ -1,6 +1,7 @@
 import { Badge, Box, IconButton, useMediaQuery } from '@mui/material';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { styled } from '@mui/material/styles';
+import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,6 +17,7 @@ import { replaceSpacesWithHyphens } from '~/utils';
 import { ModalType } from '~/types';
 
 export const Header = () => {
+  const router = useRouter();
   const isMobile = useMediaQuery('(max-width: 600px)');
   const { address } = useAccount();
   const { transactionPending } = useLogs();
@@ -29,15 +31,13 @@ export const Header = () => {
   };
 
   const handleAccountHistory = () => {
-    if (!address) openConnectModal?.();
+    if (!address) {
+      openConnectModal?.();
+    } else {
+      router.push(`/${chainPath}/account/${address}`);
+    }
   };
 
-  const settingsHref = address
-    ? {
-        pathname: '/[chain]/account/[account]',
-        query: { chain: chainPath, account: address },
-      }
-    : '#';
   return (
     <HeaderContainer>
       {/* Left section */}
@@ -53,12 +53,10 @@ export const Header = () => {
         {!isMobile && (
           <>
             <STooltip title='Account History' placement='bottom'>
-              <IconButton onClick={handleAccountHistory}>
-                <Link href={settingsHref}>
-                  <Badge invisible={!transactionPending} variant='dot' color='primary' overlap='circular'>
-                    <SHistoryIcon src={historyIcon} alt='Account History' />
-                  </Badge>
-                </Link>
+              <IconButton onClick={handleAccountHistory} role='link'>
+                <Badge invisible={!transactionPending} variant='dot' color='primary' overlap='circular'>
+                  <SHistoryIcon src={historyIcon} alt='Account History' />
+                </Badge>
               </IconButton>
             </STooltip>
 
