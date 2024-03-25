@@ -28,7 +28,7 @@
     "@emotion/react": "11.11.3",
     "@emotion/server": "11.11.0",
     "@emotion/styled": "11.11.0",
-    "@eth-optimism/tokenlist": "9.0.25",
+    "@eth-optimism/tokenlist": "10.0.8",
     "@fontsource-variable/roboto-mono": "5.0.18",
     "@mui/icons-material": "5.15.6",
     "@mui/material": "5.15.5",
@@ -44,7 +44,7 @@
     "react-dom": "18.2.0",
     "react-i18next": "14.0.0",
     "sharp": "0.33.2",
-    "viem": "2.8.6",
+    "viem": "2.9.0",
     "wagmi": "2.5.7"
   },
   "devDependencies": {

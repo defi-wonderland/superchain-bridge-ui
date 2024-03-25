@@ -11,13 +11,15 @@ import Layout from './layout';
 
 const Home = ({ Component, pageProps }: AppProps) => {
   return (
-    <Providers>
-      <Layout>
-        <Component {...pageProps} />
-        <SpeedInsights />
-        <Analytics />
-      </Layout>
-    </Providers>
+    <>
+      <Providers>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </Providers>
+      <SpeedInsights />
+      <Analytics />
+    </>
   );
 };
 

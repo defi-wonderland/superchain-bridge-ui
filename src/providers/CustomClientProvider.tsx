@@ -9,6 +9,7 @@ import { CustomClients } from '~/types';
 
 type ContextType = {
   customClient: CustomClients;
+  logsClient: CustomClients;
 };
 
 interface StateProps {
@@ -19,7 +20,7 @@ export const CustomClientConext = createContext({} as ContextType);
 
 export const CustomClientProvider = ({ children }: StateProps) => {
   const { address } = useAccount();
-  const { fromChain, toChain } = useChain();
+  const { fromChain, toChain, logsChain, availableChains } = useChain();
 
   const fromWalletClient = useMemo(() => {
     if (typeof window !== 'undefined' && window.ethereum) {
@@ -81,10 +82,41 @@ export const CustomClientProvider = ({ children }: StateProps) => {
     [fromChain, fromPublicClient, fromWalletClient, toChain, toPublicClient, toWalletClient],
   );
 
+  const logsClient: CustomClients = useMemo(
+    () => ({
+      from: {
+        public: createPublicClient({
+          chain: availableChains[0], // L1 chain
+          transport: http(alchemyUrls[availableChains[0].id]),
+          batch: {
+            multicall: true,
+          },
+        })
+          .extend(publicActionsL2())
+          .extend(publicActionsL1()),
+        contracts: getFromContracts(availableChains[0], logsChain),
+      },
+      to: {
+        public: createPublicClient({
+          chain: logsChain,
+          transport: http(alchemyUrls[logsChain.id]),
+          batch: {
+            multicall: true,
+          },
+        })
+          .extend(publicActionsL2())
+          .extend(publicActionsL1()),
+        contracts: getToContracts(availableChains[0], logsChain),
+      },
+    }),
+    [availableChains, logsChain],
+  );
+
   return (
     <CustomClientConext.Provider
       value={{
         customClient,
+        logsClient,
       }}
     >
       {children}

@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Badge, Box, IconButton, useMediaQuery } from '@mui/material';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { styled } from '@mui/material/styles';
+import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -19,6 +20,7 @@ import { ModalType } from '~/types';
 import { MobileMenu } from './MobileMenu';
 
 export const Header = () => {
+  const router = useRouter();
   const isMobile = useMediaQuery('(max-width: 600px)');
   const { address } = useAccount();
   const { transactionPending } = useLogs();
@@ -38,28 +40,12 @@ export const Header = () => {
   };
 
   const handleAccountHistory = () => {
-    if (!address) openConnectModal?.();
+    if (!address) {
+      openConnectModal?.();
+    } else {
+      router.push(`/${chainPath}/account/${address}`);
+    }
   };
-
-  const settingsHref = address
-    ? {
-        pathname: '/[chain]/account/[account]',
-        query: { chain: chainPath, account: address },
-      }
-    : '#';
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (target.closest('#header-menu')) {
-        return;
-      }
-      setMenuOpen(false);
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   return (
     <>
@@ -77,12 +63,10 @@ export const Header = () => {
           {!isMobile && (
             <>
               <STooltip title='Account History' placement='bottom'>
-                <IconButton onClick={handleAccountHistory}>
-                  <Link href={settingsHref}>
-                    <Badge invisible={!transactionPending} variant='dot' color='primary' overlap='circular'>
-                      <SHistoryIcon src={historyIcon} alt='Account History' />
-                    </Badge>
-                  </Link>
+                <IconButton onClick={handleAccountHistory} role='link'>
+                  <Badge invisible={!transactionPending} variant='dot' color='primary' overlap='circular'>
+                    <SHistoryIcon src={historyIcon} alt='Account History' />
+                  </Badge>
                 </IconButton>
               </STooltip>
 

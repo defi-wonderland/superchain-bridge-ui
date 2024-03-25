@@ -1,10 +1,26 @@
-import { base, baseSepolia, optimismSepolia, sepolia } from 'viem/chains';
+import {
+  base,
+  baseSepolia,
+  mainnet,
+  mode,
+  optimism,
+  optimismSepolia,
+  sepolia,
+  fraxtal,
+  liskSepolia,
+  zora,
+  zoraSepolia,
+} from 'viem/chains';
 
 import sepoliaLogo from '~/assets/chains/ethereum.svg';
 import opSepoliaLogo from '~/assets/chains/optimism.svg';
 import baseSepoliaLogo from '~/assets/chains/base.svg';
 import circleLogo from '~/assets/icons/circle.png';
 import optimismLogo from '~/assets/chains/optimism.svg';
+import modeLogo from '~/assets/chains/mode.png';
+import zoraLogo from '~/assets/chains/zora.png';
+import fraxtalLogo from '~/assets/chains/fraxtal.png';
+import liskLogo from '~/assets/chains/lisk.png';
 
 import { ChainData, OpContracts, BridgeData } from '~/types';
 
@@ -16,6 +32,39 @@ export const THEME_KEY = 'superbridge_theme_key';
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export const chainData: ChainData = {
+  // Mainnet
+  [mainnet.id]: {
+    logo: sepoliaLogo.src,
+    apiUrl: 'https://etherscan.io/api',
+    explorer: 'https://etherscan.io/',
+  },
+  [optimism.id]: {
+    logo: opSepoliaLogo.src,
+    apiUrl: 'https://api-sepolia-optimistic.etherscan.io/api',
+    explorer: 'https://sepolia-optimism.etherscan.io/',
+  },
+  [base.id]: {
+    logo: baseSepoliaLogo.src,
+    apiUrl: 'https://api.basescan.org/api',
+    explorer: 'https://basescan.org/',
+  },
+  [mode.id]: {
+    logo: modeLogo.src,
+    apiUrl: '',
+    explorer: '',
+  },
+  [zora.id]: {
+    logo: zoraLogo.src,
+    apiUrl: '',
+    explorer: '',
+  },
+  [fraxtal.id]: {
+    logo: fraxtalLogo.src,
+    apiUrl: '',
+    explorer: '',
+  },
+
+  // Testnets
   [sepolia.id]: {
     logo: sepoliaLogo.src,
     apiUrl: 'https://api-sepolia.etherscan.io/api',
@@ -31,10 +80,15 @@ export const chainData: ChainData = {
     apiUrl: 'https://api-sepolia.basescan.org/api',
     explorer: 'https://sepolia.basescan.org/',
   },
-  [base.id]: {
+  [zoraSepolia.id]: {
     logo: baseSepoliaLogo.src,
-    apiUrl: 'https://api.basescan.org/api',
-    explorer: 'https://basescan.org//',
+    apiUrl: '',
+    explorer: '',
+  },
+  [liskSepolia.id]: {
+    logo: liskLogo.src,
+    apiUrl: '',
+    explorer: '',
   },
 };
 
