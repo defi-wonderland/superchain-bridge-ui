@@ -11,8 +11,17 @@ import copyCheckIcon from '~/assets/icons/copy-check.svg';
 
 import { MainCardContainer, ActivityTable } from '~/containers';
 import { createData, formatDataNumber, getTimestamps, truncateAddress } from '~/utils';
-import { useChain, useCopyToClipboard, useCustomClient, useCustomTheme, useLogs, useTokenList } from '~/hooks';
+import {
+  useChain,
+  useCopyToClipboard,
+  useCustomClient,
+  useCustomTheme,
+  useLogs,
+  useQueryParams,
+  useTokenList,
+} from '~/hooks';
 import { ChainSelect, CustomHead, STooltip, TableSkeleton } from '~/components';
+import { QueryParamKey } from '~/types';
 
 const History = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
@@ -33,6 +42,9 @@ const History = () => {
     setIsLoading,
     refetchLogs,
   } = useLogs();
+
+  const { getParam } = useQueryParams();
+  const queryAddress = getParam(QueryParamKey.address);
 
   const handleTo = (chain: Chain) => {
     setLogsChain(chain);
@@ -88,6 +100,13 @@ const History = () => {
       getOrderedLogs();
     }
   }, [getOrderedLogs, orderedLogs.length, isSuccess]);
+
+  useEffect(() => {
+    // if the user is disconnected, redirect to the home page
+    if (currentAddress?.toLowerCase() !== queryAddress?.toLowerCase()) {
+      router.push('/');
+    }
+  }, [currentAddress, queryAddress, router]);
 
   return (
     <Container>
@@ -155,6 +174,11 @@ const Container = styled(Box)(() => {
     justifyContent: 'center',
     position: 'relative',
     width: '100%',
+
+    '@media (max-width: 600px)': {
+      marginTop: '6rem',
+      paddingTop: '4.2rem',
+    },
   };
 });
 

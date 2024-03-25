@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction, createContext, useEffect, useMemo, useState } from 'react';
-import { Address, isAddress, isHex } from 'viem';
+import { Address, isHex } from 'viem';
 import { useAccount } from 'wagmi';
 
 import { useModal, useToken } from '~/hooks';
 import { CustomTransactionType, ModalType, TransactionMetadata, TransactionStep, TransactionType } from '~/types';
+import { isValidAddress } from '~/utils';
 
 type ContextType = {
   userAddress?: Address;
@@ -58,7 +59,7 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
   const [txMetadata, setTxMetadata] = useState<TransactionMetadata>({ step: TransactionStep.NONE });
 
   const isReady = useMemo(() => {
-    return !!((mint || value || amount || isHex(data)) && isAddress(to));
+    return !!((mint || value || amount || isHex(data)) && isValidAddress(to));
   }, [mint, value, amount, data, to]);
 
   const resetValues = () => {

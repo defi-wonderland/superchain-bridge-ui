@@ -1,6 +1,6 @@
 import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { Address, erc20Abi, parseUnits } from 'viem';
-import { useAccount, useBalance } from 'wagmi';
+import { useAccount } from 'wagmi';
 
 import CCTP from '~/data/cctp.json';
 import { useChain, useCustomClient, useTokenList } from '~/hooks';
@@ -38,6 +38,8 @@ type ContextType = {
 
   bridgeData: BridgeData;
   setBridgeData: (val: BridgeData) => void;
+
+  loadTokenData: (client: 'from' | 'to') => void;
 };
 
 interface StateProps {
@@ -52,14 +54,8 @@ export const TokenProvider = ({ children }: StateProps) => {
   const { address } = useAccount();
   const { toTokens, fromTokens } = useTokenList();
   const { toChain, fromChain } = useChain();
-  const { data } = useBalance({
-    address,
-    chainId: fromChain.id,
-  });
 
-  const {
-    customClient: { from },
-  } = useCustomClient();
+  const { customClient } = useCustomClient();
 
   const [selectedToken, setSelectedToken] = useState<TokenData>(fromTokens[0]);
   const [price, setPrice] = useState<number>(1242.36);
@@ -96,18 +92,18 @@ export const TokenProvider = ({ children }: StateProps) => {
 
   const approve = async (spender: string) => {
     try {
-      const { request } = await from.public.simulateContract({
+      const { request } = await customClient.from.public.simulateContract({
         account: address,
         abi: erc20Abi,
         address: selectedToken?.address as Address,
         functionName: 'approve',
         args: [spender as Address, parseTokenUnits(amount)],
       });
-      const hash = await from.wallet?.writeContract(request);
+      const hash = await customClient.from.wallet?.writeContract(request);
 
       if (!hash) throw new Error('Approve transaction failed');
 
-      const receipt = await from.public.waitForTransactionReceipt({ hash: hash });
+      const receipt = await customClient.from.public.waitForTransactionReceipt({ hash: hash });
 
       console.log('Transaction confirmed,', receipt); // temporary log
     } catch (error) {
@@ -121,13 +117,14 @@ export const TokenProvider = ({ children }: StateProps) => {
     setAllowance('');
   };
 
-  useEffect(() => {
-    if (!address || !from.contracts?.standardBridge) return;
-    const tokenAddress = fromToken?.address as Address;
-    const contractAddress = fromToken?.cctp ? cctpData[fromChain.id].tokenMessenger : from.contracts.standardBridge;
-
-    from.public
-      .multicall({
+  const loadTokenData = useCallback(
+    async (client: 'from' | 'to') => {
+      if (!address || !customClient[client].contracts?.standardBridge) return;
+      const tokenAddress = selectedToken?.address as Address;
+      const contractAddress = selectedToken?.cctp
+        ? cctpData[fromChain.id].tokenMessenger
+        : customClient[client].contracts.standardBridge;
+      const [balance, allowance] = await customClient[client].public.multicall({
         contracts: [
           {
             address: tokenAddress,
@@ -142,26 +139,15 @@ export const TokenProvider = ({ children }: StateProps) => {
             args: [address, contractAddress],
           },
         ],
-      })
-      .then(([balance, allowance]) => {
-        setBalance(balance.result?.toString() || '');
-        setAllowance(allowance.result?.toString() || '');
       });
-  }, [
-    address,
-    cctpData,
-    from.contracts?.standardBridge,
-    from.public,
-    fromChain.id,
-    fromToken?.address,
-    fromToken?.cctp,
-  ]);
+      const ethBalance = await customClient[client].public.getBalance({ address });
 
-  useEffect(() => {
-    if (selectedToken?.symbol === 'ETH') {
-      return setEthBalance(data?.value.toString() || '');
-    }
-  }, [data?.value, selectedToken?.symbol]);
+      setEthBalance(ethBalance.toString() || '');
+      setBalance(balance.result?.toString() || '');
+      setAllowance(allowance.result?.toString() || '');
+    },
+    [address, cctpData, customClient, fromChain.id, selectedToken?.address, selectedToken?.cctp],
+  );
 
   useEffect(
     function reset() {
@@ -201,6 +187,8 @@ export const TokenProvider = ({ children }: StateProps) => {
         setAvailableBridges,
         bridgeData,
         setBridgeData,
+
+        loadTokenData,
       }}
     >
       {children}

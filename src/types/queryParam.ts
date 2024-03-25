@@ -1,9 +1,9 @@
 export enum QueryParamKey {
   tx = 'tx',
   chain = 'chain',
+  address = 'account',
 
   // temporary values
-  address = 'address',
   originChainId = 'originChainId',
   destinationChainId = 'destinationChainId',
   originAssetId = 'originAssetId',
