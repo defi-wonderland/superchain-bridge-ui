@@ -128,11 +128,18 @@ const HeaderContainer = styled('header')(() => {
       fontSize: '2.8rem',
     },
 
+    // TODO: confirm the design of the header
+    // background: currentTheme.steel[900],
+    // borderBottom: `1px solid ${currentTheme.steel[700]}`,
     '&.menu-open': {
       background: currentTheme.steel[900],
     },
 
     '@media (max-width: 600px)': {
+      position: 'fixed',
+      padding: '0 1.6rem',
+      top: 0,
+      left: 0,
       height: '7.2rem',
       minHeight: '7.2rem',
     },
