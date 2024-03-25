@@ -90,6 +90,11 @@ const Container = styled(Box)(() => {
     justifyContent: 'center',
     position: 'relative',
     width: '100%',
+
+    '@media (max-width: 600px)': {
+      marginTop: '6rem',
+      paddingTop: '4.2rem',
+    },
   };
 });
 
@@ -131,6 +136,12 @@ const HeaderContainer = styled(Box)(() => {
       fontSize: '1.6rem',
       fontWeight: 400,
       lineHeight: '1.8rem',
+    },
+
+    '@media (max-width: 600px)': {
+      h1: {
+        fontSize: '2.4rem',
+      },
     },
   };
 });

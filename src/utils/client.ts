@@ -3,7 +3,7 @@ import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 
 import * as wagmiChains from 'wagmi/chains';
 import { Transport, http } from 'viem';
-import { sepolia, optimismSepolia, baseSepolia } from 'viem/chains';
+import { sepolia, optimismSepolia, baseSepolia, mainnet, optimism, base, mode, zora, fraxtal } from 'viem/chains';
 
 import { getConfig } from '~/config';
 
@@ -21,11 +21,11 @@ export const alchemyUrls: { [k: string]: string } = {
 const networkId = Number(process.env.NEXT_PUBLIC_NETWORK ?? sepolia.id);
 export const defaultChain = Object.values(wagmiChains).find((chain) => chain.id === networkId) ?? sepolia;
 
-const isE2E = process.env.NEXT_PUBLIC_IS_E2E === 'true';
+const isTest = process.env.NEXT_PUBLIC_IS_TEST !== 'false';
 
-export const supportedChains = isE2E
-  ? ([sepolia, optimismSepolia] as const)
-  : ([sepolia, optimismSepolia, baseSepolia] as const);
+export const supportedChains = isTest
+  ? ([sepolia, optimismSepolia, baseSepolia] as const)
+  : ([mainnet, optimism, base, mode, zora, fraxtal] as const);
 
 export const connectors = [injected(), walletConnect({ projectId: PROJECT_ID })];
 

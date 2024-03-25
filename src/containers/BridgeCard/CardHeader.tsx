@@ -123,6 +123,10 @@ const Header = styled(Box)(() => {
         alignItems: 'flex-start',
         gap: '0.4rem',
       },
+
+      h1: {
+        fontSize: '2rem',
+      },
     },
   };
 });

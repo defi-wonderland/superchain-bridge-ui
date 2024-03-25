@@ -94,6 +94,10 @@ const MenuButton = styled(BasicButton)(() => {
       border: 'none',
       opacity: 1,
     },
+
+    '@media (max-width: 600px)': {
+      fontSize: '1.4rem',
+    },
   };
 });
 
@@ -138,6 +142,17 @@ const StyledMenu = styled((props: MenuProps) => (
 
         '&:active': {
           backgroundColor: currentTheme.steel[700],
+        },
+      },
+
+      '@media (max-width: 600px)': {
+        minWidth: 'calc(100% - 7.4rem)',
+        ul: {
+          padding: '0.2rem 0',
+        },
+
+        '& .MuiMenuItem-root': {
+          fontSize: '1.4rem',
         },
       },
     },

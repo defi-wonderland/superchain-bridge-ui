@@ -22,7 +22,9 @@ export const ExpertMode = ({ setCustomTransaction }: ExpertModeProps) => {
 
   return (
     <ContentSection>
-      <Typography variant='body1'>Select a transaction type</Typography>
+      <Typography className='select-txn-type-label' variant='body1'>
+        Select a transaction type
+      </Typography>
 
       <StyledButton
         variant='contained'
@@ -82,9 +84,13 @@ const ContentSection = styled('section')(() => {
     gap: '1.2rem',
     width: '100%',
 
-    p: {
+    '.select-txn-type-label': {
       fontSize: '1.6rem',
       color: currentTheme.steel[300],
+
+      '@media (max-width: 600px)': {
+        fontSize: '1.4rem',
+      },
     },
   };
 });
@@ -131,6 +137,14 @@ const SBox = styled(Box)(() => {
       },
       'p:last-of-type': {
         color: currentTheme.ghost[400],
+      },
+    },
+
+    '@media (max-width: 600px)': {
+      img: {
+        width: '2.2rem',
+        height: '2.2rem',
+        marginTop: '0.2rem',
       },
     },
   };

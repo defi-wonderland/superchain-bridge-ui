@@ -146,6 +146,12 @@ const StyledInput = styled(TextField)(() => {
       color: currentTheme.steel[600],
       opacity: 1,
     },
+
+    '@media (max-width: 600px)': {
+      '& .MuiInputBase-input': {
+        fontSize: '2.6rem',
+      },
+    },
   };
 });
 

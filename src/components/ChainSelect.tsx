@@ -51,7 +51,7 @@ export const ChainSelect = ({ label, list, value, setValue, disabled, isExternal
         fullWidth
         disabled={disabled || list.length < 2}
       >
-        <Image src={chainData[value.id].logo} alt={`${value.name} logo`} width={32} height={32} />
+        <Image src={chainData[value.id]?.logo} alt={`${value.name} logo`} width={32} height={32} />
         <Typography>{value.name}</Typography>
       </MenuButton>
 
@@ -65,7 +65,7 @@ export const ChainSelect = ({ label, list, value, setValue, disabled, isExternal
       >
         {list.map((chain) => (
           <MenuItem key={chain.id} value={chain.name} onClick={() => selectChain(chain)}>
-            <Image src={chainData[chain.id].logo} alt={`${chain.name} logo`} width={24} height={24} />
+            <Image src={chainData[chain.id]?.logo} alt={`${chain.name} logo`} width={24} height={24} />
 
             {chain.name}
           </MenuItem>
@@ -93,6 +93,16 @@ const SBox = styled(Box)(() => {
         width: '2.2rem',
       },
     },
+
+    '@media (max-width: 600px)': {
+      '.external': {
+        width: 'auto',
+        marginLeft: 'auto',
+        p: {
+          display: 'none',
+        },
+      },
+    },
   };
 });
 
@@ -115,6 +125,10 @@ const MenuButton = styled(BasicButton)(() => {
       whiteSpace: 'nowrap',
     },
 
+    img: {
+      borderRadius: '50%',
+    },
+
     '&:disabled': {
       backgroundColor: currentTheme.steel[800],
       color: currentTheme.steel[300],
@@ -124,6 +138,14 @@ const MenuButton = styled(BasicButton)(() => {
 
     '@media (max-width: 600px)': {
       gap: '0.6rem',
+      p: {
+        fontSize: '1.4rem',
+      },
+
+      img: {
+        height: '2.4rem',
+        width: '2.4rem',
+      },
     },
   };
 });
@@ -169,6 +191,19 @@ const StyledMenu = styled((props: MenuProps) => (
 
         '&:active': {
           backgroundColor: currentTheme.steel[700],
+        },
+      },
+    },
+
+    '@media (max-width: 600px)': {
+      '& .MuiPaper-root': {
+        '& .MuiMenuItem-root': {
+          fontSize: '1.4rem',
+
+          img: {
+            height: '2.2rem',
+            width: '2.2rem',
+          },
         },
       },
     },

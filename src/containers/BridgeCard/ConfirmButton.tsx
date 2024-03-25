@@ -1,16 +1,17 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, styled } from '@mui/material';
-import { isAddress, isHex, parseEther, parseUnits } from 'viem';
+import { isHex, parseEther, parseUnits } from 'viem';
 
 import { useChain, useCustomTheme, useModal, useToken, useTransactionData } from '~/hooks';
 import { ModalType, TransactionType } from '~/types';
+import { isValidAddress } from '~/utils';
 
 interface ConfirmButtonProps {
   isExpertMode?: boolean;
 }
 export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
   const { setModalOpen } = useModal();
-  const { amount, selectedToken, balance, ethBalance } = useToken();
+  const { amount, selectedToken, balance, ethBalance, loadTokenData } = useToken();
   const {
     userAddress,
     isReady,
@@ -28,6 +29,11 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
   const isFromAnL2 = !!fromChain?.sourceId;
   const isToAnL2 = !!toChain?.sourceId;
 
+  useEffect(() => {
+    const client = customTransaction?.includes('force') ? 'to' : 'from';
+    loadTokenData(client);
+  }, [customTransaction, isFromAnL2, loadTokenData]);
+
   const isButtonDisabled = useMemo(() => {
     setButtonErrorText('');
 
@@ -43,7 +49,7 @@ export const ConfirmButton = ({ isExpertMode }: ConfirmButtonProps) => {
       }
     }
 
-    if (to && !isAddress(to)) {
+    if (to && !isValidAddress(to)) {
       setButtonErrorText('Invalid target address');
       return true;
     }
@@ -130,6 +136,10 @@ const StyledButton = styled(Button)(() => {
       backgroundColor: currentTheme.steel[700],
       borderColor: currentTheme.steel[700],
       color: currentTheme.steel[500],
+    },
+
+    '@media (max-width: 600px)': {
+      fontSize: '1.6rem',
     },
   };
 });

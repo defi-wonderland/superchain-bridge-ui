@@ -113,5 +113,15 @@ export const ModalHeader = styled(Box)(() => {
       marginRight: '-0.4rem',
       marginLeft: 'auto',
     },
+
+    '@media (max-width: 600px)': {
+      h2: {
+        fontSize: '1.8rem',
+      },
+      img: {
+        width: '2.4rem',
+        height: '2.4rem',
+      },
+    },
   };
 });

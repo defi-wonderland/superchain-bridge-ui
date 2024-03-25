@@ -133,6 +133,16 @@ const LeftSection = styled(Box)(() => {
       flexDirection: 'column',
       gap: '0.4rem',
     },
+
+    '@media (max-width: 600px)': {
+      h3: {
+        fontSize: '1.4rem',
+      },
+      img: {
+        width: '3.2rem',
+        height: '3.2rem',
+      },
+    },
   };
 });
 

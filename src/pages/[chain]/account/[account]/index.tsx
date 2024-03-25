@@ -11,16 +11,25 @@ import copyCheckIcon from '~/assets/icons/copy-check.svg';
 
 import { MainCardContainer, ActivityTable } from '~/containers';
 import { createData, formatDataNumber, getTimestamps, truncateAddress } from '~/utils';
-import { useChain, useCopyToClipboard, useCustomClient, useCustomTheme, useLogs, useTokenList } from '~/hooks';
+import {
+  useChain,
+  useCopyToClipboard,
+  useCustomClient,
+  useCustomTheme,
+  useLogs,
+  useQueryParams,
+  useTokenList,
+} from '~/hooks';
 import { ChainSelect, CustomHead, STooltip, TableSkeleton } from '~/components';
+import { QueryParamKey } from '~/types';
 
 const History = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
   const router = useRouter();
-  const { setToChain, toChain, l2Chains } = useChain();
+  const { l2Chains, logsChain, setLogsChain } = useChain();
   const { address: currentAddress } = useAccount();
   const [copiedText, copy] = useCopyToClipboard();
-  const { customClient } = useCustomClient();
+  const { logsClient } = useCustomClient();
   const { fromTokens, toTokens } = useTokenList();
   const {
     cctpLogs,
@@ -28,31 +37,38 @@ const History = () => {
     withdrawLogs,
     orderedLogs,
     isSuccess,
-    setOrderedLogs,
     isLoading,
+    setOrderedLogs,
     setIsLoading,
     refetchLogs,
   } = useLogs();
 
+  const { getParam } = useQueryParams();
+  const queryAddress = getParam(QueryParamKey.address);
+
   const handleTo = (chain: Chain) => {
-    setToChain(chain);
+    setLogsChain(chain);
     setTimeout(refetchLogs);
   };
 
   const getOrderedLogs = useCallback(async () => {
     if (!depositLogs || !withdrawLogs) return;
-    const accountLogs = [...depositLogs.accountLogs, ...withdrawLogs.accountLogs, ...cctpLogs];
-    const blocks = await getTimestamps(accountLogs, customClient);
+    try {
+      const accountLogs = [...depositLogs.accountLogs, ...withdrawLogs.accountLogs, ...cctpLogs];
+      const blocks = await getTimestamps(accountLogs, logsClient);
 
-    const logsWithTimestamp = accountLogs.map((log, index) => {
-      return { ...log, timestamp: blocks[index].timestamp };
-    });
-    const orderedLogs = logsWithTimestamp.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+      const logsWithTimestamp = accountLogs.map((log, index) => {
+        return { ...log, timestamp: blocks[index].timestamp };
+      });
+      const orderedLogs = logsWithTimestamp.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
 
-    const reversedLogs = orderedLogs.reverse(); // latest logs first
-    setOrderedLogs(reversedLogs);
-    setIsLoading(false);
-  }, [cctpLogs, customClient, depositLogs, setIsLoading, setOrderedLogs, withdrawLogs]);
+      const reversedLogs = orderedLogs.reverse(); // latest logs first
+      setOrderedLogs(reversedLogs);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error loading timestamps:', error);
+    }
+  }, [cctpLogs, logsClient, depositLogs, setIsLoading, setOrderedLogs, withdrawLogs]);
 
   const rows = useMemo(() => {
     const data = orderedLogs.map((eventLog) => {
@@ -85,6 +101,13 @@ const History = () => {
     }
   }, [getOrderedLogs, orderedLogs.length, isSuccess]);
 
+  useEffect(() => {
+    // if the user is disconnected, redirect to the home page
+    if (currentAddress?.toLowerCase() !== queryAddress?.toLowerCase()) {
+      router.push('/');
+    }
+  }, [currentAddress, queryAddress, router]);
+
   return (
     <Container>
       <CustomHead title='Account History' />
@@ -100,7 +123,7 @@ const History = () => {
               )}
               <Typography variant='h1'>Account History</Typography>
             </Box>
-            {!isMobile && <ChainSelect value={toChain} setValue={handleTo} list={l2Chains} isExternal />}
+            <ChainSelect value={logsChain} setValue={handleTo} list={l2Chains} isExternal />
           </Box>
 
           <STooltip title={copiedText === currentAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
@@ -151,6 +174,11 @@ const Container = styled(Box)(() => {
     justifyContent: 'center',
     position: 'relative',
     width: '100%',
+
+    '@media (max-width: 600px)': {
+      marginTop: '6rem',
+      paddingTop: '4.2rem',
+    },
   };
 });
 
@@ -171,6 +199,7 @@ const HeaderContainer = styled(Box)(() => {
       height: '2rem',
     },
     h1: {
+      width: 'max-content',
       color: currentTheme.steel[50],
       fontSize: '3rem',
       fontWeight: 500,
@@ -208,6 +237,12 @@ const HeaderContainer = styled(Box)(() => {
 
     '& .chain-select': {
       maxWidth: '20rem',
+    },
+
+    '@media (max-width: 600px)': {
+      h1: {
+        fontSize: '2.4rem',
+      },
     },
   };
 });

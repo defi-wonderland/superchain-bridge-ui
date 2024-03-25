@@ -17,4 +17,8 @@ const Container = styled(Box)`
   height: 100%;
   width: 100%;
   margin: 6rem 0;
+
+  @media (max-width: 600px) {
+    padding-top: 4.2rem;
+  }
 `;

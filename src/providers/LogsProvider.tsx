@@ -12,7 +12,7 @@ type ContextType = {
   depositLogs?: DepositLogs;
   withdrawLogs?: WithdrawLogs;
   selectedLog?: AccountLogs;
-  setSelectedLog: (log: AccountLogs) => void;
+  setSelectedLog: (log?: AccountLogs) => void;
   orderedLogs: AccountLogs[];
   setOrderedLogs: (logs: AccountLogs[]) => void;
   transactionPending: boolean;
@@ -34,7 +34,7 @@ export const LogsContext = createContext({} as ContextType);
 export const LogsProvider = ({ children }: StateProps) => {
   const cctpData = CCTP as CctpType;
   const { address: userAddress } = useAccount();
-  const { customClient } = useCustomClient();
+  const { logsClient } = useCustomClient();
   const [depositLogs, setDepositLogs] = useState<DepositLogs>();
   const [withdrawLogs, setWithdrawLogs] = useState<WithdrawLogs>();
   const [selectedLog, setSelectedLog] = useState<AccountLogs>();
@@ -42,14 +42,14 @@ export const LogsProvider = ({ children }: StateProps) => {
   const [orderedLogs, setOrderedLogs] = useState<AccountLogs[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const getLogs = async ({ userAddress, customClient }: { userAddress: Address; customClient: CustomClients }) => {
+  const getLogs = async ({ userAddress, logsClient }: { userAddress: Address; logsClient: CustomClients }) => {
     if (userAddress) {
       //  OP Canonical bridge
-      const depositLogsPromise = getDepositLogs({ userAddress, customClient });
-      const withdrawLogsPromise = getWithdrawLogs({ userAddress, customClient });
+      const depositLogsPromise = getDepositLogs({ userAddress, customClient: logsClient });
+      const withdrawLogsPromise = getWithdrawLogs({ userAddress, customClient: logsClient });
 
       // Cross-Chain Transfer Protocol (CCTP)
-      const cctpLogsPromise = getCctpLogs({ customClient, userAddress, data: cctpData });
+      const cctpLogsPromise = getCctpLogs({ customClient: logsClient, userAddress, data: cctpData });
 
       const [depositLogs, withdrawLogs, cctpLogs] = await Promise.all([
         depositLogsPromise,
@@ -68,7 +68,7 @@ export const LogsProvider = ({ children }: StateProps) => {
 
   const { refetch, isFetched } = useQuery({
     queryKey: ['depositLogs'],
-    queryFn: () => getLogs({ userAddress: userAddress!, customClient }),
+    queryFn: () => getLogs({ userAddress: userAddress!, logsClient }),
     enabled: !!userAddress,
     refetchOnWindowFocus: false, // temporary disable refetch on window focus
   });
