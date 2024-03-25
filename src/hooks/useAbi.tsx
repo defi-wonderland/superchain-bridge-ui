@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { isAddress } from 'viem';
 
-import { chainData, getContractAbi } from '~/utils';
+import { chainData, getContractAbi, isValidAddress } from '~/utils';
 import { getConfig } from '~/config';
 import { useChain } from './useContext';
 
@@ -19,7 +18,7 @@ export const useAbi = () => {
 
       if (data[contractAddress]) return data[contractAddress];
 
-      if (!isAddress(contractAddress)) return '';
+      if (!isValidAddress(contractAddress)) return '';
 
       const fetchedAbi = await getContractAbi(chainData[toChain.id].apiUrl, contractAddress, ETHERSCAN_KEY);
       const newAbiData = { ...data, [contractAddress]: fetchedAbi || '' };

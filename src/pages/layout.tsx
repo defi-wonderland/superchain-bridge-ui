@@ -46,12 +46,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <p>This website requires JavaScript to function properly.</p>
         </NoScriptMessage>
 
-        {/* TODO: remove when responsive is done */}
-        <ResponsiveDisclaimer>
-          <p>
-            This website is not yet optimized for mobile devices. Please use a desktop browser for the best experience.
-          </p>
-        </ResponsiveDisclaimer>
         <Header />
         {children}
         <Footer />
@@ -92,27 +86,6 @@ const NoScriptMessage = styled('noscript')(() => {
     p: {
       padding: '1rem 0',
       margin: 0,
-    },
-  };
-});
-
-const ResponsiveDisclaimer = styled('div')(({ theme }) => {
-  const { currentTheme } = useCustomTheme();
-  return {
-    display: 'none',
-    margin: '0 auto',
-    textAlign: 'start',
-    fontSize: '1.6rem',
-    padding: '1rem 0.8rem 1rem',
-    color: currentTheme.steel[100],
-
-    p: {
-      padding: '1rem 0',
-      margin: 0,
-    },
-
-    [theme.breakpoints.down('sm')]: {
-      display: 'block',
     },
   };
 });

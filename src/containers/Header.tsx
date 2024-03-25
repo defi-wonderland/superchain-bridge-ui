@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Badge, Box, IconButton, useMediaQuery } from '@mui/material';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { styled } from '@mui/material/styles';
@@ -9,11 +10,13 @@ import logo from '~/assets/logo.svg';
 import responsiveLogo from '~/assets/responsive-logo.svg';
 import historyIcon from '~/assets/icons/clock-rewind.svg';
 import settingsIcon from '~/assets/icons/settings.svg';
+import menuIcon from '~/assets/icons/menu.svg';
 
 import { Connect, STooltip } from '~/components';
 import { useChain, useCustomTheme, useLogs, useModal } from '~/hooks';
-import { replaceSpacesWithHyphens } from '~/utils';
+import { replaceSpacesWithHyphens, zIndex } from '~/utils';
 import { ModalType } from '~/types';
+import { MobileMenu } from './MobileMenu';
 
 export const Header = () => {
   const isMobile = useMediaQuery('(max-width: 600px)');
@@ -23,6 +26,12 @@ export const Header = () => {
   const { setModalOpen } = useModal();
   const { openConnectModal } = useConnectModal();
   const chainPath = replaceSpacesWithHyphens(toChain?.name || '');
+
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleMenuOpen = () => {
+    setMenuOpen((prev) => !prev);
+  };
 
   const openSettings = () => {
     setModalOpen(ModalType.SETTINGS);
@@ -38,49 +47,66 @@ export const Header = () => {
         query: { chain: chainPath, account: address },
       }
     : '#';
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (target.closest('#header-menu')) {
+        return;
+      }
+      setMenuOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
-    <HeaderContainer>
-      {/* Left section */}
-      <LeftSection>
-        <Link href='/' replace>
-          {!isMobile && <Image src={logo} alt='Superchain Bridge' priority />}
-          {isMobile && <Image src={responsiveLogo} alt='Superchain Bridge' priority />}
-        </Link>
-      </LeftSection>
+    <>
+      <HeaderContainer className={menuOpen ? 'menu-open' : ''} id='header-menu'>
+        {/* Left section */}
+        <LeftSection>
+          <Link href='/' replace>
+            {!isMobile && <Image src={logo} alt='Superchain Bridge' priority />}
+            {isMobile && <Image src={responsiveLogo} alt='Superchain Bridge' priority />}
+          </Link>
+        </LeftSection>
 
-      {/* Right section */}
-      <RightSection>
-        {!isMobile && (
-          <>
-            <STooltip title='Account History' placement='bottom'>
-              <IconButton onClick={handleAccountHistory}>
-                <Link href={settingsHref}>
-                  <Badge invisible={!transactionPending} variant='dot' color='primary' overlap='circular'>
-                    <SHistoryIcon src={historyIcon} alt='Account History' />
-                  </Badge>
-                </Link>
-              </IconButton>
-            </STooltip>
+        {/* Right section */}
+        <RightSection>
+          {!isMobile && (
+            <>
+              <STooltip title='Account History' placement='bottom'>
+                <IconButton onClick={handleAccountHistory}>
+                  <Link href={settingsHref}>
+                    <Badge invisible={!transactionPending} variant='dot' color='primary' overlap='circular'>
+                      <SHistoryIcon src={historyIcon} alt='Account History' />
+                    </Badge>
+                  </Link>
+                </IconButton>
+              </STooltip>
 
-            <STooltip title='Settings' placement='bottom'>
-              <IconButton onClick={openSettings}>
-                <StyledSettingsIcon src={settingsIcon} alt='Settings' />
-              </IconButton>
-            </STooltip>
-          </>
-        )}
+              <STooltip title='Settings' placement='bottom'>
+                <IconButton onClick={openSettings}>
+                  <StyledSettingsIcon src={settingsIcon} alt='Settings' />
+                </IconButton>
+              </STooltip>
 
-        <Connect />
+              <Connect />
+            </>
+          )}
 
-        {isMobile && (
-          <STooltip title='Settings' placement='bottom'>
-            <IconButton onClick={openSettings}>
-              <StyledSettingsIcon src={settingsIcon} alt='Settings' />
+          {isMobile && (
+            <IconButton onClick={handleMenuOpen}>
+              <StyledSettingsIcon src={menuIcon} alt='menu' />
             </IconButton>
-          </STooltip>
-        )}
-      </RightSection>
-    </HeaderContainer>
+          )}
+        </RightSection>
+
+        {/* Mobile Menu */}
+        {menuOpen && <MobileMenu closeMenu={handleMenuOpen} />}
+      </HeaderContainer>
+    </>
   );
 };
 
@@ -93,7 +119,8 @@ const HeaderContainer = styled('header')(() => {
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    zIndex: 100,
+    zIndex: zIndex.HEADER,
+
     h1: {
       color: currentTheme.titleColor,
     },
@@ -101,7 +128,18 @@ const HeaderContainer = styled('header')(() => {
       fontSize: '2.8rem',
     },
 
+    // TODO: confirm the design of the header
+    // background: currentTheme.steel[900],
+    // borderBottom: `1px solid ${currentTheme.steel[700]}`,
+    '&.menu-open': {
+      background: currentTheme.steel[900],
+    },
+
     '@media (max-width: 600px)': {
+      position: 'fixed',
+      padding: '0 1.6rem',
+      top: 0,
+      left: 0,
       height: '7.2rem',
       minHeight: '7.2rem',
     },
