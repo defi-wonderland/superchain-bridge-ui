@@ -18,8 +18,8 @@ dependencies:
     specifier: 11.11.0
     version: 11.11.0(@emotion/react@11.11.3)(@types/react@18.2.15)(react@18.2.0)
   '@eth-optimism/tokenlist':
-    specifier: 9.0.25
-    version: 9.0.25
+    specifier: 10.0.8
+    version: 10.0.8
   '@fontsource-variable/roboto-mono':
     specifier: 5.0.18
     version: 5.0.18
@@ -1859,8 +1859,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /@eth-optimism/tokenlist@9.0.25:
-    resolution: {integrity: sha512-8pd9kt6tOCg9KERAOFyDL/sGLmam1K+sbdF7O4XyNIZiG/sFBeW81OSsADjIhc5qMi+7+BBhEAuN4fgK6p+0bQ==}
+  /@eth-optimism/tokenlist@10.0.8:
+    resolution: {integrity: sha512-+IIohZiSQ5hbJd9vvTKOcNqo1+dNf5pBPw/bXSnmyyKrdo7gSHqqninT4mLp6Nw4C9UFI+PsxzZwK0GkqNJ0Gg==}
     dev: false
 
   /@ethereumjs/common@3.2.0:
