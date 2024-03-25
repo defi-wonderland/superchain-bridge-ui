@@ -42,7 +42,7 @@
     "react-dom": "18.2.0",
     "react-i18next": "14.0.0",
     "sharp": "0.33.2",
-    "viem": "2.8.6",
+    "viem": "2.9.0",
     "wagmi": "2.5.7"
   },
   "devDependencies": {
