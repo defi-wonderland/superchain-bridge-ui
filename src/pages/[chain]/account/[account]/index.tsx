@@ -8,6 +8,7 @@ import { Chain } from 'viem';
 import arrowLeft from '~/assets/icons/arrow-left.svg';
 import copyIcon from '~/assets/icons/copy.svg';
 import copyCheckIcon from '~/assets/icons/copy-check.svg';
+import refresh from '~/assets/icons/refresh.svg';
 
 import { MainCardContainer, ActivityTable } from '~/containers';
 import { createData, formatDataNumber, getTimestamps, truncateAddress } from '~/utils';
@@ -101,6 +102,9 @@ const History = () => {
               <Typography variant='h1'>Account History</Typography>
             </Box>
             <ChainSelect value={toChain} setValue={handleTo} list={l2Chains} isExternal />
+            <IconButton onClick={refetchLogs}>
+              <Image src={refresh} alt='refresh' />
+            </IconButton>
           </Box>
 
           <STooltip title={copiedText === currentAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
