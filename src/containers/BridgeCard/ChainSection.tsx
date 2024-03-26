@@ -87,6 +87,14 @@ const ChainSectionContainer = styled(Box)(() => {
     },
     div: {
       maxWidth: '50%',
+      width: '19.3rem',
+    },
+
+    '@media (max-width: 600px)': {
+      div: {
+        maxWidth: '50%',
+        width: '15.05rem',
+      },
     },
   };
 });
