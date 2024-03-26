@@ -1,10 +1,20 @@
 import { useEffect } from 'react';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { GetStaticProps, GetStaticPropsContext } from 'next';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
 import { Landing } from '~/containers';
 import { useChain } from '~/hooks';
 import { replaceSpacesWithHyphens } from '~/utils';
+
+export const getStaticProps: GetStaticProps = async ({ locale }: GetStaticPropsContext) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale ?? 'en', ['common'])),
+    },
+  };
+};
 
 const Home = () => {
   const { toChain } = useChain();
