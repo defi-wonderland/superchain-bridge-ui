@@ -1,7 +1,7 @@
-import { injected, walletConnect } from 'wagmi/connectors';
-import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-
+import { rainbowWallet, walletConnectWallet, injectedWallet } from '@rainbow-me/rainbowkit/wallets';
+import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import * as wagmiChains from 'wagmi/chains';
+import { createConfig, cookieStorage, createStorage } from 'wagmi';
 import { Transport, http } from 'viem';
 import { sepolia, optimismSepolia, baseSepolia } from 'viem/chains';
 
@@ -27,17 +27,38 @@ export const supportedChains = isE2E
   ? ([sepolia, optimismSepolia] as const)
   : ([sepolia, optimismSepolia, baseSepolia] as const);
 
-export const connectors = [injected(), walletConnect({ projectId: PROJECT_ID })];
+const getWallets = () => {
+  if (PROJECT_ID) {
+    return [injectedWallet, walletConnectWallet, rainbowWallet];
+  } else {
+    return [injectedWallet];
+  }
+};
+
+export const connectors = connectorsForWallets(
+  [
+    {
+      groupName: 'Recommended',
+      wallets: getWallets(),
+    },
+  ],
+  {
+    appName: 'Superchain Bridge',
+    projectId: PROJECT_ID,
+  },
+);
 
 const transport: Record<[wagmiChains.Chain, ...wagmiChains.Chain[]][number]['id'], Transport> = Object.fromEntries(
   Object.entries(alchemyUrls).map(([chainId, url]) => [chainId, http(url)]),
 );
 
-export const config = getDefaultConfig({
-  appName: 'Superchain Bridge',
-  projectId: PROJECT_ID,
+export const config = createConfig({
   chains: supportedChains,
+  ssr: true,
+  storage: createStorage({
+    storage: cookieStorage,
+  }),
   transports: transport,
   batch: { multicall: true },
-  ssr: true,
+  connectors,
 });
