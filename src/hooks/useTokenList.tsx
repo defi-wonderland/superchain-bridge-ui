@@ -16,12 +16,14 @@ export const useTokenList = () => {
   );
 
   const fromTokens = useMemo(() => {
-    return tokenList.filter(
-      (token: TokenData) =>
+    return tokenList.filter((token: TokenData) => {
+      const filteredList =
         token.chainId === fromChain?.id &&
         // Also the token should exist on the 'To' chain
-        toTokens.some((toToken: TokenData) => toToken.name === token.name && toToken.symbol === token.symbol),
-    );
+        toTokens.some((toToken: TokenData) => toToken.name === token.name && toToken.symbol === token.symbol);
+
+      return filteredList;
+    });
   }, [fromChain?.id, toTokens, tokenList]);
 
   return {
