@@ -1,6 +1,7 @@
-import { InferGetStaticPropsType } from 'next';
-import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType } from 'next';
+import { useRouter } from 'next/router';
 import { Chain as ChainType } from 'viem';
 
 import { replaceSpacesWithHyphens, supportedChains } from '~/utils';
@@ -21,12 +22,18 @@ export const getStaticPaths = async () => {
   };
 };
 
-export const getStaticProps = async (context: { params: { chain: string } }) => {
-  const path = context.params?.chain;
+type HomeProps = {
+  title: string;
+};
+
+export const getStaticProps: GetStaticProps<HomeProps> = async ({ locale, params }: GetStaticPropsContext) => {
+  const path = params?.chain;
   const chains = [...supportedChains] as ChainType[]; // This converts the readonly array to a mutable array to use the find method
   const title = chains.find((chain: ChainType) => replaceSpacesWithHyphens(chain.name) === path)?.name || '';
 
-  return { props: { title } };
+  const i18Config = await serverSideTranslations(locale ?? 'en', ['common']);
+
+  return { props: { ...i18Config, title } };
 };
 
 const Chain = ({ title }: InferGetStaticPropsType<typeof getStaticProps>) => {

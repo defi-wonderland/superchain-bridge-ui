@@ -1,15 +1,18 @@
 import Image from 'next/image';
 import { Box, Typography, styled } from '@mui/material';
+import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 
 import WonderlandLogo from '~/assets/wonderland.svg';
 import { useCustomTheme } from '~/hooks';
 
 export const MadeByWonderland = () => {
+  const { t } = useTranslation('common');
+
   return (
     <Link href='https://defi.sucks/' target='_blank'>
       <SBox>
-        <Typography variant='body1'>Made with 🤍 by</Typography>
+        <Typography variant='body1'>{t('footer.wonderland')}</Typography>
         <Image src={WonderlandLogo} alt='Wonderland' />
       </SBox>
     </Link>

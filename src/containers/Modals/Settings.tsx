@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Button, styled } from '@mui/material';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 
 import clearCacheIcon from '~/assets/icons/trash.svg';
@@ -10,19 +12,27 @@ import { useCustomTheme } from '~/hooks';
 import { ModalType } from '~/types';
 
 export const SettingsModal = () => {
-  // temproary fixed values
+  const {
+    i18n: { changeLanguage, language },
+  } = useTranslation();
+
+  const { locales, replace } = useRouter();
+
+  const handleChangeLanguage = (value: string) => {
+    replace('/', undefined, { locale: value });
+    changeLanguage(value);
+  };
+
+  // temporary fixed values
   const [explorer, setExplorer] = useState('Etherscan');
   const explorers = ['Etherscan']; //['Etherscan', 'Blockscout', 'Etherchain'];
-
-  const [language, setLanguage] = useState('English');
-  const languages = ['English']; //['English', 'Spanish', 'Chinese'];
 
   const [publicRPC, setPublicRPC] = useState('Alchemy');
   const publicRPCs = ['Alchemy']; //['Alchemy', 'Infura'];
 
   return (
     <BaseModal type={ModalType.SETTINGS} title='Settings'>
-      <BasicSelect label='Language' value={language} setValue={setLanguage} list={languages} />
+      <BasicSelect label='Language' value={language} setValue={handleChangeLanguage} list={locales || []} />
 
       <BasicSelect label='Default block explorer' value={explorer} setValue={setExplorer} list={explorers} />
 
