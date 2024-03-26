@@ -91,9 +91,15 @@ const ChainSectionContainer = styled(Box)(() => {
     },
 
     '@media (max-width: 600px)': {
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      maxWidth: 'calc(100% - 0.8rem)',
+      margin: '0 auto',
+
       div: {
-        maxWidth: '50%',
-        width: '15.05rem',
+        maxwidth: 'auto',
+        width: '100%',
       },
     },
   };
