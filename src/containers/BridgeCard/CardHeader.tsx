@@ -38,7 +38,7 @@ export const CardHeader = ({
     if (customTransaction === 'force-transfer') return 'Force Transfer';
   })();
 
-  const activateExpertMode = () => {
+  const toggleExpertMode = () => {
     setIsExpertMode(!isExpertMode);
     resetChains();
     resetValues();
@@ -81,7 +81,7 @@ export const CardHeader = ({
           <StyledMenu id='expert-mode-menu' anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
             <Box className='menu-item'>
               <span>Expert mode</span>
-              <ExpertModeSwitch checked={isExpertMode} onChange={activateExpertMode} disableRipple />
+              <ExpertModeSwitch checked={isExpertMode} onChange={toggleExpertMode} disableRipple />
             </Box>
           </StyledMenu>
         </>
