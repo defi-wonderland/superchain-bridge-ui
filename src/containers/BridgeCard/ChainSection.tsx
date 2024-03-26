@@ -94,13 +94,7 @@ const ChainSectionContainer = styled(Box)(() => {
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'center',
-      maxWidth: 'calc(100% - 0.8rem)',
-      margin: '0 auto',
-
-      div: {
-        maxwidth: 'auto',
-        width: '100%',
-      },
+      padding: '0 0.4rem',
     },
   };
 });
