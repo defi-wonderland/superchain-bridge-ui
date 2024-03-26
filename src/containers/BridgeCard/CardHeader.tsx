@@ -180,9 +180,9 @@ const StyledMenu = styled((props: MenuProps) => (
       background: currentTheme.steel[900],
       color: currentTheme.steel[100],
       fontSize: '1.6rem',
-      minWidth: '208px',
-      minHeight: '72px',
-      padding: '1rem',
+      minWidth: '13rem',
+      minHeight: '4.5rem',
+      padding: '1.5rem 2.75rem',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -191,12 +191,10 @@ const StyledMenu = styled((props: MenuProps) => (
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 'var(--spacing-2xl, 1.25rem)',
+        gap: '2rem',
         alignSelf: 'stretch',
       },
       '@media (max-width: 600px)': {
-        minWidth: '13rem',
-        minHeigth: '4.5rem',
         '& .MuiPaper-root': {
           fontSize: '1rem',
           lineHeight: '1.5rem',
@@ -208,14 +206,13 @@ const StyledMenu = styled((props: MenuProps) => (
 
 const ExpertModeSwitch = styled(Switch)(() => {
   return {
-    width: 42,
-    height: 24,
+    width: '3.5rem',
+    height: '2rem',
     padding: 0,
     '& .MuiSwitch-switchBase': {
       padding: 2,
-      margin: '0 5%',
       '&.Mui-checked': {
-        transform: 'translateX(16px)',
+        transform: 'translateX(1.5rem)',
         '& + .MuiSwitch-track': {
           backgroundColor: '#7365C7',
         },
@@ -228,8 +225,8 @@ const ExpertModeSwitch = styled(Switch)(() => {
       },
     },
     '& .MuiSwitch-thumb': {
-      width: 20,
-      height: 20,
+      width: '1.5rem',
+      height: '1.5rem',
       boxShadow: 'none',
     },
     '& .MuiSwitch-track': {
@@ -240,10 +237,10 @@ const ExpertModeSwitch = styled(Switch)(() => {
     },
     '&:active': {
       '& .MuiSwitch-thumb': {
-        width: 22,
+        width: '1.5rem',
       },
       '& .MuiSwitch-switchBase.Mui-checked': {
-        transform: 'translateX(16px)',
+        transform: 'translateX(1.5rem)',
       },
     },
   };

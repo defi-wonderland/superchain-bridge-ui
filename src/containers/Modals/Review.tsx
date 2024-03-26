@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Box, Divider, Typography, styled, IconButton } from '@mui/material';
 import Image from 'next/image';
 
@@ -13,38 +12,17 @@ import { PrimaryButton, STooltip, SecondaryButton } from '~/components';
 import { formatDataNumber, truncateAddress } from '~/utils';
 import { ModalType, TransactionType } from '~/types';
 
-type CopiedValue = string | null;
-
 export const ReviewModal = () => {
   const { closeModal } = useModal();
   const { transactionType, value, mint, to, userAddress, data } = useTransactionData();
   const { selectedToken, amount, bridgeData } = useToken();
   const { executeTransaction } = useTransactions();
-  const [, copy] = useCopyToClipboard();
-  const [copiedOrigin, setCopiedOrigin] = useState<CopiedValue>(null);
-  const [copiedDestination, setCopiedDestination] = useState<CopiedValue>(null);
-  const copiedTextTimeout = 800;
+  const [copiedStates, copy] = useCopyToClipboard();
 
   const totalAmount = amount || mint || value;
 
   const handleConfirm = async () => {
     executeTransaction();
-  };
-
-  const handleCopyOrigin = async () => {
-    const success = await copy(userAddress?.toString() || '');
-    if (success) {
-      setCopiedOrigin(userAddress?.toString() || '');
-      setTimeout(() => setCopiedOrigin(''), copiedTextTimeout);
-    }
-  };
-
-  const handleCopyDestination = async () => {
-    const success = await copy(to?.toString() || '');
-    if (success) {
-      setCopiedDestination(to?.toString() || '');
-      setTimeout(() => setCopiedDestination(''), copiedTextTimeout);
-    }
   };
 
   const showData =
@@ -97,10 +75,10 @@ export const ReviewModal = () => {
           <STooltip title={userAddress} className='address'>
             <span>{truncateAddress(userAddress || '')}</span>
           </STooltip>
-          <STooltip title={copiedOrigin === userAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
-            <IconButton onClick={() => handleCopyOrigin()} className='icon-button'>
+          <STooltip title={copiedStates['origin'] === userAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
+            <IconButton onClick={() => copy('origin', userAddress || '')} className='icon-button'>
               <Image
-                src={copiedOrigin === userAddress ? copyCheckIcon : copyIcon}
+                src={copiedStates['origin'] === userAddress ? copyCheckIcon : copyIcon}
                 alt='Copy to clipboard'
                 className='icon-image'
               />
@@ -116,10 +94,10 @@ export const ReviewModal = () => {
           <STooltip title={to} className='address'>
             <span>{truncateAddress(to)}</span>
           </STooltip>
-          <STooltip title={copiedDestination === to ? 'Copied!' : 'Copy to clipboard'} arrow>
-            <IconButton onClick={() => handleCopyDestination()} className='icon-button'>
+          <STooltip title={copiedStates['destination'] === to ? 'Copied!' : 'Copy to clipboard'} arrow>
+            <IconButton onClick={() => copy('destination', to)} className='icon-button'>
               <Image
-                src={copiedDestination === to ? copyCheckIcon : copyIcon}
+                src={copiedStates['destination'] === to ? copyCheckIcon : copyIcon}
                 alt='Copy to clipboard'
                 className='icon-image'
               />
@@ -214,8 +192,8 @@ export const DataRow = styled(Box)(() => {
       alignItems: 'center',
     },
     '.icon-button': {
-      width: '32px',
-      height: '32px',
+      width: '3rem',
+      height: '3rem',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
