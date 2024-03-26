@@ -29,7 +29,7 @@ const History = () => {
   const router = useRouter();
   const { l2Chains, logsChain, setLogsChain } = useChain();
   const { address: currentAddress } = useAccount();
-  const [copiedText, copy] = useCopyToClipboard();
+  const [copiedStates, copy] = useCopyToClipboard();
   const { logsClient } = useCustomClient();
   const { fromTokens, toTokens } = useTokenList();
   const {
@@ -130,13 +130,13 @@ const History = () => {
             </IconButton>
           </Box>
 
-          <STooltip title={copiedText === currentAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
-            <Box className='account' onClick={() => copy(currentAddress?.toString() || '')}>
+          <STooltip title={copiedStates['currentAddress'] === currentAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
+            <Box className='account' onClick={() => copy('currentAddress', currentAddress?.toString() || '')}>
               {currentAddress && (
                 <Typography variant='body1'>{isMobile ? truncateAddress(currentAddress) : currentAddress}</Typography>
               )}
               <Image
-                src={copiedText === currentAddress ? copyCheckIcon : copyIcon}
+                src={copiedStates['currentAddress'] === currentAddress ? copyCheckIcon : copyIcon}
                 alt='Copy to clipboard'
                 className='copy-to-clipboard'
               />
