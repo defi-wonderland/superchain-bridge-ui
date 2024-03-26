@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Box, Button, Typography, styled } from '@mui/material';
 import { useAccount } from 'wagmi';
-import { isAddress } from 'viem';
 import Image from 'next/image';
 
 import checkIcon from '~/assets/icons/check.svg';
@@ -10,6 +9,7 @@ import warningIcon from '~/assets/icons/exclamation-triangle.svg';
 import { useCustomTheme, useModal, useTransactionData } from '~/hooks';
 import BaseModal from '~/components/BaseModal';
 import { InputField } from '~/components';
+import { isValidAddress } from '~/utils';
 import { ModalType } from '~/types';
 
 export const TargetAddress = () => {
@@ -18,7 +18,7 @@ export const TargetAddress = () => {
   const { setTo, to } = useTransactionData();
   const [targetAddress, setTargetAddress] = useState('');
 
-  const isError = !isAddress(targetAddress);
+  const isError = !isValidAddress(targetAddress);
 
   const supportText = useMemo(() => {
     if (targetAddress === address) return 'This is your connected wallet address';

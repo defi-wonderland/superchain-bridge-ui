@@ -90,6 +90,11 @@ const Container = styled(Box)(() => {
     justifyContent: 'center',
     position: 'relative',
     width: '100%',
+
+    '@media (max-width: 600px)': {
+      marginTop: '6rem',
+      paddingTop: '4.2rem',
+    },
   };
 });
 

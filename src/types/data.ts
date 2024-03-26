@@ -16,7 +16,7 @@ export interface CustomClients {
     contracts: OpContracts; // contracts for the from chain
   };
   to: {
-    wallet: WalletClient & (WalletActionsL1 & WalletActionsL2);
+    wallet?: WalletClient & (WalletActionsL1 & WalletActionsL2);
     public: PublicClient & (PublicActionsL2 & PublicActionsL1);
     contracts: OpContracts; // contracts for the to chain
   };

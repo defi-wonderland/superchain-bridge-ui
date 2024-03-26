@@ -51,7 +51,7 @@ export const ChainSelect = ({ label, list, value, setValue, disabled, isExternal
         fullWidth
         disabled={disabled || list.length < 2}
       >
-        <Image src={chainData[value.id].logo} alt={`${value.name} logo`} width={32} height={32} />
+        <Image src={chainData[value.id]?.logo} alt={`${value.name} logo`} width={32} height={32} />
         <Typography>{value.name}</Typography>
       </MenuButton>
 
@@ -65,7 +65,7 @@ export const ChainSelect = ({ label, list, value, setValue, disabled, isExternal
       >
         {list.map((chain) => (
           <MenuItem key={chain.id} value={chain.name} onClick={() => selectChain(chain)}>
-            <Image src={chainData[chain.id].logo} alt={`${chain.name} logo`} width={24} height={24} />
+            <Image src={chainData[chain.id]?.logo} alt={`${chain.name} logo`} width={24} height={24} />
 
             {chain.name}
           </MenuItem>
@@ -123,6 +123,10 @@ const MenuButton = styled(BasicButton)(() => {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
+    },
+
+    img: {
+      borderRadius: '50%',
     },
 
     '&:disabled': {
