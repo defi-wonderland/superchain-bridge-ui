@@ -196,7 +196,7 @@ const StyledMenu = styled((props: MenuProps) => (
       },
       '@media (max-width: 600px)': {
         '& .MuiPaper-root': {
-          fontSize: '1rem',
+          fontSize: '1.4rem',
           lineHeight: '1.5rem',
         },
       },

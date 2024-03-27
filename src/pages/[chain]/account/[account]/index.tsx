@@ -125,9 +125,11 @@ const History = () => {
               <Typography variant='h1'>Account History</Typography>
             </Box>
             <ChainSelect value={logsChain} setValue={handleTo} list={l2Chains} isExternal />
-            <IconButton onClick={refetchLogs}>
-              <Image src={refresh} alt='refresh' />
-            </IconButton>
+            {!isMobile && (
+              <IconButton onClick={refetchLogs}>
+                <Image src={refresh} alt='refresh' />
+              </IconButton>
+            )}
           </Box>
 
           <STooltip title={copiedStates['currentAddress'] === currentAddress ? 'Copied!' : 'Copy to clipboard'} arrow>

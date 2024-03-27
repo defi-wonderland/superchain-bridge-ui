@@ -197,6 +197,7 @@ export const DataRow = styled(Box)(() => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      marginLeft: '1rem',
     },
     '.icon-image': {
       width: '100%',
