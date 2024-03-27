@@ -8,6 +8,7 @@ import { Chain } from 'viem';
 import arrowLeft from '~/assets/icons/arrow-left.svg';
 import copyIcon from '~/assets/icons/copy.svg';
 import copyCheckIcon from '~/assets/icons/copy-check.svg';
+import refresh from '~/assets/icons/refresh.svg';
 
 import { MainCardContainer, ActivityTable } from '~/containers';
 import { createData, formatDataNumber, getTimestamps, truncateAddress } from '~/utils';
@@ -28,7 +29,7 @@ const History = () => {
   const router = useRouter();
   const { l2Chains, logsChain, setLogsChain } = useChain();
   const { address: currentAddress } = useAccount();
-  const [copiedText, copy] = useCopyToClipboard();
+  const [copiedStates, copy] = useCopyToClipboard();
   const { logsClient } = useCustomClient();
   const { fromTokens, toTokens } = useTokenList();
   const {
@@ -124,15 +125,20 @@ const History = () => {
               <Typography variant='h1'>Account History</Typography>
             </Box>
             <ChainSelect value={logsChain} setValue={handleTo} list={l2Chains} isExternal />
+            {!isMobile && (
+              <IconButton onClick={refetchLogs}>
+                <Image src={refresh} alt='refresh' />
+              </IconButton>
+            )}
           </Box>
 
-          <STooltip title={copiedText === currentAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
-            <Box className='account' onClick={() => copy(currentAddress?.toString() || '')}>
+          <STooltip title={copiedStates['currentAddress'] === currentAddress ? 'Copied!' : 'Copy to clipboard'} arrow>
+            <Box className='account' onClick={() => copy('currentAddress', currentAddress?.toString() || '')}>
               {currentAddress && (
                 <Typography variant='body1'>{isMobile ? truncateAddress(currentAddress) : currentAddress}</Typography>
               )}
               <Image
-                src={copiedText === currentAddress ? copyCheckIcon : copyIcon}
+                src={copiedStates['currentAddress'] === currentAddress ? copyCheckIcon : copyIcon}
                 alt='Copy to clipboard'
                 className='copy-to-clipboard'
               />

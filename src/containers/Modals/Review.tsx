@@ -2,10 +2,13 @@ import { Box, Divider, Typography, styled } from '@mui/material';
 import Image from 'next/image';
 
 import clockIcon from '~/assets/icons/clock.svg';
+
 // import gasIcon from '~/assets/icons/gas.svg';
+import copyIcon from '~/assets/icons/copy.svg';
+import copyCheckIcon from '~/assets/icons/copy-check.svg';
 
 import BaseModal from '~/components/BaseModal';
-import { useTransactionData, useToken, useTransactions, useCustomTheme, useModal } from '~/hooks';
+import { useTransactionData, useToken, useTransactions, useCustomTheme, useModal, useCopyToClipboard } from '~/hooks';
 import { PrimaryButton, STooltip, SecondaryButton } from '~/components';
 import { formatDataNumber, truncateAddress } from '~/utils';
 import { ModalType, TransactionType } from '~/types';
@@ -15,6 +18,7 @@ export const ReviewModal = () => {
   const { transactionType, value, mint, to, userAddress, data } = useTransactionData();
   const { selectedToken, amount, bridgeData } = useToken();
   const { executeTransaction } = useTransactions();
+  const [copiedStates, copy] = useCopyToClipboard();
 
   const totalAmount = amount || mint || value;
 
@@ -69,17 +73,35 @@ export const ReviewModal = () => {
       {/* Origin address */}
       <DataRow>
         <Typography variant='body1'>From address</Typography>
-        <STooltip title={userAddress} className='address'>
-          <span>{truncateAddress(userAddress || '')}</span>
-        </STooltip>
+        <Box>
+          <STooltip title={copiedStates['origin'] === userAddress ? 'Copied!' : 'Copy to clipboard'}>
+            <Box onClick={() => copy('origin', userAddress || '')} role='button' className='address'>
+              <span>{truncateAddress(userAddress || '')}</span>
+              <Image
+                src={copiedStates['origin'] === userAddress ? copyCheckIcon : copyIcon}
+                alt='Copy to clipboard'
+                className='copy-to-clipboard'
+              />
+            </Box>
+          </STooltip>
+        </Box>
       </DataRow>
 
       {/* Destination address */}
       <DataRow>
         <Typography variant='body1'>To address</Typography>
-        <STooltip title={to} className='address'>
-          <span>{truncateAddress(to)}</span>
-        </STooltip>
+        <Box>
+          <STooltip title={copiedStates['destination'] === to ? 'Copied!' : 'Copy to clipboard'}>
+            <Box onClick={() => copy('destination', to)} role='button' className='address'>
+              <span>{truncateAddress(to)}</span>
+              <Image
+                src={copiedStates['destination'] === to ? copyCheckIcon : copyIcon}
+                alt='Copy to clipboard'
+                className='copy-to-clipboard'
+              />
+            </Box>
+          </STooltip>
+        </Box>
       </DataRow>
 
       {showData && (
@@ -158,13 +180,23 @@ export const DataRow = styled(Box)(() => {
       display: 'flex',
       alignItems: 'center',
       gap: '0.5rem',
-
       fontSize: '1.6rem',
       color: currentTheme.steel[100],
       lineHeight: '150%' /* 24px */,
       letterSpacing: '-0.352px',
     },
-
+    '.address': {
+      cursor: 'pointer',
+      width: 'auto',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.4rem',
+    },
+    '.copy-to-clipboard': {
+      transition: currentTheme.transition,
+      width: '1.6rem',
+      height: '1.6rem',
+    },
     '@media (max-width: 600px)': {
       p: {
         fontSize: '1.4rem',

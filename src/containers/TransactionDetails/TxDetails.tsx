@@ -3,9 +3,12 @@ import Image from 'next/image';
 
 // import clockIcon from '~/assets/icons/clock.svg';
 // import gasIcon from '~/assets/icons/gas.svg';
+import copyIcon from '~/assets/icons/copy.svg';
+import copyCheckIcon from '~/assets/icons/copy-check.svg';
 
 import { formatDataNumber, formatTimestamp, supportedChains, truncateAddress } from '~/utils';
-import { useCustomTheme, useLogs, useTokenList } from '~/hooks';
+import { useCustomTheme, useLogs, useTokenList, useCopyToClipboard } from '~/hooks';
+
 import { STooltip } from '~/components';
 import { DataRow } from '~/containers';
 import { chainData } from '~/data';
@@ -13,6 +16,8 @@ import { chainData } from '~/data';
 export const TxDetails = () => {
   const { selectedLog } = useLogs();
   const { fromTokens, toTokens } = useTokenList();
+  const [copiedStates, copy] = useCopyToClipboard();
+
   const selectedToken =
     fromTokens.find((token) => token.address === selectedLog?.localToken) ||
     toTokens.find((token) => token.address === selectedLog?.localToken);
@@ -87,16 +92,35 @@ export const TxDetails = () => {
       <DataContainer>
         <DataRow>
           <Typography variant='body1'>From</Typography>
-          <STooltip title={selectedLog?.from} className='address'>
-            <span>{truncateAddress(selectedLog?.from || '0x')}</span>
-          </STooltip>
+
+          <Box className='address-container'>
+            <STooltip title={copiedStates['from'] === selectedLog?.from ? 'Copied!' : 'Copy to clipboard'}>
+              <Box onClick={() => copy('from', selectedLog?.from || '0x')} className='address'>
+                <span>{truncateAddress(selectedLog?.from || '0x')}</span>
+                <Image
+                  src={copiedStates['from'] === selectedLog?.from ? copyCheckIcon : copyIcon}
+                  alt='Copy to clipboard'
+                  className='copy-to-clipboard'
+                />
+              </Box>
+            </STooltip>
+          </Box>
         </DataRow>
 
         <DataRow>
           <Typography variant='body1'>To</Typography>
-          <STooltip title={selectedLog?.from} className='address'>
-            <span>{truncateAddress(selectedLog?.to || '0x')}</span>
-          </STooltip>
+          <Box className='address-container'>
+            <STooltip title={copiedStates['to'] === selectedLog?.to ? 'Copied!' : 'Copy to clipboard'}>
+              <Box onClick={() => copy('to', selectedLog?.to || '0x')} className='address'>
+                <span>{truncateAddress(selectedLog?.to || '0x')}</span>
+                <Image
+                  src={copiedStates['to'] === selectedLog?.to ? copyCheckIcon : copyIcon}
+                  alt='Copy to clipboard'
+                  className='copy-to-clipboard'
+                />
+              </Box>
+            </STooltip>
+          </Box>
         </DataRow>
 
         {selectedLog?.data && (
