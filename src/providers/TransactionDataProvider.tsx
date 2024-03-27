@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, createContext, useEffect, useMemo, useState } from 'react';
+import { Dispatch, SetStateAction, createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { Address, isHex } from 'viem';
 import { useAccount } from 'wagmi';
 
@@ -62,12 +62,12 @@ export const TransactionDataProvider = ({ children }: StateProps) => {
     return !!((mint || value || amount || isHex(data)) && isValidAddress(to));
   }, [mint, value, amount, data, to]);
 
-  const resetValues = () => {
+  const resetValues = useCallback(() => {
     setMint('');
     setValue('');
     setData('');
     setTo(address?.toString() || '');
-  };
+  }, [address]);
 
   useEffect(() => {
     if (address) {

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Chain } from 'viem';
 import { Box, IconButton, styled } from '@mui/material';
 import Image from 'next/image';
@@ -8,11 +9,11 @@ import { useChain, useCustomTheme, useToken, useTokenList, useTransactionData } 
 import { ChainSelect } from '~/components';
 
 export const ChainSection = () => {
-  const { customTransactionType } = useTransactionData();
+  const { customTransactionType, resetValues: resetTxData } = useTransactionData();
   const { fromList, toList, setFromChain, setToChain, fromChain, toChain, switchChains, l1Chains, l2Chains } =
     useChain();
 
-  const { setSelectedToken } = useToken();
+  const { setSelectedToken, resetValues } = useToken();
   const { fromTokens } = useTokenList();
 
   const fromChainList = customTransactionType?.includes('force') ? l1Chains : fromList;
@@ -29,6 +30,12 @@ export const ChainSection = () => {
   const handleTo = (chain: Chain) => {
     setToChain(chain);
   };
+
+  // Reset values when chain is changed
+  useEffect(() => {
+    resetValues();
+    resetTxData();
+  }, [fromChain, resetTxData, resetValues]);
 
   return (
     <ChainSectionContainer>

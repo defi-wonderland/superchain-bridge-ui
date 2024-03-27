@@ -116,11 +116,11 @@ export const TokenProvider = ({ children }: StateProps) => {
     }
   };
 
-  const resetValues = () => {
+  const resetValues = useCallback(() => {
     setAmount('');
     setBalance('');
     setAllowance('');
-  };
+  }, []);
 
   const loadTokenData = useCallback(
     async (client: 'from' | 'to') => {
