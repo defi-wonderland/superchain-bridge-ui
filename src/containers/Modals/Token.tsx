@@ -48,8 +48,8 @@ export const TokensModal = () => {
 
       <ListContainer>
         <CustomScrollbar>
-          {tokenList.map((token) => (
-            <Token key={token.address} onClick={() => handleToken(token)} fullWidth>
+          {tokenList.map((token, index) => (
+            <Token key={token.address + index} onClick={() => handleToken(token)} fullWidth>
               {/* Token info section */}
               <LeftSection>
                 <Image src={token.logoURI} alt={token.name} width={36} height={36} />

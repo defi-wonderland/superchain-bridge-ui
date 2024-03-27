@@ -91,10 +91,10 @@ const ChainSectionContainer = styled(Box)(() => {
     },
 
     '@media (max-width: 600px)': {
-      div: {
-        maxWidth: '50%',
-        width: '15.05rem',
-      },
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      padding: '0 0.4rem',
     },
   };
 });
