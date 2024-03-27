@@ -31,7 +31,7 @@ const isTest = process.env.NEXT_PUBLIC_IS_TEST !== 'false';
 
 export const supportedChains = isTest
   ? ([sepolia, optimismSepolia, baseSepolia] as const)
-  : ([mainnet, optimism, base, zora, fraxtal] as const);
+  : ([mainnet, optimism, base] as const);
 
 const getWallets = () => {
   if (PROJECT_ID) {
