@@ -186,6 +186,7 @@ const StyledMenu = styled((props: MenuProps) => (
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
+      boxShadow: '0px 20px 38px -10px rgba(0, 0, 0, 0.50)',
       '.menu-item': {
         display: 'flex',
         width: '100%',
