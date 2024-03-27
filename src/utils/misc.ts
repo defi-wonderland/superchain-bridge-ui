@@ -39,7 +39,7 @@ export function formatDataNumber(
   compact?: boolean,
 ) {
   let res: number = Number.parseFloat(input.toString());
-  if (res === 0) return `${currency ? '$0' : '0'}`;
+  if (res === 0 || isNaN(res)) return `${currency ? '$0' : '0'}`;
 
   if (decimals !== 0) res = Number.parseFloat(formatUnits(BigInt(input || 0), decimals));
 
