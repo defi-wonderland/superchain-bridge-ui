@@ -1,4 +1,4 @@
-import { createContext, useMemo, useState } from 'react';
+import { createContext, useCallback, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAccount } from 'wagmi';
 import { Address } from 'viem';
@@ -73,14 +73,14 @@ export const LogsProvider = ({ children }: StateProps) => {
     refetchOnWindowFocus: false, // temporary disable refetch on window focus
   });
 
-  const refetchLogs = async () => {
+  const refetchLogs = useCallback(async () => {
     setIsLoading(true);
     setDepositLogs(undefined);
     setWithdrawLogs(undefined);
     setCctpLogs([]);
     setOrderedLogs([]);
     refetch();
-  };
+  }, [refetch]);
 
   const transactionPending = useMemo(() => {
     let isTransactionPending = false;

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Chain } from 'viem';
 import { Box, IconButton, styled } from '@mui/material';
 import Image from 'next/image';
@@ -19,17 +19,23 @@ export const ChainSection = () => {
   const fromChainList = customTransactionType?.includes('force') ? l1Chains : fromList;
   const toChainList = customTransactionType?.includes('force') ? l2Chains : toList;
 
-  const handleFrom = (chain: Chain) => {
-    setFromChain(chain);
+  const handleFrom = useCallback(
+    (chain: Chain) => {
+      setFromChain(chain);
 
-    // Reset token when chain is changed
-    const ethtoken = fromTokens.find((token) => token.symbol === 'ETH');
-    setSelectedToken(ethtoken!);
-  };
+      // Reset token when chain is changed
+      const ethtoken = fromTokens.find((token) => token.symbol === 'ETH') || fromTokens[0];
+      setSelectedToken(ethtoken!);
+    },
+    [fromTokens, setFromChain, setSelectedToken],
+  );
 
-  const handleTo = (chain: Chain) => {
-    setToChain(chain);
-  };
+  const handleTo = useCallback(
+    (chain: Chain) => {
+      setToChain(chain);
+    },
+    [setToChain],
+  );
 
   // Reset values when chain is changed
   useEffect(() => {
