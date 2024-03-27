@@ -51,7 +51,7 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
   };
 
   return (
-    <TableContainer>
+    <STableContainer>
       <Table>
         {!isMobile && (
           <STableHead>
@@ -133,9 +133,33 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
       )}
 
       <SPagination numberOfItems={rows.length} perPage={itemsPerPage} setPaging={setPaging} />
-    </TableContainer>
+    </STableContainer>
   );
 };
+
+const STableContainer = styled(TableContainer)(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    '&::-webkit-scrollbar': {
+      width: '0.6rem',
+      height: '0.6rem',
+      background: 'transparent',
+    },
+
+    '&::-webkit-scrollbar-thumb': {
+      background: currentTheme.steel[700],
+      borderRadius: '0.4rem',
+    },
+
+    '&::-webkit-scrollbar-thumb:hover': {
+      background: currentTheme.steel[600],
+    },
+
+    '&::-webkit-scrollbar-thumb:active': {
+      background: currentTheme.steel[600],
+    },
+  };
+});
 
 const STableHead = styled(TableHead)(() => {
   const { currentTheme } = useCustomTheme();

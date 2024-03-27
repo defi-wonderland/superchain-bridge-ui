@@ -154,7 +154,6 @@ export const SMainCardContainer = styled(MainCardContainer)(() => {
     overflow: 'auto',
     maxWidth: '100%',
     width: '84.3rem',
-    maxHeight: '68rem',
     boxShadow: 'none',
     padding: '2rem 3.2rem',
 
