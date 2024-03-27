@@ -2,7 +2,6 @@ import {
   base,
   baseSepolia,
   mainnet,
-  mode,
   optimism,
   optimismSepolia,
   sepolia,
@@ -15,7 +14,6 @@ import {
 import sepoliaLogo from '~/assets/chains/ethereum.svg';
 import opSepoliaLogo from '~/assets/chains/optimism.svg';
 import baseSepoliaLogo from '~/assets/chains/base.svg';
-import modeLogo from '~/assets/chains/mode.png';
 import zoraLogo from '~/assets/chains/zora.png';
 import fraxtalLogo from '~/assets/chains/fraxtal.png';
 import liskLogo from '~/assets/chains/lisk.png';
@@ -31,18 +29,13 @@ export const chainData: ChainData = {
   },
   [optimism.id]: {
     logo: opSepoliaLogo.src,
-    apiUrl: 'https://api-sepolia-optimistic.etherscan.io/api',
-    explorer: 'https://sepolia-optimism.etherscan.io/',
+    apiUrl: 'https://api-optimistic.etherscan.io/api',
+    explorer: 'https://optimistic.etherscan.io/',
   },
   [base.id]: {
     logo: baseSepoliaLogo.src,
     apiUrl: 'https://api.basescan.org/api',
     explorer: 'https://basescan.org/',
-  },
-  [mode.id]: {
-    logo: modeLogo.src,
-    apiUrl: '',
-    explorer: '',
   },
   [zora.id]: {
     logo: zoraLogo.src,
@@ -51,8 +44,8 @@ export const chainData: ChainData = {
   },
   [fraxtal.id]: {
     logo: fraxtalLogo.src,
-    apiUrl: '',
-    explorer: '',
+    apiUrl: 'https://api.fraxscan.com/api',
+    explorer: 'https://fraxscan.com/',
   },
 
   // Testnets

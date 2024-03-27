@@ -4,10 +4,11 @@ import Image from 'next/image';
 import clockIcon from '~/assets/icons/clock.svg';
 import gasIcon from '~/assets/icons/gas.svg';
 
-import { chainData, formatDataNumber, formatTimestamp, supportedChains, truncateAddress } from '~/utils';
+import { formatDataNumber, formatTimestamp, supportedChains, truncateAddress } from '~/utils';
 import { useCustomTheme, useLogs, useTokenList } from '~/hooks';
 import { STooltip } from '~/components';
 import { DataRow } from '~/containers';
+import { chainData } from '~/data';
 
 export const TxDetails = () => {
   const { selectedLog } = useLogs();
