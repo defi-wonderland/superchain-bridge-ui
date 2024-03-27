@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 import chevrownDown from '~/assets/icons/chevron-down.svg';
 
-import { BridgeIcons } from '~/components/BridgeIcons';
+// import { BridgeIcons } from '~/components/BridgeIcons';
 import { BasicButton } from '~/components/Buttons';
 import { useCustomTheme, useModal, useToken } from '~/hooks';
 import { ModalType } from '~/types';
@@ -13,6 +13,9 @@ import { bridges } from '~/data';
 export const BridgeSection = () => {
   const { setModalOpen } = useModal();
   const { selectedToken, bridgeData, setBridgeData, setAvailableBridges } = useToken();
+
+  // TODO: add more bridges and remove this
+  const disabled = true;
 
   const openBridgeModal = () => {
     setModalOpen(ModalType.SELECT_BRIDGE);
@@ -33,16 +36,17 @@ export const BridgeSection = () => {
       variant='contained'
       disableElevation
       onClick={openBridgeModal}
-      endIcon={<Image src={chevrownDown} alt='arrow-down' className='chevron-down' />}
+      endIcon={disabled ? undefined : <Image src={chevrownDown} alt='arrow-down' className='chevron-down' />}
       fullWidth
+      disabled={disabled}
     >
       <Box className='bridge-name'>
-        <Box>
+        <Box className='selected-bridge'>
           <Image src={bridgeData.logoUrl} alt='' className='bridge-image' width={24} height={24} />
           <Typography>{bridgeData.name}</Typography>
         </Box>
         {/* TODO: calculate gas */}
-        <BridgeIcons gas={bridgeData.fees} time={bridgeData.time} />
+        {/* <BridgeIcons gas={bridgeData.fees} time={bridgeData.time} /> */}
       </Box>
     </MenuButton>
   );
@@ -71,6 +75,10 @@ const MenuButton = styled(BasicButton)(() => {
       display: 'flex',
       alignItems: 'center',
       gap: '0.8rem',
+
+      '.selected-bridge': {
+        width: '100%',
+      },
 
       div: {
         display: 'flex',

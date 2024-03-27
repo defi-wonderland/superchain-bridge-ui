@@ -2,7 +2,7 @@ import { Box, Divider, Typography, styled } from '@mui/material';
 import Image from 'next/image';
 
 import clockIcon from '~/assets/icons/clock.svg';
-import gasIcon from '~/assets/icons/gas.svg';
+// import gasIcon from '~/assets/icons/gas.svg';
 
 import BaseModal from '~/components/BaseModal';
 import { useTransactionData, useToken, useTransactions, useCustomTheme, useModal } from '~/hooks';
@@ -46,13 +46,14 @@ export const ReviewModal = () => {
       </DataRow>
 
       {/* Fees */}
-      <DataRow>
+      {/* Temporary disabled */}
+      {/* <DataRow>
         <Typography variant='body1'>Fees</Typography>
         <span>
           <Image src={gasIcon} alt='fees' />
           {bridgeData.fees}
         </span>
-      </DataRow>
+      </DataRow> */}
 
       {/* Transaction time */}
       <DataRow>
