@@ -7,7 +7,7 @@ import chevrownDown from '~/assets/icons/chevron-down.svg';
 import { useCustomTheme } from '~/hooks';
 import { BasicButton } from './Buttons';
 import { SInputLabel } from './InputField';
-import { chainData } from '~/utils';
+import { chainData } from '~/data';
 
 interface ChainSelectProps {
   value: Chain;
@@ -95,6 +95,7 @@ const SBox = styled(Box)(() => {
     },
 
     '@media (max-width: 600px)': {
+      minWidth: '50%',
       '.external': {
         width: 'auto',
         marginLeft: 'auto',
@@ -175,6 +176,9 @@ const StyledMenu = styled((props: MenuProps) => (
       fontSize: '1.6rem',
       minWidth: '20rem',
       marginTop: '0.4rem',
+      img: {
+        borderRadius: '50%',
+      },
 
       '& .MuiMenu-list': {
         padding: '0.4rem 0',

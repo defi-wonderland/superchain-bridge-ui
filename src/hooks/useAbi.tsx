@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { chainData, getContractAbi, isValidAddress } from '~/utils';
+import { getContractAbi, isValidAddress } from '~/utils';
 import { getConfig } from '~/config';
 import { useChain } from './useContext';
+import { chainData } from '~/data';
 
 export const useAbi = () => {
   const [abi, setAbiData] = useState<{ [key: string]: string }>({});

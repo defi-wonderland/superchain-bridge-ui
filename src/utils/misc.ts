@@ -1,5 +1,5 @@
 import { Address, Chain, Hex, PublicClient, formatUnits, parseUnits } from 'viem';
-import { contracts } from './variables';
+import { contracts } from '~/data';
 import { AccountLogs, CustomClients, OpContracts } from '~/types';
 
 export const replaceSpacesWithHyphens = (str: string) => str.replace(/\s+/g, '-').toLowerCase();
@@ -39,7 +39,7 @@ export function formatDataNumber(
   compact?: boolean,
 ) {
   let res: number = Number.parseFloat(input.toString());
-  if (res === 0) return `${currency ? '$0' : '0'}`;
+  if (res === 0 || isNaN(res)) return `${currency ? '$0' : '0'}`;
 
   if (decimals !== 0) res = Number.parseFloat(formatUnits(BigInt(input || 0), decimals));
 

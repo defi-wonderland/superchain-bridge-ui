@@ -1,15 +1,18 @@
 import { Box, Typography, styled } from '@mui/material';
 import Image from 'next/image';
 
-import clockIcon from '~/assets/icons/clock.svg';
-import gasIcon from '~/assets/icons/gas.svg';
+
+// import clockIcon from '~/assets/icons/clock.svg';
+// import gasIcon from '~/assets/icons/gas.svg';
 import copyIcon from '~/assets/icons/copy.svg';
 import copyCheckIcon from '~/assets/icons/copy-check.svg';
 
-import { chainData, formatDataNumber, formatTimestamp, supportedChains, truncateAddress } from '~/utils';
+import { formatDataNumber, formatTimestamp, supportedChains, truncateAddress } from '~/utils';
 import { useCustomTheme, useLogs, useTokenList, useCopyToClipboard } from '~/hooks';
+
 import { STooltip } from '~/components';
 import { DataRow } from '~/containers';
+import { chainData } from '~/data';
 
 export const TxDetails = () => {
   const { selectedLog } = useLogs();
@@ -70,22 +73,21 @@ export const TxDetails = () => {
           </span>
         </DataRow>
 
-        <DataRow>
+        {/* <DataRow>
           <Typography variant='body1'>Fees</Typography>
-
           <span>
             <Image src={gasIcon} alt='fees' />
-            {/* {selectedLog?.fees} */} -
+            {selectedLog?.fees}
           </span>
-        </DataRow>
+        </DataRow> */}
 
-        <DataRow>
+        {/* <DataRow>
           <Typography variant='body1'>Transaction time</Typography>
           <span>
             <Image src={clockIcon} alt='transaction time' />
-            {/* {selectedLog?.transactionTime} */} -
+            {selectedLog?.transactionTime}
           </span>
-        </DataRow>
+        </DataRow> */}
       </DataContainer>
 
       <DataContainer>
