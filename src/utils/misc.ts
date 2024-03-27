@@ -1,5 +1,5 @@
 import { Address, Chain, Hex, PublicClient, formatUnits, parseUnits } from 'viem';
-import { contracts } from './variables';
+import { contracts } from '~/data';
 import { AccountLogs, CustomClients, OpContracts } from '~/types';
 
 export const replaceSpacesWithHyphens = (str: string) => str.replace(/\s+/g, '-').toLowerCase();

@@ -3,7 +3,8 @@ import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 
 import * as wagmiChains from 'wagmi/chains';
 import { Transport, http } from 'viem';
-import { sepolia, optimismSepolia, baseSepolia, mainnet, optimism, base, mode, zora, fraxtal } from 'viem/chains';
+import { sepolia, mainnet } from 'viem/chains';
+import { optimismSepolia, baseSepolia, optimism, base, zora, fraxtal } from 'viem/op-stack';
 
 import { getConfig } from '~/config';
 
@@ -25,7 +26,7 @@ const isTest = process.env.NEXT_PUBLIC_IS_TEST !== 'false';
 
 export const supportedChains = isTest
   ? ([sepolia, optimismSepolia, baseSepolia] as const)
-  : ([mainnet, optimism, base, mode, zora, fraxtal] as const);
+  : ([mainnet, optimism, base, zora, fraxtal] as const);
 
 export const connectors = [injected(), walletConnect({ projectId: PROJECT_ID })];
 
