@@ -8,7 +8,7 @@ import { BridgeIcons } from '~/components/BridgeIcons';
 import { BasicButton } from '~/components/Buttons';
 import { useCustomTheme, useModal, useToken } from '~/hooks';
 import { ModalType } from '~/types';
-import { bridges } from '~/utils';
+import { bridges } from '~/data';
 
 export const BridgeSection = () => {
   const { setModalOpen } = useModal();

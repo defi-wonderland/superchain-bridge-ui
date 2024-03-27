@@ -7,7 +7,7 @@ import chevrownDown from '~/assets/icons/chevron-down.svg';
 import { useCustomTheme } from '~/hooks';
 import { BasicButton } from './Buttons';
 import { SInputLabel } from './InputField';
-import { chainData } from '~/utils';
+import { chainData } from '~/data';
 
 interface ChainSelectProps {
   value: Chain;

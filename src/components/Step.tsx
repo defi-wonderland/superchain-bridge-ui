@@ -7,8 +7,9 @@ import openLinkIcon from '~/assets/icons/open-link.svg';
 import contentIcon from '~/assets/icons/content.svg';
 import pendingIcon from '~/assets/icons/pending-tx.svg';
 
-import { chainData, truncateAddress } from '~/utils';
+import { truncateAddress } from '~/utils';
 import { useCustomTheme } from '~/hooks';
+import { chainData } from '~/data';
 
 interface StepProps {
   title: string;

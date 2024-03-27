@@ -3,19 +3,25 @@ import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 
 import * as wagmiChains from 'wagmi/chains';
 import { Transport, http } from 'viem';
-import { sepolia, optimismSepolia, baseSepolia, mainnet, optimism, base, mode, zora, fraxtal } from 'viem/chains';
+import { sepolia, mainnet } from 'viem/chains';
+import { optimismSepolia, baseSepolia, optimism, base, zora, fraxtal } from 'viem/op-stack';
 
 import { getConfig } from '~/config';
 
 const { ALCHEMY_KEY, PROJECT_ID } = getConfig();
 
 export const alchemyUrls: { [k: string]: string } = {
-  [optimismSepolia.id]: `https://opt-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  // mainnet
+  [mainnet.id]: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  [optimism.id]: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  [base.id]: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  [fraxtal.id]: `https://frax-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  [zora.id]: `https://zora-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+
+  // testnets
   [sepolia.id]: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+  [optimismSepolia.id]: `https://opt-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
   [baseSepolia.id]: `https://base-sepolia.g.alchemy.com/v2/${ALCHEMY_KEY}`,
-  // [optimism.id]: `https://optimism-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
-  // [mainnet.id]: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
-  // [base.id]: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
 };
 
 const networkId = Number(process.env.NEXT_PUBLIC_NETWORK ?? sepolia.id);
@@ -25,7 +31,7 @@ const isTest = process.env.NEXT_PUBLIC_IS_TEST !== 'false';
 
 export const supportedChains = isTest
   ? ([sepolia, optimismSepolia, baseSepolia] as const)
-  : ([mainnet, optimism, base, mode, zora, fraxtal] as const);
+  : ([mainnet, optimism, base, zora, fraxtal] as const);
 
 export const connectors = [injected(), walletConnect({ projectId: PROJECT_ID })];
 

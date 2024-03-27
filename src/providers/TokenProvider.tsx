@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi';
 import CCTP from '~/data/cctp.json';
 import { useChain, useCustomClient, useTokenList } from '~/hooks';
 import { TokenData, CctpType, BridgeData } from '~/types';
-import { bridges } from '~/utils';
+import { bridges } from '~/data';
 
 type ContextType = {
   selectedToken: TokenData;
