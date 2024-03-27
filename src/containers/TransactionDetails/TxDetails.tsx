@@ -1,7 +1,6 @@
 import { Box, Typography, styled } from '@mui/material';
 import Image from 'next/image';
 
-
 // import clockIcon from '~/assets/icons/clock.svg';
 // import gasIcon from '~/assets/icons/gas.svg';
 import copyIcon from '~/assets/icons/copy.svg';

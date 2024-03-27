@@ -7,7 +7,6 @@ import clockIcon from '~/assets/icons/clock.svg';
 import copyIcon from '~/assets/icons/copy.svg';
 import copyCheckIcon from '~/assets/icons/copy-check.svg';
 
-
 import BaseModal from '~/components/BaseModal';
 import { useTransactionData, useToken, useTransactions, useCustomTheme, useModal, useCopyToClipboard } from '~/hooks';
 import { PrimaryButton, STooltip, SecondaryButton } from '~/components';
