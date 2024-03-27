@@ -35,7 +35,7 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
   const { setSelectedLog } = useLogs();
   const chainPath = replaceSpacesWithHyphens(fromChain?.name || '');
   const [paging, setPaging] = useState({ from: 0, to: itemsPerPage });
-  const [copiedText, copy] = useCopyToClipboard();
+  const [copiedStates, copy] = useCopyToClipboard();
   const navigate = useRouter();
 
   const slicedRows = isMobile ? rows : rows.slice(paging.from, paging.to);
@@ -47,11 +47,11 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
 
   const handleCopy = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, text?: string) => {
     e.stopPropagation();
-    copy(text || '');
+    copy('text', text || '');
   };
 
   return (
-    <TableContainer>
+    <STableContainer>
       <Table>
         {!isMobile && (
           <STableHead>
@@ -84,11 +84,11 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
                 {/* Transaction Hash */}
                 {!isMobile && (
                   <TxHashCell>
-                    <STooltip title={copiedText === row.txHash ? 'Copied!' : 'Copy to clipboard'} arrow>
+                    <STooltip title={copiedStates['text'] === row.txHash ? 'Copied!' : 'Copy to clipboard'} arrow>
                       <Box className='account' onClick={(e) => handleCopy(e, row.txHash)}>
                         {row.txHash && <Typography variant='body1'>{truncateAddress(row.txHash)}</Typography>}
                         <Image
-                          src={copiedText === row.txHash ? copyCheckIcon : copyIcon}
+                          src={copiedStates['text'] === row.txHash ? copyCheckIcon : copyIcon}
                           alt='Copy to clipboard'
                           className='copy-to-clipboard'
                         />
@@ -133,9 +133,33 @@ export const ActivityTable = ({ rows = [] }: ActivityTableProps) => {
       )}
 
       <SPagination numberOfItems={rows.length} perPage={itemsPerPage} setPaging={setPaging} />
-    </TableContainer>
+    </STableContainer>
   );
 };
+
+const STableContainer = styled(TableContainer)(() => {
+  const { currentTheme } = useCustomTheme();
+  return {
+    '&::-webkit-scrollbar': {
+      width: '0.6rem',
+      height: '0.6rem',
+      background: 'transparent',
+    },
+
+    '&::-webkit-scrollbar-thumb': {
+      background: currentTheme.steel[700],
+      borderRadius: '0.4rem',
+    },
+
+    '&::-webkit-scrollbar-thumb:hover': {
+      background: currentTheme.steel[600],
+    },
+
+    '&::-webkit-scrollbar-thumb:active': {
+      background: currentTheme.steel[600],
+    },
+  };
+});
 
 const STableHead = styled(TableHead)(() => {
   const { currentTheme } = useCustomTheme();

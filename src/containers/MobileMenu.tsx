@@ -22,7 +22,7 @@ export const MobileMenu = ({ closeMenu }: MobileMenuProps) => {
   const { address } = useAccount();
   const disconnect = useDisconnect();
   const { setModalOpen } = useModal();
-  const [copiedText, copy] = useCopyToClipboard();
+  const [copiedStates, copy] = useCopyToClipboard();
   const { toChain } = useChain();
   const chainPath = replaceSpacesWithHyphens(toChain?.name || '');
 
@@ -42,7 +42,7 @@ export const MobileMenu = ({ closeMenu }: MobileMenuProps) => {
   };
 
   const handleCopyAddress = () => {
-    copy(address || '');
+    copy('address', address || '');
   };
 
   return (
@@ -53,7 +53,9 @@ export const MobileMenu = ({ closeMenu }: MobileMenuProps) => {
             <MenuButton
               variant='text'
               onClick={handleCopyAddress}
-              startIcon={<SIcon src={address === copiedText ? checkIcon : addressIcon} alt='Copy address' />}
+              startIcon={
+                <SIcon src={address === copiedStates['address'] ? checkIcon : addressIcon} alt='Copy address' />
+              }
             >
               {truncateAddress(address || '')}
             </MenuButton>

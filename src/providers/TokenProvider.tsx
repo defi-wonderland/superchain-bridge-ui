@@ -5,7 +5,7 @@ import { useAccount } from 'wagmi';
 import CCTP from '~/data/cctp.json';
 import { useChain, useCustomClient, useTokenList } from '~/hooks';
 import { TokenData, CctpType, BridgeData } from '~/types';
-import { bridges } from '~/utils';
+import { bridges } from '~/data';
 
 type ContextType = {
   selectedToken: TokenData;
@@ -57,7 +57,12 @@ export const TokenProvider = ({ children }: StateProps) => {
 
   const { customClient } = useCustomClient();
 
-  const [selectedToken, setSelectedToken] = useState<TokenData>(fromTokens[0]);
+  // set default token to ETH if it exists, otherwise use the first token in the list
+  const defaultToken = useMemo(() => {
+    return fromTokens.filter((token) => token.symbol === 'ETH')[0] || fromTokens[0];
+  }, [fromTokens]);
+
+  const [selectedToken, setSelectedToken] = useState<TokenData>(defaultToken);
   const [price, setPrice] = useState<number>(1242.36);
 
   // amount is the value of the input field
@@ -161,8 +166,8 @@ export const TokenProvider = ({ children }: StateProps) => {
   );
 
   useEffect(() => {
-    setSelectedToken(fromTokens[0]);
-  }, [fromTokens]);
+    setSelectedToken(defaultToken);
+  }, [defaultToken]);
 
   return (
     <TokenContext.Provider
