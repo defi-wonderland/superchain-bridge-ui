@@ -1,3 +1,4 @@
+import { useCallback, useEffect } from 'react';
 import { Chain } from 'viem';
 import { Box, IconButton, styled } from '@mui/material';
 import Image from 'next/image';
@@ -8,27 +9,39 @@ import { useChain, useCustomTheme, useToken, useTokenList, useTransactionData } 
 import { ChainSelect } from '~/components';
 
 export const ChainSection = () => {
-  const { customTransactionType } = useTransactionData();
+  const { customTransactionType, resetValues: resetTxData } = useTransactionData();
   const { fromList, toList, setFromChain, setToChain, fromChain, toChain, switchChains, l1Chains, l2Chains } =
     useChain();
 
-  const { setSelectedToken } = useToken();
+  const { setSelectedToken, resetValues } = useToken();
   const { fromTokens } = useTokenList();
 
   const fromChainList = customTransactionType?.includes('force') ? l1Chains : fromList;
   const toChainList = customTransactionType?.includes('force') ? l2Chains : toList;
 
-  const handleFrom = (chain: Chain) => {
-    setFromChain(chain);
+  const handleFrom = useCallback(
+    (chain: Chain) => {
+      setFromChain(chain);
 
-    // Reset token when chain is changed
-    const ethtoken = fromTokens.find((token) => token.symbol === 'ETH');
-    setSelectedToken(ethtoken!);
-  };
+      // Reset token when chain is changed
+      const ethtoken = fromTokens.find((token) => token.symbol === 'ETH') || fromTokens[0];
+      setSelectedToken(ethtoken!);
+    },
+    [fromTokens, setFromChain, setSelectedToken],
+  );
 
-  const handleTo = (chain: Chain) => {
-    setToChain(chain);
-  };
+  const handleTo = useCallback(
+    (chain: Chain) => {
+      setToChain(chain);
+    },
+    [setToChain],
+  );
+
+  // Reset values when chain is changed
+  useEffect(() => {
+    resetValues();
+    resetTxData();
+  }, [fromChain, resetTxData, resetValues]);
 
   return (
     <ChainSectionContainer>

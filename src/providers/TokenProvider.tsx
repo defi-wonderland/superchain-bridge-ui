@@ -95,40 +95,45 @@ export const TokenProvider = ({ children }: StateProps) => {
     [selectedToken],
   );
 
-  const approve = async (spender: string) => {
-    try {
-      const { request } = await customClient.from.public.simulateContract({
-        account: address,
-        abi: erc20Abi,
-        address: selectedToken?.address as Address,
-        functionName: 'approve',
-        args: [spender as Address, parseTokenUnits(amount)],
-      });
-      const hash = await customClient.from.wallet?.writeContract(request);
+  const approve = useCallback(
+    async (spender: string) => {
+      try {
+        const { request } = await customClient.from.public.simulateContract({
+          account: address,
+          abi: erc20Abi,
+          address: selectedToken?.address as Address,
+          functionName: 'approve',
+          args: [spender as Address, parseTokenUnits(amount)],
+        });
+        const hash = await customClient.from.wallet?.writeContract(request);
 
-      if (!hash) throw new Error('Approve transaction failed');
+        if (!hash) throw new Error('Approve transaction failed');
 
-      const receipt = await customClient.from.public.waitForTransactionReceipt({ hash: hash });
+        const receipt = await customClient.from.public.waitForTransactionReceipt({ hash: hash });
 
-      console.log('Transaction confirmed,', receipt); // temporary log
-    } catch (error) {
-      console.warn(error);
-    }
-  };
+        console.log('Transaction confirmed,', receipt); // temporary log
+      } catch (error) {
+        console.warn(error);
+      }
+    },
+    [address, amount, customClient.from.public, customClient.from.wallet, parseTokenUnits, selectedToken?.address],
+  );
 
-  const resetValues = () => {
+  const resetValues = useCallback(() => {
     setAmount('');
     setBalance('');
     setAllowance('');
-  };
+  }, []);
 
-  const loadTokenData = useCallback(
+  const loadTokenBalance = useCallback(
     async (client: 'from' | 'to') => {
       if (!address || !customClient[client].contracts?.standardBridge) return;
+
       const tokenAddress = selectedToken?.address as Address;
       const contractAddress = selectedToken?.cctp
-        ? cctpData[fromChain.id].tokenMessenger
+        ? cctpData[fromChain.id]?.tokenMessenger
         : customClient[client].contracts.standardBridge;
+
       const [balance, allowance] = await customClient[client].public.multicall({
         contracts: [
           {
@@ -152,6 +157,28 @@ export const TokenProvider = ({ children }: StateProps) => {
       setAllowance(allowance.result?.toString() || '');
     },
     [address, cctpData, customClient, fromChain.id, selectedToken?.address, selectedToken?.cctp],
+  );
+
+  const loadEthBalance = useCallback(
+    async (client: 'from' | 'to') => {
+      if (!address) return;
+
+      const ethBalance = await customClient[client].public.getBalance({ address });
+      setEthBalance(ethBalance.toString());
+    },
+    [address, customClient],
+  );
+
+  const loadTokenData = useCallback(
+    async (client: 'from' | 'to') => {
+      if (!selectedToken) return;
+
+      loadTokenBalance(client);
+      if (selectedToken.symbol === 'ETH') {
+        loadEthBalance(client);
+      }
+    },
+    [loadEthBalance, loadTokenBalance, selectedToken],
   );
 
   useEffect(

@@ -25,5 +25,13 @@
     "decimals": 6,
     "logoURI": "https://assets.coingecko.com/coins/images/6319/standard/usdc.png",
     "cctp": true
+  },
+  {
+    "chainId": 8453,
+    "address": "0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000",
+    "name": "Ether",
+    "symbol": "ETH",
+    "decimals": 18,
+    "logoURI": "https://ethereum-optimism.github.io/data/ETH/logo.svg"
   }
 ]

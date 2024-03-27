@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, styled } from '@mui/material';
 import { AbiParameter, isHex } from 'viem';
 
-import { useFunctionMethod, useTransactionData } from '~/hooks';
+import { useChain, useFunctionMethod, useTransactionData } from '~/hooks';
 import { ChainSection } from './ChainSection';
 import { TokenSection } from './TokenSection';
 import { InputField, RadioButtons, FunctionSelect } from '~/components';
 import { isValidAddress } from '~/utils';
 
 export const CustomTransaction = () => {
+  const { fromChain } = useChain();
   const { setTo, to, customTransactionType, data, setData } = useTransactionData();
   const [isCustomData, setIsCustomData] = useState<'custom-data' | 'function'>('function');
   const { abi, setAbi, handleSetSelectedFunction, functions, selectedFunction, functionParams, setFunctionParams } =
@@ -21,6 +22,10 @@ export const CustomTransaction = () => {
     setFunctionParams(undefined);
     setData('');
   };
+
+  useEffect(() => {
+    setTo('');
+  }, [setTo, fromChain]);
 
   return (
     <SBox>
