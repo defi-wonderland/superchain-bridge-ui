@@ -64,7 +64,6 @@ export const TokenProvider = ({ children }: StateProps) => {
   }, [fromTokens]);
 
   const [selectedToken, setSelectedToken] = useState<TokenData>(defaultToken);
-  console.log('selected', selectedToken);
   const [price, setPrice] = useState<number>(0);
 
   // amount is the value of the input field

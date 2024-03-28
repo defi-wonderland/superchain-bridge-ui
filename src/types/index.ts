@@ -6,3 +6,4 @@ export * from './modal';
 export * from './queryParam';
 export * from './theme';
 export * from './transactions';
+export * from './chains';
