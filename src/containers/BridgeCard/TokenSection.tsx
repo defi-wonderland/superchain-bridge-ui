@@ -20,7 +20,8 @@ export const TokenSection = () => {
   const inputValue = isEth ? ethValue : amount;
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    isEth ? setEthValue(e.target.value) : setAmount(e.target.value);
+    const normalizedInput = e.target.value.replace(/[^0-9.]+/g, '').replace(/(\..*)\..*/g, '$1');
+    isEth ? setEthValue(normalizedInput) : setAmount(normalizedInput);
   };
 
   const handleOpenTokenModal = () => {
@@ -56,7 +57,7 @@ export const TokenSection = () => {
         <StyledInput
           id='token-amount-input'
           variant='standard'
-          type='number'
+          type='text'
           placeholder='0'
           value={inputValue}
           onChange={handleOnChange}
