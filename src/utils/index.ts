@@ -7,4 +7,4 @@ export * from './parsedAbis';
 export * from './parsedEvents';
 export * from './variables';
 export * from './transactions';
-export * from './numbersFormat';
+export * from './getTokenPrice';

@@ -3,6 +3,7 @@ export interface Env {
   PROJECT_ID: string;
   ALCHEMY_KEY: string;
   ETHERSCAN_KEY: string;
+  CHAINBASE_KEY: string;
 }
 
 export interface Constants {

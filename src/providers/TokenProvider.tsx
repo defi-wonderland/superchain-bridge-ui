@@ -6,6 +6,7 @@ import CCTP from '~/data/cctp.json';
 import { useChain, useCustomClient, useTokenList } from '~/hooks';
 import { TokenData, CctpType, BridgeData } from '~/types';
 import { bridges } from '~/data';
+import { fetchTokenPrice } from '~/utils';
 
 type ContextType = {
   selectedToken: TokenData;
@@ -63,7 +64,8 @@ export const TokenProvider = ({ children }: StateProps) => {
   }, [fromTokens]);
 
   const [selectedToken, setSelectedToken] = useState<TokenData>(defaultToken);
-  const [price, setPrice] = useState<number>(1242.36);
+  console.log('selected', selectedToken);
+  const [price, setPrice] = useState<number>(0);
 
   // amount is the value of the input field
   const [amount, setAmount] = useState<string>('');
@@ -164,6 +166,17 @@ export const TokenProvider = ({ children }: StateProps) => {
     },
     [selectedToken],
   );
+
+  useEffect(() => {
+    async function updateTokenPrice() {
+      const price = await fetchTokenPrice({ chainId: selectedToken.chainId, address: selectedToken.address });
+      setPrice(price);
+    }
+
+    if (selectedToken) {
+      updateTokenPrice();
+    }
+  }, [selectedToken]);
 
   useEffect(() => {
     setSelectedToken(defaultToken);

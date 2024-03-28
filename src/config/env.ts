@@ -6,5 +6,6 @@ export const getEnv = (): Env => {
     PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID || '',
     ALCHEMY_KEY: process.env.NEXT_PUBLIC_ALCHEMY_KEY || '',
     ETHERSCAN_KEY: process.env.NEXT_PUBLIC_ETHERSCAN_KEY || '',
+    CHAINBASE_KEY: process.env.NEXT_PUBLIC_CHAINBASE_KEY || '',
   };
 };
