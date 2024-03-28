@@ -1,9 +1,14 @@
 import { Box, styled } from '@mui/material';
 import { BridgeCard } from '~/containers';
+import { NotificationChip } from './BridgeCard/NotificationChip';
 
+import { useLogs } from '~/hooks';
 export const Landing = () => {
+  const { pendingTransactionCount } = useLogs();
+
   return (
     <Container>
+      {pendingTransactionCount > 0 && <NotificationChip />}
       <BridgeCard />
     </Container>
   );

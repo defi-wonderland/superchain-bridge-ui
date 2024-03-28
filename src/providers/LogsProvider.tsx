@@ -15,7 +15,7 @@ type ContextType = {
   setSelectedLog: (log?: AccountLogs) => void;
   orderedLogs: AccountLogs[];
   setOrderedLogs: (logs: AccountLogs[]) => void;
-  transactionPending: boolean;
+  pendingTransactionCount: number;
   isSuccess: boolean;
   refetchLogs: () => void;
 
@@ -82,14 +82,13 @@ export const LogsProvider = ({ children }: StateProps) => {
     refetch();
   };
 
-  const transactionPending = useMemo(() => {
-    let isTransactionPending = false;
+  const pendingTransactionCount = useMemo(() => {
     if (depositLogs && withdrawLogs && userAddress) {
       const logs = [...depositLogs.accountLogs, ...withdrawLogs.accountLogs, ...cctpLogs];
-      isTransactionPending = logs.some((log) => log.status.includes('waiting-') || log.status.includes('ready-to'));
+      return logs.filter((log) => log.status.includes('waiting-') || log.status.includes('ready-to')).length;
     }
 
-    return isTransactionPending;
+    return 0;
   }, [cctpLogs, depositLogs, userAddress, withdrawLogs]);
 
   const isSuccess = useMemo(() => {
@@ -105,7 +104,7 @@ export const LogsProvider = ({ children }: StateProps) => {
         setSelectedLog,
         orderedLogs,
         setOrderedLogs,
-        transactionPending,
+        pendingTransactionCount,
         isSuccess,
         isLoading,
         setIsLoading,
