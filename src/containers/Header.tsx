@@ -23,7 +23,7 @@ export const Header = () => {
   const router = useRouter();
   const isMobile = useMediaQuery('(max-width: 600px)');
   const { address } = useAccount();
-  const { transactionPending } = useLogs();
+  const { pendingTransactionCount } = useLogs();
   const { toChain } = useChain();
   const { setModalOpen } = useModal();
   const { openConnectModal } = useConnectModal();
@@ -64,7 +64,7 @@ export const Header = () => {
             <>
               <STooltip title='Account History' placement='bottom'>
                 <IconButton onClick={handleAccountHistory} role='link'>
-                  <Badge invisible={!transactionPending} variant='dot' color='primary' overlap='circular'>
+                  <Badge invisible={pendingTransactionCount === 0} variant='dot' color='primary' overlap='circular'>
                     <SHistoryIcon src={historyIcon} alt='Account History' />
                   </Badge>
                 </IconButton>
